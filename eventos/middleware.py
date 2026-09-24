@@ -1,17 +1,15 @@
 from django.utils.deprecation import MiddlewareMixin
 
 from atividades.models import InscricaoAtividade
-from core.fields import get_current_year_str
-
 from .models import Avaliador, Evento, InscricaoEvento, Monitor
 
 
 class EventoSelecionadoMiddleware(MiddlewareMixin):
 
     def process_request(self, request):
-        request.evento = Evento.objects.all().first()
+        request.evento = Evento.objects.order_by('-ano', '-pk').first()
         request.user = request.user
-        if request.user.is_authenticated:
+        if request.user.is_authenticated and request.evento is not None:
             request.user.is_evaluator = request.evento.avaliadores.filter(usuario=request.user).exists() 
             request.user.is_monitor = request.evento.monitores.filter(usuario=request.user).exists() 
             request.user.avaliador = Avaliador.objects.filter(usuario = request.user, evento = request.evento).first()

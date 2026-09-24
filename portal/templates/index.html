@@ -39,7 +39,7 @@
                         <img src="{% static 'img/placeholders/noticias.jpg' %}" class="d-block w-100">
                         <div class="carousel-caption d-md-block">
                             <h2>{{evento.dt_inicio | date:"j M Y"}} - {{evento.endereco.local|default:'IFRN'}}</h2>
-                            <h1>{{evento.edicao|default:'4ª'}} {{evento.titulo|default:'Expotec'}}</h1>
+                            <h1>{{ evento.edicao }} {{ evento.titulo|default:'Expotec' }}</h1>
                             <p class="fs-6 text-lowercase">{{evento.subtitulo}}</p>
                             <a class="btn btn-success text-light" href="{% url 'account_login' %}">Acessar</a>
                         </div>
