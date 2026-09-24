@@ -1,0 +1,24 @@
+{% extends "modal.html" %}
+{% load crispy_forms_tags i18n %}
+{% block modalclasses %}
+  modal-lg
+{% endblock modalclasses %}
+{% block modalcontent %}
+  <form method="post"
+        action="{{ request.path }}?{{ request.query_string }}"
+        id="change-form"
+        enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="modal-header">
+      <div class="modal-title">{{ page_title }}</div>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+      </button>
+    </div>
+    <div class="modal-body">{% crispy form %}</div>
+    <div class="modal-footer">
+      {% block form_buttons %}
+        <div class="d-flex justify-content-end mt-3">{% include "includes/form_buttons.html" %}</div>
+      {% endblock form_buttons %}
+    </div>
+  </form>
+{% endblock modalcontent %}

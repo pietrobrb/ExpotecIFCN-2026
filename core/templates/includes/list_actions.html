@@ -1,0 +1,12 @@
+{% load i18n %}
+{% for name, action in actions.items %}
+
+  <a  title="{{ action.verbose_name|default:name|capfirst }}"
+     class="mb-3 btn text-white btn-{{ forloop.first|yesno:"success,secondary" }} action-{{ name }}"
+     {% if action.modal %} hx-get="{% url action.url %}" hx-target="#app-modal" hx-trigger="click" data-bs-toggle="modal" data-bs-target="#app-modal" {% endif %}
+     href="{% url action.url %}"  target="{{action.target|default:'_self'}}" >
+    {% if action.icon %}<i class="{{ action.icon }}"></i>{% endif %}
+    {{ action.verbose_name|default:name|capfirst }}
+  </a>
+
+{% endfor %}

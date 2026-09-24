@@ -1,0 +1,33 @@
+{% load crispy_forms_tags i18n formset_tags %}
+
+  <form method="post" id="change-form" novalidate>
+    {% csrf_token %}
+    <div class="card shadow-none">
+      <div class="card-body px-0">
+        
+        <fieldset class="px-3">
+          <legend class="small">Orientações</legend>
+          <ul class="list-group">
+          {% for er in request.evento.regras.all %}
+          
+            <li class="list-group-item mb-2">
+                      <a class="d-block  text-start text-decoration-none text-capitalize" href="{{er.documento.file.url}}" target="_blank">
+                        <span class=" me-2"><i class="fas fa-download"></i></span>
+                        {{er.documento.descricao}}
+                      </a>
+            </li>
+          {%empty%}
+            <p class="small">Nenhuma Orientação Cadastrada</p>
+          {% endfor %}
+          </ul>
+        </fieldset>
+        <fieldset class="px-3">
+          <p class="small">Áreas temáticas</legend>
+          {% crispy form %}  
+        </fieldset>
+      </div>
+      <div class="card-foot pb-3 px-3">
+        <button type="submit" class="btn btn-primary">Salvar</button>
+      </div>
+    </div>
+  </form>

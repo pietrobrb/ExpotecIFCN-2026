@@ -1,0 +1,110 @@
+{% load crispy_forms_tags i18n %}
+<fieldset class="border-top px-0 pt-0">
+  <legend class="bg-secondary fs-6 p-2 small text-secondary my-0">Documentos Enviados</legend>
+  <div class="table-responsive">
+    <table class="table mb-0 table-hover custom-table">
+      <thead>
+        <tr>
+          <th>Status</th>
+          <th>Etapa</th>
+          <th>Período</th>
+          <th>Nota</th>
+          <th>Documento</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+
+        {% for sd in submissoes %}
+        <tr>
+          {% if sd.chamada.forma_avaliacao == 'sem' %}
+            <td>
+                {% if object.status == 'RASCUNHO' %}
+                    {% if sd.documento.file %}
+                        Submissão Pendente
+                    {% elif sd.chamada.tem_submissao %}
+                        Documento ausente
+                    {% else %}
+                        -
+                    {% endif %}
+                {% else %}
+                    Submetido
+                {% endif %}
+            </td>
+          {% else %}
+            {% if sd.chamada.status == 'encerrado' %}
+                <td class="text-capitalize">{{ sd.get_status }}</td>
+            {% else %}
+                <td>
+                    {% if object.status == 'RASCUNHO' %}
+                        {% if sd.documento.file %}
+                            Submissão Pendente
+                        {% elif sd.chamada.tem_submissao %}
+                            Documento ausente
+                        {% else %}
+                            -
+                        {% endif %}
+                    {% else %}
+                        Submetido
+                    {% endif %}
+                </td>
+            {% endif %}
+        {% endif %}
+
+      
+
+
+          <td class="text-capitalize">{{ sd.chamada.get_etapa_display }}</td>
+          <td>
+            {{ sd.chamada.dt_inicio|date:"d/M"}} - {{ sd.chamada.dt_encerramento|date:"d/M"}}
+            ({{sd.chamada.get_status_display}})
+          </td>
+          <td>
+            {% if sd.chamada.status == 'encerrado' and object.status != 'RASCUNHO' %}
+            {{ sd.nota_final }}
+            {% else %}
+            -
+            {% endif %}
+          </td>
+
+          <td>
+            {% if sd.documento.file %}
+            <a href="{{ sd.documento.file.url }}" class="mr-auto" target="_blank">Visualizar</a>
+            {% else %}
+            <div class="mr-auto">-</div>
+            {% endif %}
+          </td>
+
+
+          <td class="text-end">
+
+            {% if sd.chamada.status == 'aberto' and sd.chamada.etapa == 'inicial'%}
+                {%if object.status == 'RASCUNHO'%}
+                  <a title="Enviar Outro Arquivo" class="btn btn-light btn-link text-black action-enviar px-2 ml-1 mt-1 py-2"
+                    hx-get="{%url 'user:trabalho-trocar_doc' sd.pk %}" hx-target="#app-modal" hx-trigger="click"
+                    data-bs-toggle="modal" data-bs-target="#app-modal" href="{%url 'user:trabalho-trocar_doc' sd.pk %}"
+                    target="_self">
+                    <i class="fa-solid fa-upload"></i>
+                  </a>
+                {%endif%}
+            {% elif sd.chamada.status != 'encerrado' and sd.chamada.etapa != 'inicial'%}
+              {%if sd.chamada.tem_submissao %}
+                  {% if sd.trabalho.status == 'RASCUNHO' or  sd.trabalho.status == 'APROVADO' or sd.trabalho.status == 'APRESENTADO' %}
+                    <a title="Enviar Outro Arquivo" class="btn btn-light btn-link text-black action-enviar px-2 ml-1 mt-1 py-2"
+                      hx-get="{%url 'user:trabalho-trocar_doc' sd.pk %}" hx-target="#app-modal" hx-trigger="click"
+                      data-bs-toggle="modal" data-bs-target="#app-modal" href="{%url 'user:trabalho-trocar_doc' sd.pk %}"
+                      target="_self">
+                      <i class="fa-solid fa-upload"></i>
+                    </a>
+                  {%endif%}
+              {%endif%}
+            {%endif%}
+
+          </td>
+
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</fieldset>

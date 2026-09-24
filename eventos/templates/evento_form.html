@@ -1,0 +1,106 @@
+{% extends "private/layout.html" %}
+{% load crispy_forms_tags i18n formset_tags %}
+
+{% block extrahead %}
+  {{ block.super }}
+  {{ form.media.css }}
+{% endblock extrahead %}
+{% block content %}
+    <form method="post"
+          id="change-form"
+          {% if form.is_multipart %}enctype="multipart/form-data"{% endif %}
+          novalidate>
+        {% block form_content %}
+        <div class="card shadow-none">
+          <div class="card-body px-0">
+            <fieldset class="px-4">
+              <div class="d-flex flex-column flex-fill">
+                {% crispy form.evento %}
+              </div>
+            </fieldset>
+            <fieldset id="endereco_formset" class="border-top px-4" data-formset-prefix="{{ endereco_form.prefix }}">
+                <div class="d-flex flex-row">
+                  <legend class="text-secondary fs-6 mt-3">Endereço</legend>
+                 
+                </div>
+                <div class="d-flex flex-column flex-fill">
+                  {% crispy form.endereco %}
+                </div>
+            </fieldset>
+            <fieldset id="contato_formset" class="border-top px-4"  data-formset-prefix="{{ contato_forms.prefix }}">
+              <div class="d-flex flex-row  mt-3">
+                <legend class="text-secondary fs-6">Contatos</legend>
+                <div class="ml-auto">
+                  <button class="btn btn-success btn-block " type="button" data-formset-add>
+                          <i class="fa fa-plus"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="d-flex flex-column flex-fill">
+                {{ contato_forms.management_form }}
+                {{ contato_forms.non_form_errors }}
+                <div data-formset-body>
+                    {% for f in contato_forms %}
+                    <div data-formset-form class="row my-2">
+                        <div class="col-12 col-md-11">
+                            {% crispy f %}
+                            {% for fld in f.hidden_fields %}{{ fld }}{% endfor %}
+                        </div>
+                        <div class="col-1 align-self-center pt-3 text-end">
+                            <div class="d-none">{{ f.DELETE }}</div>
+                            <button class="btn btn-danger " type="button" data-formset-delete-button>
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                  <script type="form-template" data-formset-empty-form>
+                  {% escapescript %}
+                  <div data-formset-form class="row my-2">
+                      <div class="col-12 col-md-11">
+                          {% crispy contato_forms.empty_form %}
+                          {% for fld in contato_forms.empty_form.hidden_fields %}{{ fld }}{% endfor %}
+                      </div>
+                      <div class="col-1 align-self-center pt-3 text-end">
+                          <div class="d-none">{{ contato_forms.DELETE }}</div>
+                          <button class="btn btn-danger" type="button" data-formset-delete-button>
+                              <i class="fa fa-trash"></i>
+                          </button>
+                      </div>
+                  </div>
+                  {% endescapescript %}
+                  </script>
+              </div>
+            </fieldset>
+          </div>
+          <div class="card-foot pb-3 px-3">
+            {% include "includes/form_buttons.html" %}
+          </div>
+        </div>
+
+      {% endblock form_content %}
+      
+    </form>
+  </div>
+  
+{% endblock content %}
+{% block extra_scripts %}
+  {{ block.super }}
+  {{ form.media.js }}
+  <script>
+      $(function () {
+          var contatoFormset = $("#contato_formset").formset({
+              animateForms: true,
+              prefix: "{{ contato_forms.prefix }}",
+          });
+          var enderecoFormset = $("#endereco_formset").formset({
+              animateForms: true,
+              prefix: "{{ endereco_form.prefix }}",
+          });
+      });
+  </script>
+{% endblock extra_scripts %}
+
+{% block preloader %}
+{% endblock preloader %}

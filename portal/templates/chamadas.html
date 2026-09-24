@@ -1,0 +1,41 @@
+{% extends 'public/layout.html' %}
+{% load static i18n %}
+{% block title %} Chamadas de Trabalhos {% endblock title %}
+{% block bodyclass %}bg-black single-page{% endblock bodyclass %}
+
+{% block content %}
+
+<section class="section bg-white">
+    <div class="container">
+        <div class="row  my-3">
+            <div class="col-md-12">
+                <h3 class="section-title">CHAMADAS DE TRABALHOS</h3>
+            </div>
+        </div>
+        <div class="row justify-content-center justify-content-lg-start">
+            
+                {% for c in object.tipos_chamadas.all %}
+                <div class="col-md-4 col-sm-6  mb-3  d-flex ms-md-auto ms-lg-0  ">
+                    <a href="{% url 'portal:evento-chamada' c.id %}" class="text-decoration-none w-100">
+                    <div class="schedule-box flex-fill" >
+                        <div class="time">
+                            {% if c.chamada_atual %}
+                                {{c.chamada_atual.get_tipo_display}} ({{c.chamada_atual.dt_inicio|date:"d/m"}} a {{c.chamada_atual.dt_encerramento|date:"d/m"}})
+                            {% elif c.primeira_chamada %}
+                                {{c.primeira_chamada.get_tipo_display}} ({{c.primeira_chamada.dt_inicio|date:"d/m"}} a {{c.primeira_chamada.dt_encerramento|date:"d/m"}})
+                            {% else %}
+                                EM BREVE
+                            {% endif %}
+                        </div>
+                        <h3 class="text-wrap text-break px-3">{{c.nome}}</h3>
+                        <p  class="text-wrap text-break px-3">{{c.tipo}}</p>
+                    </div>
+                    </a>
+                </div>
+                {%empty%}
+                    EM BREVE
+                {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock content %}

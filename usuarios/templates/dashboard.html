@@ -1,0 +1,163 @@
+{% extends 'private/layout.html' %}
+{% load static custom_tags %}
+
+{% block title %} Início {% endblock title %}
+
+{% block content %}
+<div class="row row-cols-1 {% if request.user.is_evaluator %} row-cols-md-4 {%else%} row-cols-md-3 {%endif%} ">
+  <div class="col">
+    <div class="card p-2 text-center dashboard-menu-cards w-100 bg-primary" >
+      <a href="{%url 'user:minhas_inscricoes'%}" class="text-decoration-none text-white">
+      <div class="card-body d-flex flex-column justify-content-center align-items-center">
+        <h3 class="mb-0 pb-0 text-bold text-white">{{request.users.atividades.all  | length }}</h3>
+        <p class="text-light fs-5">ATIVIDADES</p>
+      </div>
+      </a>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card p-2 text-center dashboard-menu-cards w-100 bg-success" >
+      <a href="{%url 'user:trabalho-meus_trabalhos'%}" class="text-decoration-none text-white">
+      <div class="card-body d-flex flex-column justify-content-center align-items-center">
+        <h3 class="mb-0 pb-0 text-bold text-white">{{trabalhos_usuario | length}}</h3>
+        <p class="text-light fs-5">TRABALHOS</p>
+      </div>
+      </a>
+    </div>
+  </div>
+  {% if request.user.is_evaluator %}
+
+  <div class="col">
+    <div class="card p-2 text-center dashboard-menu-cards w-100 bg-warning" >
+      <a href="{%url 'user:avaliacao-minhas_avaliacoes'%}" class="text-decoration-none text-white">
+      <div class="card-body d-flex flex-column justify-content-center align-items-center">
+        <h3 class="mb-0 pb-0 text-bold text-white">{{request.user.avaliador.avaliacoes.all | length}}</h3>
+        <p class="text-light fs-5">AVALIAÇÕES</p>
+      </div>
+      </a>
+    </div>
+  </div>
+  {%endif%}
+  <div class="col">
+    <div class="card p-2 text-center dashboard-menu-cards w-100 bg-info" >
+      <a href="#" class="text-decoration-none text-white">
+      <div class="card-body d-flex flex-column justify-content-center align-items-center">
+        <h3 class="mb-0 pb-0 text-bold text-white">0</h3>
+        <p class="text-light fs-5">CERTIFICADOS</p>
+      </div>
+      </a>
+    </div>
+  </div>
+</div>
+<div class="row">
+  
+    <div class="col-md-4">
+      <h5 class="text-black-50 border-bottom small"> Notícias </h5>
+      <ul class="list-group overflow-y-auto mb-2 h-350">
+        {% for n in request.evento.noticias.all %}
+        <li class="list-group-item bg-transparent  border-0 p-0 my-1">
+          <div class="d-flex w-100 justify-content-between ">
+            <div class="small fs-7 text-muted px-1 bg-dark text-white text-uppercase  no-wordbreak vertical-center" >
+              {{n.dt_cadastro | date:"d/m"}}
+            </div>
+            <div class=" small fs-7 flex-grow-1 mx-1">
+              {{n.titulo}} <br/>
+              <a title="Leia Mais" class="text-primary "
+                hx-get="{%url 'user:evento-ler_noticia' n.pk %}" hx-target="#app-modal" hx-trigger="click"
+                data-bs-toggle="modal" data-bs-target="#app-modal" href="{%url 'user:evento-ler_noticia' n.pk %}"
+                target="_self">
+                Leia Mais
+              </a>
+            </div>
+          </div>
+        </li>
+        {%empty%}
+        <li class="list-group-item bg-transparent  border-0 p-0 my-1">
+          <div class="d-flex w-100 justify-content-between ">
+            <div class=" small fs-7 flex-grow-1 mx-1 text-muted">Nenhuma noticia  cadastrada.</div>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="col-md-4">
+      <h5 class="text-black-50 border-bottom small">Atividades </h5>
+      <ul class="list-group overflow-y-auto mb-2 h-350">
+        {% for a in request.evento.atividades %}
+        <li class="list-group-item bg-transparent border-0 p-0 my-1">
+          <div class="row">
+            <div class="col-2 flex-column pl-3 text-white text-uppercase no-wordbreak vertical-center justify-content-center" style="background-color: {{a.tipo.cor}};">
+                {% if a.data_inicio %}
+                <div class="small">
+                  {{ a.data_inicio | date:"d/m" }}
+                </div>
+                {% else %}
+                <div class="xsmall">
+                  Em breve
+                </div>
+                {% endif %} 
+            </div>
+            <div class="col-9 xsmall fs-7 flex-grow-1 mx-1 text-start">
+              <a title="Detalhar"
+                hx-get="{%url 'user:evento-ver_atividade' a.pk %}" hx-target="#app-modal" hx-trigger="click"
+                data-bs-toggle="modal" data-bs-target="#app-modal" href="{%url 'user:evento-ver_atividade' a.pk %}"
+                target="_self">
+                {{a.titulo}}
+              </a>
+              {% if a.com_inscricoes %}
+              <div class="xsmall"><a href="{%url 'user:minhas_inscricoes' %}" class="text-primary" >Inscrever-se</a></div>
+              {% endif %}
+            </div>
+          </div>
+        </li>
+      
+        
+        {%empty%}
+        <li class="list-group-item bg-transparent  border-0 p-0 my-1">
+          <div class="d-flex w-100 justify-content-between ">
+            <div class="small fs-7 flex-grow-1 mx-1 text-muted">Nenhuma atividade cadastrada.</div>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="col-md-4">
+      <h5 class="text-black-50 border-bottom small"> Chamadas de Trabalho </h5>
+      <ul class="list-group overflow-y-auto mb-2 h-350">
+        {% for c in request.evento.tipos_chamadas.all %}
+        <li class="list-group-item bg-transparent  border-0 p-0 my-1">
+          <div class="row">
+            <div class="col-2 flex-column pl-3 text-white text-uppercase no-wordbreak vertical-center justify-content-center bg-success">
+              <div class="xsmall">
+                {% if c.chamada_atual %}
+              
+                  {{c.chamada_atual.get_etapa_display}}
+              
+                {% else %}
+                  Em breve
+                {% endif %}
+              </div>
+            </div>
+            <div class="col-5 small fs-7 flex-grow-1 mx-1">
+              {{c.nome}}
+            </div>
+            <div class="col-4 text-end">
+              <a href="{%url 'user:trabalho-meus_trabalhos' %}" class="small px-1 no-wordbreak text-primary">{{c.chamada_atual.dt_inicio | date:"d/M"}} <font class="text-muted">à</font>  {{c.chamada_atual.dt_encerramento | date:"d/M"}} </a>
+            </div>
+          </div>
+        </li>
+
+        
+        {%empty%}
+        <li class="list-group-item bg-transparent  border-0 p-0 my-1">
+          <div class="d-flex w-100 justify-content-between ">
+            <div class=" small fs-7 flex-grow-1 mx-1 text-muted">Nenhuma chamada cadastrada.</div>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+</div>
+{% endblock content %}
+

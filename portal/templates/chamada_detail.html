@@ -1,0 +1,50 @@
+{% extends 'public/layout.html' %}
+{% load static i18n %}
+{% block title %} Chamadas de Trabalhos {% endblock title %}
+{% block bodyclass %}bg-black single-page{% endblock bodyclass %}
+
+{% block content %}
+
+<section class="section bg-white">
+    <div class="container">
+        <div class="row  my-3">
+                <div class="col-md-8">
+                    <h3 class="section-title"><a class="text-decoration-none" href="{%url 'portal:evento-chamadas'%}"> <span class='small'>CHAMADAS DE TRABALHO</span></a><br>{{ object.nome }}</h3>
+                    <div class="text-justify">{{object.descricao|safe}}</div>
+                    <div class="list-group my-3">
+                        {% for dc in object.tipo_chamada_documentos.all %}
+                        <div class="list-group-item bg-dark text-light mb-2">
+                            <a class="d-block text-start text-decoration-none text-capitalize" href="{{dc.documento.file.url}}" target="_blank">
+                              <span class=" me-2"><i class="fas fa-download"></i></span>
+                              {{dc.documento.descricao }}
+                            </a>
+                        </div>
+                        {%empty%}
+                          <p> Nenhum documento disponível</p>
+                        {% endfor %}
+                    </div>
+
+                </div>
+
+                <div class="col-md-4 pt-5">
+                    <h4 class="section-title">Prazos</h4>
+                    <ul class="list-group px-0">
+                        {% for c in object.lista_chamadas %}
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="me-auto text-justify">
+                                    <div class="fw-bold">{{c.get_etapa_display}} ({{c.get_status_display}})</div>
+                                    <p class="fs-6 fw-light">{{ c.dt_inicio }} - {{c.dt_encerramento}}</p>
+                                </div>
+                            </li>
+                        {%empty%}
+                            <p> Nenhum prazo cadastrado.</p>
+                          
+                        {% endfor %}
+                    </ul>
+                </div><!-- /.col-sm-6 -->
+            </div><!-- /.row -->
+       
+        </div>
+    </div>
+</section>
+{% endblock content %}

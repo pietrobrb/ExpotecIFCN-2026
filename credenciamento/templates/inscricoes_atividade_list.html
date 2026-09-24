@@ -1,0 +1,149 @@
+{% extends "private/layout.html" %}
+{% load crispy_forms_tags i18n formset_tags %}
+
+{% block extrahead %}
+  {{ block.super }}
+  {{ form.media.css }}
+{% endblock extrahead %}
+
+
+{% block content %}
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+        <a class="nav-link text-active-primary ms-0 me-10 fw-light " href="{% url 'credenciamento:inscricaoevento-list'%}">
+            Inscrições no Evento
+        </a>
+        </li>
+        <li class="nav-item">
+        <a class="nav-link text-active-primary ms-0 me-10 fw-light active" href="{% url 'credenciamento:inscricaoatividade-list'%}">
+            Inscrições nas Atividades
+        </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-active-primary ms-0 me-10 fw-light" href="{% url 'evento:avaliador-list'%}">
+                Inscrições de Avaliadores
+            </a>
+        </li>         
+    </ul>
+    <div class="card shadow-none">
+        <div class="card-header">
+            <form method="GET">
+                <div class="form-group">
+                    <fieldset class="px-0">
+                        <div class="d-flex flex-column flex-fill">
+                            {{ filtro_form.email|as_crispy_field }}
+                            {{ filtro_form.atividade|as_crispy_field }}
+                            {{ filtro_form.tipo|as_crispy_field }}
+                            <br>
+                            <div class="col-md-12 d-flex justify-content-center mt-4">
+                                <button type="submit" class="btn btn-primary mx-2">Filtrar</button>
+                                <a href="{% url 'credenciamento:inscricaoatividade-list' %}" class="btn btn-secondary mx-2">Limpar</a>
+                                <a title="Adicionar" class=" btn text-white btn-success action-add" href="{% url 'credenciamento:inscricaoatividade-add' %}" target="_self">
+                                    <i class="fas fa-plus"></i>
+                                    Adicionar
+                                </a>
+                            </div> 
+                        </div>
+                    </fieldset>
+                </div>
+            </form>
+        </div>
+        <div class="card-body">
+            <div class="table-container table-responsive container-fluid">
+                <table class="table table-bordered custom-table">
+                    <thead>
+                        <tr>
+                            <th>Foto</th>
+                            <th>Nome</th>
+                            <th>CPF</th>
+                            <th>Email</th>
+                            <th>Data de Inscrição</th>
+                            <th>Atividade</th>
+                            <th>Tipo da Atividade</th>
+                            <th>Presença do(a) Inscrito(a)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for inscricao in inscricoes %}
+                            <tr>
+                                <td class="text-center">
+                                    {% if inscricao.usuario.foto_perfil %}
+                                        <img src="{{ inscricao.usuario.foto_perfil.url }}" alt="Foto do usuário" class="img-thumbnail" style="width: 80px; height: 70px;">
+                                    {% else %}
+                                        <i class="fas fa-user-circle fa-2x"></i>
+                                    {% endif %}
+                                </td>
+                                <td>{{ inscricao.usuario.nome_completo }}</td>
+                                <td>{{ inscricao.usuario.cpf }}</td>
+                                <td>{{ inscricao.usuario.email }}</td>
+                                <td>{{ inscricao.data_inscricao|date:"d/m/Y H:i" }}</td>
+                                <td>{{ inscricao.atividade.titulo }}</td>
+                                <td>{{ inscricao.atividade.tipo.nome }}</td>
+                                <td>
+                                    <button class="btn btn-outline-primary toggle-presenca" data-inscricao-id="{{ inscricao.id }}" data-presente="{{ inscricao.presente }}">
+                                        {% if inscricao.presente %}Presente{% else %}Marcar Presença{% endif %}
+                                    </button>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="8" class="text-center">Nenhuma inscrição encontrada.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>                
+            </div>
+        </div>
+        <div class="card-footer bg-white">
+            <div class="pagination-container">
+            {% if table.paginator %}
+              <nav aria-label="Page navigation">
+                {% include "includes/pagination.html" %}
+              </nav>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+
+   
+
+{% endblock content %}
+
+{% block extra_scripts %}
+  {{ block.super }}
+  {{ form.media.js }}
+  <script>
+    document.querySelectorAll('.toggle-presenca').forEach(button => {
+        button.addEventListener('click', function () {
+            const inscricaoId = this.getAttribute('data-inscricao-id');
+            const presente = this.getAttribute('data-presente') === 'true';
+            const buttonElement = this;
+
+            fetch('', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    'inscricao_id': inscricaoId,
+                    'presente': !presente  
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    buttonElement.textContent = data.presente ? 'Presente' : 'Marcar Presença';
+                    buttonElement.setAttribute('data-presente', data.presente);
+                }
+            })
+            .catch(error => console.error('Erro:', error));
+        });
+    });
+</script>
+{% endblock extra_scripts %}
+
+{% block preloader %}
+{% endblock preloader %}
+

@@ -1,0 +1,9 @@
+{% load crispy_forms_tags %}
+{% for field in filterset.form %}
+  <div class="mr-2 mb-3 mb-md-0">
+    {{ field }}
+  </div>
+{% endfor %}
+<div class="mr-2 mb-3 mb-md-0">
+  <button type="submit" class="btn btn-primary text-nowrap w-100">Filtrar</button>
+</div>

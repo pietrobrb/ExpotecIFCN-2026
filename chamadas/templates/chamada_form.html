@@ -1,0 +1,130 @@
+{% extends "private/layout.html" %}
+{% load crispy_forms_tags i18n formset_tags %}
+
+{% block extrahead %}
+  {{ block.super }}
+  {{ form.media.css }}
+{% endblock extrahead %}
+
+{% block content %}
+  <form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    {% block form_content %}
+    <div class="card shadow-none">
+      <div class="card-body px-0">
+        <fieldset class="px-4">
+          <div class="d-flex flex-column flex-fill">
+            {% crispy form %}
+          </div>
+        </fieldset>
+        
+        <fieldset id="criterio_formset" class="border-top px-4" data-formset-prefix="{{ criterio_forms.prefix }}">
+          <div class="d-flex flex-row mt-3">
+            <legend class="text-secondary fs-6">Critérios de Avaliacao</legend>
+            <div class="ml-auto">
+              <button class="btn btn-success btn-block" type="button" data-formset-add>
+                  <i class="fa fa-plus"></i>
+              </button>
+            </div>
+          </div>
+          <div class="d-flex flex-column flex-fill">
+            {{ criterio_forms.management_form }}
+            {{ criterio_forms.non_form_errors }}
+            <div data-formset-body>
+              {% for f in criterio_forms %}
+              <div data-formset-form class="row my-2">
+                <div class="col-12 col-md-11">
+                  {% crispy f %}
+                  {% for fld in f.hidden_fields %}{{ fld }}{% endfor %}
+                </div>
+                <div class="col-1 align-self-center pt-3 text-end">
+                  <div class="d-none">{{ f.DELETE }}</div>
+                  <button class="btn btn-danger" type="button" data-formset-delete-button>
+                      <i class="fa fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+            <script type="form-template" data-formset-empty-form>
+              {% escapescript %}
+              <div data-formset-form class="row my-2">
+                  <div class="col-12 col-md-11">
+                      {% crispy criterio_forms.empty_form %}
+                      {% for fld in criterio_forms.empty_form.hidden_fields %}{{ fld }}{% endfor %}
+                  </div>
+                  <div class="col-1 align-self-center pt-3 text-end">
+                      <div class="d-none">{{ criterio_forms.empty_form.DELETE }}</div>
+                      <button class="btn btn-danger" type="button" data-formset-delete-button>
+                          <i class="fa fa-trash"></i>
+                      </button>
+                  </div>
+              </div>
+              {% endescapescript %}
+            </script>
+          </div>
+        </fieldset>
+      </div>
+      <div class="card-foot pb-3 px-3">
+        {% include "includes/form_buttons.html" %}
+      </div>
+    </div>
+    {% endblock form_content %}
+  </form>
+{% endblock content %}
+
+{% block extra_scripts %}
+  {{ block.super }}
+  {{ form.media.js }}
+  <script>
+    function atualizar_criterios(){
+        var aval = $("#id_forma_avaliacao").val();
+        switch(aval) {
+            case 'sem':
+                $('#criterio_formset').hide();
+                $('#criterio_formset').find('[data-formset-body]').children().remove();
+                $('#id_min_avaliacoes').val(0).attr('readonly', true);
+                break;
+            case 'soma':
+                $('#criterio_formset').show();
+                $('.peso_container').find('label').html('Nota Máxima*');	
+                $('.peso_container').find('input').attr('readonly', false);
+                $('#id_min_avaliacoes').attr('readonly', false);
+                break;
+            case 'media_aritmetica':
+                $('#criterio_formset').show();
+                $('.peso_container').find('label').html('Peso*');	
+                $('.peso_container').find('input').val(1).attr('readonly', true);	
+                $('#id_min_avaliacoes').attr('readonly', false)
+                
+                break;
+            default:
+                $('#criterio_formset').show();
+                $('.peso_container').find('label').html('Peso*');	
+                $('.peso_container').find('input').attr('readonly', false);
+                $('#id_min_avaliacoes').attr('readonly', false)
+        }
+    }
+    $(function () {
+      
+      var formset = $("#criterio_formset").formset({
+        animateForms: true,
+        prefix: "{{ criterio_forms.prefix }}",
+      });
+
+      formset.on('formAdded', function($form) {
+        atualizar_criterios();
+        console.log("criou", $form)
+      });
+
+      $('#id_forma_avaliacao').on('change', function() {
+        atualizar_criterios()
+      });
+      
+      atualizar_criterios();
+    });
+  </script>
+{% endblock extra_scripts %}
+
+{% block preloader %}
+{% endblock preloader %}

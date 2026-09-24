@@ -1,0 +1,7 @@
+<a class="btn btn-outline-primary ms-2"
+  href="{{ view.get_success_url }}">Cancelar</a>
+{% if object %}
+  <button type="submit" class="btn btn-primary ms-2">Salvar</button>
+{% else %}
+  <button type="submit" class="btn btn-primary ms-2">Adicionar</button>
+{% endif %}

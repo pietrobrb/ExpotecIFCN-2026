@@ -1,0 +1,64 @@
+{% extends "private/layout.html" %}
+{% load crispy_forms_tags i18n %}
+{% block extrahead %}
+  {{ block.super }}
+  {{ form.media.css }}
+{% endblock extrahead %}
+{% block content %}
+{%if request.user.is_evaluator %}
+<div class="row">
+  <ul class="nav nav-tabs ml-3">
+    <li class="nav-item">
+      <a class="nav-link text-active-primary ms-0 me-10 fw-light active"
+        href="{% url 'user:meu_perfil' %}">Dados Pessoais</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-active-primary ms-0 me-10 fw-light"
+        href="{% url 'user:edit_avaliador' %}">Cadastro de Avaliador</a>
+    </li>
+  </ul>
+</div>
+{% endif %}
+<div class="row">
+  <form method="post"
+          id="change-form"
+          enctype="multipart/form-data"
+          novalidate>
+
+      {% block form_content %}
+        
+        <div class="card shadow-none">
+          <div class="card-body pt-3">
+            <div class="d-flex flex-column flex-fill">
+              <fieldset class="px-0">
+                <div class="d-flex flex-row">
+                </div>
+                <div class="d-flex flex-column flex-fill">
+                  {% crispy form.usuario %}
+                </div>
+              </fieldset>
+              <fieldset id="endereco_formset" class="border-top px-0" data-formset-prefix="{{ endereco_form.prefix }}">
+                  <div class="d-flex flex-row">
+                    <legend class="text-secondary fs-6 mt-3">Endereço</legend>
+                  </div>
+                  <div class="d-flex flex-column flex-fill">
+                    {% crispy form.endereco %}
+                  </div>
+              </fieldset>
+            </div>
+          </div>
+          <div class="card-foot pb-3 px-3">
+            {% include "includes/form_buttons.html" %}
+          </div>
+        </div>
+      {% endblock form_content %}
+    </form>
+</div>
+{% endblock content %}
+{% block extra_scripts %}
+  {{ block.super }}
+  {{ form.media.js }}
+{% endblock extra_scripts %}
+
+{% block preloader %}
+{% endblock preloader %}

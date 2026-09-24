@@ -1,0 +1,176 @@
+{% extends "private/layout.html" %}
+{% load crispy_forms_tags formset_tags %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data" novalidate>
+  {% csrf_token %}
+  {% block form_content %}
+  <div class="card shadow-none">
+    <div class="card-body px-0">
+      <fieldset class="px-4">
+              <div class="d-flex flex-column flex-fill">
+                {% crispy form %}
+              </div>
+      </fieldset>
+      <fieldset class="border-top">
+        <div id="membros_form" data-formset-prefix="{{ membro_forms.prefix }}" class="card-body pt-0">
+            <div class="row content-header ">
+              <div class="d-flex flex-row  my-3">
+                <legend class="text-secondary fs-6">Membros</legend>
+                <div class="ml-auto">
+                  <button class="btn btn-success btn-block " type="button" data-formset-add>
+                          <i class="fa fa-plus"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            {{ membro_forms.management_form }}
+            {{ membro_forms.non_form_errors }}
+            <div data-formset-body class="accordion custom-accordion" id="accordion_membros">
+              
+                {% for f in membro_forms %}
+                <div data-formset-form class="my-2 accordion-item">
+                    <div class="accordion-header bg-light">
+                        <h6 class="mb-0">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMembro{{ forloop.counter }}" aria-expanded="false" aria-controls="collapseMembro{{ forloop.counter }}">
+                                {% if f.instance.usuario %}
+                                {{ f.instance.usuario }}
+                                {% else %}
+                                Nova Membro
+                                {% endif %}
+                            </button>
+                        </h6>
+                    </div>
+                    <div id="collapseMembro{{ forloop.counter }}" class="accordion-collapse collapse" data-bs-toggle="collapse">
+                        <div class="card-body">
+                            {% crispy f %}
+                            {% for fld in f.hidden_fields %}{{ fld }}{% endfor %}
+                            <div class="text-end">
+                                <div class="d-none">{{ f.DELETE }}</div>
+                                <button class="btn btn-danger" type="button" data-formset-delete-button>
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <script type="form-template" data-formset-empty-form>
+            {% escapescript %}
+            <div data-formset-form class="accordion-item my-2 ">
+                <div class="accordion-header bg-light">
+                    <h6 class="mb-0">
+                        <button id="toggle_btn_novo" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" aria-expanded="false" data-bs-target="#collapseMembro_novo" aria-expanded="false" aria-controls="collapseMembro_novo">
+                          Novo Membro
+                        </button>
+                    </h6>
+                </div>
+                <div id="collapseMembro_novo" class="accordion-collapse collapse" data-bs-toggle="collapse">
+                    <div class="card-body">
+                        {% crispy membro_forms.empty_form %}
+                        {% for fld in membro_forms.empty_form.hidden_fields %}{{ fld }}{% endfor %}
+                        <div class="text-end">
+                            <div class="d-none">{{ membro_forms.empty_form.DELETE }}</div>
+                            <button class="btn btn-danger" type="button" data-formset-delete-button>
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endescapescript %}
+            </script>
+        </div>
+      </fieldset>
+    </div>
+    <div class="card-foot pb-3 px-3">
+      {% include "includes/form_buttons.html" %}
+    </div>
+  </div>
+  {% endblock form_content %}
+</form>
+
+{% endblock content %}
+
+
+{% block extra_scripts %}
+    {{ block.super }}
+    {{ form.media.js }}
+    <script>
+        $(function () {
+            var membrosFormset = $("#membros_form").formset({
+                animateForms: true,
+                prefix: "{{ membro_forms.prefix }}",
+            });
+
+            membrosFormset.on('formAdded', function($form) {
+                var uniqueId = Date.now();  // Gera um ID único baseado no timestamp
+                var collapseTarget = '#collapseMembro_'+uniqueId;
+                var collapseId = 'collapseMembro_'+uniqueId;
+                $("#toggle_btn_novo").attr('data-bs-target', collapseTarget);
+                $("#toggle_btn_novo").attr('aria-controls', collapseId);
+                $("#collapseMembro_novo").attr('id', collapseId);
+                $("#toggle_btn_novo").attr('id', "toggle_btn_"+uniqueId);      
+                $(collapseTarget).collapse("show");  
+            });
+            $(".is-invalid").closest(".collapse").collapse("show");  
+            
+        });
+        
+        function getUserData(el){
+            let input_value = $(el).val();  
+            let input_prefix = $(el).attr("name").split("-")[1]; 
+            if (input_value !== originalValue) {
+                _usuario = $(`[name="membros-${input_prefix}-usuario"]`);
+                _nome =  $(`[name="membros-${input_prefix}-nome_completo"]`);
+                _vinculo =  $(`[name="membros-${input_prefix}-vinculo"]`);
+                if (input_value !== "" && input_value != null) {
+                    _url = "{% url 'evento:evento-get_user' %}";
+                    console.log(_url)
+                    $.ajax({
+                        url: _url,
+                        data: {
+                            'email': input_value
+                        },
+                        dataType: 'json',
+                        success: function (res) {
+                            if (res.found) {
+                                _nome.val(res.usuario.nome_completo);
+                                _nome.prop('readonly', true);
+                                _vinculo.val(res.usuario.vinculo).trigger("change.select2");
+                                _vinculo.on('mousedown', function(e) {
+                                    e.preventDefault(); // Impede que o select seja modificado
+                                });
+                                _vinculo.addClass('readonly');
+                                _vinculo.addAttr('readonly');
+                            }else{
+                                _usuario.val(null)
+                                _nome.val(null);
+                                _nome.prop('readonly', false);
+                                _vinculo.val("Servidor IFRN").trigger("change.select2");
+                                _vinculo.off('mousedown');
+                                _vinculo.removeClass('readonly');
+                                _vinculo.removeAttr('readonly');
+                            }
+
+                    },
+                    error: function (res) {
+                        Swal.fire({title: "Cadastro de Membro",
+                            text: "Erro de conexao. Tente novamente.",
+                            icon: "error"
+                        });
+                    }
+                });
+                } else {
+                    $(el).focus();
+                }
+            }
+        }
+
+    </script>
+{% endblock extra_scripts %}
+
+
+{% block preloader %}
+{% endblock preloader %}

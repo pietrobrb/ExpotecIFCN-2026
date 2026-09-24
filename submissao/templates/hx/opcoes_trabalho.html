@@ -1,0 +1,15 @@
+{% load crispy_forms_tags %}
+{% block content %}
+<div>
+    
+    {%if 'DESCRICAO' in opcoes %}
+    {{ form.descricao | as_crispy_field }}
+    {%endif %}
+
+    {%if 'RESUMO' in opcoes %}
+    {{ form.resumo | as_crispy_field }}
+    {{ form.palavras_chave | as_crispy_field }}
+    {%endif %}
+    {{form.tipo_chamada.opcoes.all}}
+</div>
+{% endblock%}

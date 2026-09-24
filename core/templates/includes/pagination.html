@@ -1,0 +1,35 @@
+{% load django_tables2 %}
+
+<ul class="pagination">
+  {% if table.page.has_previous %}
+  <li class="paginate_button page-item previous">
+    <a href="{% querystring table.prefixed_page_field=table.page.previous_page_number %}" 
+      data-dt-idx="0" tabindex="0" class="page-link">
+      Anterior
+    </a>
+  </li>
+  {% else %}
+  <li class="paginate_button page-item previous disabled">
+    <a href="#" data-dt-idx="0" tabindex="0" class="page-link">
+     Anterior
+    </a>
+  </li>
+  {% endif %}
+  {% for p in table.page|table_page_range:table.paginator %}
+  <li class="paginate_button page-item">
+    <a {% if p != "..." %}href=" {% querystring table.prefixed_page_field=p %}" {% endif %} tabindex="0"
+      class="page-link {%if p == table_page %} bg-primary {% endif %}" >{{ p }}</a>
+  </li>
+  {% endfor %}
+  {% if table.page.has_next %}
+  <li class="paginate_button page-item next">
+    <a href="{% querystring table.prefixed_page_field=table.page.next_page_number %}" tabindex="0" class="page-link">
+      Próximo
+    </a>
+  </li>
+  {% else %}
+  <li class="paginate_button page-item next disabled">
+    <a href="#" tabindex="0" class="page-link">Próximo</a>
+  </li>
+  {% endif %}
+</ul>

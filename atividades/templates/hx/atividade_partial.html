@@ -1,0 +1,27 @@
+{% load crispy_forms_tags %}
+<div class="row">
+    <div class="col-3">
+        {{ form.qtd_vagas | as_crispy_field }}
+        {% if form.qtd_vagas.errors %}
+            <div class="text-danger">{{ form.qtd_vagas.errors }}</div>
+        {% endif %}
+    </div>
+    <div class="col-3">
+        {{ form.inicio_inscricoes | as_crispy_field }}
+        {% if form.inicio_inscricoes.errors %}
+            <div class="text-danger">{{ form.inicio_inscricoes.errors }}</div>
+        {% endif %}
+    </div>
+    <div class="col-3">
+        {{ form.fim_inscricoes | as_crispy_field }}
+        {% if form.fim_inscricoes.errors %}
+            <div class="text-danger">{{ form.fim_inscricoes.errors }}</div>
+        {% endif %}
+    </div>
+    <div class="col-3">
+        {{ form.status | as_crispy_field }}
+        {% if form.status.errors %}
+            <div class="text-danger">{{ form.status.errors }}</div>
+        {% endif %}
+    </div>
+</div>

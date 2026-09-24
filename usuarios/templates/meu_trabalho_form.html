@@ -1,0 +1,41 @@
+{% extends "private/layout.html" %}
+{% load crispy_forms_tags i18n %}
+{% block extrahead %}
+{{ block.super }}
+{{ form.media.css }}
+{% endblock extrahead %}
+{% block content %}
+<div class="row">
+  <form method="post" id="change-form" enctype="multipart/form-data">
+    {% block form_content %}
+    <div class="card shadow-none">
+      <div class="card-body pt-3">
+          <fieldset class="px-0">
+            <div class="d-flex flex-column flex-fill">
+              {% crispy form %}
+            </div>
+          </fieldset>
+
+          <fieldset>
+            
+            {%include "includes/trabalho_submissao_list.html"%}
+          </fieldset>
+      </div>
+      <div class="card-foot pb-3 px-3">
+        <a class="btn btn-outline-primary ms-2" href="{{ view.get_success_url }}">Cancelar</a>
+        {% if object.status == 'RASCUNHO'%}
+        <button type="submit" class="btn btn-primary ms-2">Salvar</button>
+        {% endif %}
+      </div>
+    </div>
+    {% endblock form_content %}
+  </form>
+</div>
+{% endblock content %}
+{% block extra_scripts %}
+{{ block.super }}
+{{ form.media.js }}
+{% endblock extra_scripts %}
+
+{% block preloader %}
+{% endblock preloader %}

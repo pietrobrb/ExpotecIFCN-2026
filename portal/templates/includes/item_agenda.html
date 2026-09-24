@@ -1,0 +1,99 @@
+{% load django_tables2 %}
+{% load i18n l10n %}
+{% block table-wrapper %}
+<div class="table-container table-responsive container-fluid m-0 p-0"">
+    {% block table %}
+        <table {% render_attrs table.attrs class="table mb-0 table-hover text-nowrap custom-table"  %}>
+            {% block table.thead %}
+            {% endblock table.thead %}
+
+            {% block table.tbody %}
+                <tbody {{ table.attrs.tbody.as_html }}  style="border:0px; border-color:transparent;" >
+                {% for row in table.paginated_rows %}
+                    {% block table.tbody.row %}
+                    <tr {{ row.attrs.as_html }} >
+                        {% for column, cell in row.items %}
+                                <td {{ column.attrs.td.as_html }} 
+                                    class="text-start text-wrap align-middle" {% if forloop.counter == 1 %} 
+                                    style="font-size:24px; text-align: center !important; width: 117px; background-color: {{row.record.atividade.tipo.cor}};" 
+                                    {% endif %}>    
+                                    
+                                    {% if column.localize == None %}
+                                        {{ cell }}
+                                    {% else %}
+                                        {% if column.localize %}
+                                            {{ cell|localize }}
+                                        {% else %}
+                                            {{ cell|unlocalize }}
+                                        {% endif %}
+                                    {% endif %}
+                                </td>
+                        {% endfor %}
+                    </tr>
+                    {% endblock table.tbody.row %}
+                {% empty %}
+                    {% block table.tbody.empty_text %}
+                        <tr><td colspan="{{ table.columns|length }}">
+                            Nenhuma programação para este dia.
+                        </td></tr>
+                    {% endblock table.tbody.empty_text %}
+                {% endfor %}
+                </tbody>
+            {% endblock table.tbody %}
+            {% block table.tfoot %}
+            {% if table.has_footer %}
+            <tfoot {{ table.attrs.tfoot.as_html} class='boder-0'}>
+                <tr>
+                {% for column in table.columns %}
+                    <td {{ column.attrs.tf.as_html }}>{{ column.footer }}</td>
+                {% endfor %}
+                </tr>
+            </tfoot>
+            {% endif %}
+            {% endblock table.tfoot %}
+        </table>
+    {% endblock table %}
+
+    {% block pagination %}
+        <div class="mt-2">
+        {% if table.page and table.paginator.num_pages > 1 %}
+        <nav aria-label="Table navigation">
+            <ul class="pagination justify-content-center">
+            {% if table.page.has_previous %}
+                {% block pagination.previous %}
+                <li class="previous page-item">
+                    <a href="{% querystring table.prefixed_page_field=table.page.previous_page_number %}" class="page-link">
+                        <span aria-hidden="true">&laquo;</span>
+                        {% trans 'previous' %}
+                    </a>
+                </li>
+                {% endblock pagination.previous %}
+            {% endif %}
+            {% if table.page.has_previous or table.page.has_next %}
+            {% block pagination.range %}
+            {% for p in table.page|table_page_range:table.paginator %}
+                <li class="page-item{% if table.page.number == p %} active{% endif %}">
+                    <a class="page-link" {% if p != '...' %}href="{% querystring table.prefixed_page_field=p %}"{% endif %}>
+                        {{ p }}
+                    </a>
+                </li>
+            {% endfor %}
+            {% endblock pagination.range %}
+            {% endif %}
+            {% if table.page.has_next %}
+                {% block pagination.next %}
+                <li class="next page-item">
+                    <a href="{% querystring table.prefixed_page_field=table.page.next_page_number %}" class="page-link">
+                        {% trans 'next' %}
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                {% endblock pagination.next %}
+            {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+        </div>
+    {% endblock pagination %}
+</div>
+{% endblock table-wrapper %}

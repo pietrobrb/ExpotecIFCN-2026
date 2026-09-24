@@ -1,0 +1,43 @@
+{% load i18n static simple_menu %}
+
+<!-- Main Sidebar Container -->
+<aside class="main-sidebar sidebar-light  sidebar-no-expand">
+  <!-- Brand Logo -->
+  <div class="sidebar-brand border-0 ">
+    <a href="{%url 'portal:index' %}" class="brand-link logo-switch">
+      {%if request.evento.logo %}  
+        <img src="{{request.evento.logo.url}}" alt="Logo" class="brand-image-xl logo-xl mx-auto">
+      {% else %}
+        <img src="{% static 'img/logos/logo.png' %}" alt="Logo" class="brand-image-xl logo-xl mx-auto">
+      {% endif %}
+
+      {%if request.evento.logo_mini %}  
+      <img src="{{request.evento.logo_mini.url}}" alt="Mini Logo" class="brand-image-xs logo-xs mx-auto">
+      {% else %}
+      <img src="{% static 'img/logos/logo-mini.png' %}" alt="Mini Logo" class="brand-image-xs logo-xs mx-auto">
+      {% endif %}
+    </a>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <!-- SidebarSearch Form -->
+    <div class="form-inline">
+      <div class="input-group my-3" data-widget="sidebar-search">
+        <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+        <div class="input-group-append">
+          <button class="btn btn-sidebar">
+            <i class="fas fa-search fa-fw"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar Menu -->
+    <nav class="mt-2">
+      {% include 'private/menu-list.html' %}
+    </nav>
+    <!-- /.sidebar-menu -->
+  </div>
+  <!-- /.sidebar -->
+</aside>

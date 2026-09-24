@@ -1,0 +1,32 @@
+{% extends "private/layout.html" %}
+{% load crispy_forms_tags i18n formset_tags %}
+
+{% block extrahead %}
+  {{ block.super }}
+  {{ form.media.css }}
+{% endblock extrahead %}
+
+{% block content %}
+
+<div class="row">
+  <ul class="nav nav-tabs ml-3">
+    <li class="nav-item">
+      <a class="nav-link text-active-primary ms-0 me-10 fw-light "
+        href="{% url 'user:meu_perfil' %}">Dados Pessoais</a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link text-active-primary ms-0 me-10 fw-light active"
+        href="{% url 'user:edit_avaliador' %}">Cadastro de Avaliador</a>
+    </li>
+  </ul>
+</div>
+
+<div class="row">
+  {% include "includes/form_avaliador.html" %}
+</div>
+{% endblock content %}
+
+
+{% block preloader %}
+{% endblock preloader %}

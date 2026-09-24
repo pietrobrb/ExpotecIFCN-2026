@@ -1,0 +1,59 @@
+{% extends "account/base_entrance.html" %}
+
+{% load i18n %}
+{% load allauth account socialaccount %}
+{% load static %}
+
+{% block title %} {% trans "Sign In" %} {% endblock %}
+
+{% block content %}
+  {% if SOCIALACCOUNT_ENABLED %}
+
+  <div class="social-auth-links text-center mb-3">
+    {% get_providers as socialaccount_providers %}
+      {% for provider in socialaccount_providers %}
+        {% provider_login_url provider process=process scope=scope auth_params=auth_params as href %}
+        <a href="{{ href }}" class="btn btn-block btn-success text-light p-2">
+          <i class="fab  mr-2"></i>Acessar com o {{ provider.name }}
+        </a>
+      {% endfor %}
+    <p class="py-3 p-relative" style="border-bottom: 1px solid var(--gray); opacity: .3;" >
+      <span class="middle-border-bottom">
+          ou
+      </span>
+  </p>
+  </div>
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+      {% for error in form.non_field_errors  %}
+        <small class="text-danger mb-3">{{ error }}</small>
+      {% endfor %}
+    {% endif %}
+
+    {% for field in form %}
+      <div class="input-group mb-3">
+        {{field}}
+        <div class="input-group-append">
+          <div class="input-group-text">
+            <span class="fas {% if field.name == 'login' %} fa-user {% else %}  fa-lock {% endif %}"></span>
+          </div>
+        </div>
+      </div>
+      <small class="text-danger">{{ field.errors }}</small>
+    {% endfor %}
+      <div class="row">
+        <div class="col-4 mx-auto">
+          <button type="submit" class="btn btn-secondary btn-block">{% trans "Sign In" %}</button>
+        </div>
+      </div>
+  </form>
+  <p class="my-2 text-center">
+    <a href="{% url 'account_reset_password' %}">{% trans "Password Reset" %}</a>
+    &bull;
+    <a href="{% url 'account_signup' %}" class="text-center">{% trans "Sign Up" %}</a>
+  </p>
+{% endblock content %}

@@ -1,0 +1,96 @@
+{% extends "private/layout.html" %}
+{% load crispy_forms_tags i18n formset_tags static %}
+
+{% block extrahead %}
+  {{ block.super }}
+  {{ form.media.css }}
+{% endblock extrahead %}
+
+{% block content %}
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% block form_content %}
+    <div class="card shadow-none">
+      <div class="card-header bg-white border-bottom px-3 py-2">
+        <div class="card-title">{{submissao.trabalho.titulo}}</div>
+      </div>
+      <div class="card-body p-0">
+        <div class="row" >
+          <div class="col-12 {%if submissao.documento.file%} col-md-5 {% endif %} ">
+            <fieldset id="criterio_formset" class="px-3" data-formset-prefix="{{ criterio_forms.prefix }}">
+              <div class="d-flex flex-row mt-3">
+                <legend class="text-secondary fs-6">Critérios de Avaliacao</legend>
+              </div>
+              <div class="d-flex flex-column flex-fill">
+                {{ criterio_forms.management_form }}
+                {{ criterio_forms.non_form_errors }}
+                <div data-formset-body>
+                  {% for f in criterio_forms %}
+                  <div data-formset-form class="row my-2">
+                    <div class="col-12 col-md-12">
+                      {% crispy f %}
+                      {% for fld in f.hidden_fields %}{{ fld }}{% endfor %}
+                    </div>
+                    
+                  </div>
+                  {% empty %}
+                    <div class="alert text-secondary small px-0">Nenhum critério de avaliação cadastrado.</div>
+                  {% endfor %}
+                </div>
+                <script type="form-template" data-formset-empty-form>
+                  {% escapescript %}
+                  <div data-formset-form class="row my-2">
+                      <div class="col-12 col-md-12">
+                          {% crispy criterio_forms.empty_form %}
+                          {% for fld in criterio_forms.empty_form.hidden_fields %}{{ fld }}{% endfor %}
+                      </div>
+                  </div>
+                  {% endescapescript %}
+                </script>
+              </div>
+            </fieldset>
+           
+          </div>
+          {%if submissao.documento.file%}
+          <div class="col-12 col-md-7 px-3">
+          
+              <object data="{{submissao.documento.file.url}}" type="application/pdf" width="100%"  height="100%" >
+                <p>Seu navegador não suporta a exibição de PDF.</p>
+                <p><a href="{{submissao.documento.file.url}}" target="_blank">Clique aqui</a> para baixar o PDF.</p>
+              </object>
+          
+          </div>
+          {% endif %}
+        </div>
+        <fieldset class="border-top px-3 pt-5">
+            <div class="d-flex flex-column flex-fill">
+              {% crispy form %}
+            </div>
+        </fieldset>
+      </div>
+        
+      <div class="card-foot text py-3 px-3">
+        {% include "includes/form_buttons.html" %}
+      </div>
+    </div>
+    {% endblock form_content %}
+  </form>
+{% endblock content %}
+
+{% block extra_scripts %}
+  {{ block.super }}
+  {{ form.media.js }}
+  <script>
+   
+    $(function () {
+      
+      var formset = $("#criterio_formset").formset({
+        animateForms: true,
+        prefix: "{{ criterio_forms.prefix }}",
+      });
+    });
+  </script>
+{% endblock extra_scripts %}
+
+{% block preloader %}
+{% endblock preloader %}

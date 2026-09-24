@@ -1,0 +1,48 @@
+{% extends "private/layout.html" %}
+{% load static django_htmx i18n crispy_forms_tags%}
+
+{% block extrahead %}
+  {{ block.super }}
+  {{ form.media.css }}
+{% endblock extrahead %}
+{% block content %}
+    
+    <form method="post"
+          id="change-form"
+          enctype="multipart/form-data">
+      
+      {% block form_content %}
+        <div class="card shadow-none">
+          <div class="card-header bg-white border-bottom px-3 py-2">
+            <div class="card-title text-muted fs-7">
+              {%if object.selecionado %}
+                Monitor Selecionado
+              {% else %}
+                Aguardando Seleção
+              {% endif %}
+              </div>
+          </div>
+          
+          <div class="card-body">
+            <div class="d-flex flex-column flex-fill">
+              {% crispy form %}
+            </div>
+          </div>
+          <div class="card-foot pb-3 px-3">
+            {% include "includes/form_buttons.html" %}
+          </div>
+        </div>
+
+      {% endblock form_content %}
+      
+    </form>
+  </div>
+  
+{% endblock content %}
+{% block extra_scripts %}
+  {{ block.super }}
+  {{ form.media.js }}
+{% endblock extra_scripts %}
+
+{% block preloader %}
+{% endblock preloader %}

@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% load static django_htmx i18n crispy_forms_tags%}
+
+
+{% block title %}{{ page_title }}{% endblock title %}
+
+{% block bodyclass %} hold-transition sidebar-mini layout-fixed {% endblock bodyclass %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'vendor/adminlte/css/adminlte.min.css' %}">
+{% endblock extrastyle %}
+
+{% block layout %}
+
+<div class="wrapper">
+
+    {% block preloader %}
+      <!-- Preloader -->
+      <div class="preloader flex-column justify-content-center align-items-center">
+        {%if evento.logo %}  
+          <img src="{{evento.logo.url}}" alt="Logo" class="animation__shake" width="200px">
+        {% else %}
+          <img src="{% static 'img/logos/logo.png' %}" alt="Logo"class="animation__shake"  width="200px">
+        {% endif %}
+        
+      </div>
+    {% endblock preloader %}
+  
+    
+    {% block header %}
+      {% include 'private/navigation-light.html' %}
+    {% endblock header %}
+
+    {% block sidebar %}
+      {% include 'private/sidebar.html' %}
+    {% endblock sidebar %}
+    
+    <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper text-break">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h5 class="text-black-50">{% block page_title %} {{ page_title }} {% endblock %}</h5>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            {% include 'includes/breadcrumbs.html' %}
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid pb-3">
+        {% block content %}{% endblock content %}
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+
+
+    {% block footer %}
+      {% include 'private/footer.html' %}
+    {% endblock footer %}
+
+    {% block control_sidebar %}
+      
+      <!-- Control Sidebar -->
+      <aside class="control-sidebar control-sidebar-dark">
+        <!-- Control sidebar content goes here -->
+      </aside>
+      <!-- /.control-sidebar -->
+    
+    {% endblock control_sidebar %}
+  </div>
+
+{% endblock layout %}
+
+{% block messages %}
+
+      {% if messages %}
+        <script type="text/javascript">
+          $(function() {
+            toastr.options = { positionClass: 'toast-top-center', timeOut: "5000", closeButton: true, progressBar: true,  hideEasing: "linear",}
+            //{% for message in messages %}
+            toastr['{{ message.tags }}']('{{ message }}')
+            //{% endfor %}
+          })
+        </script>
+      {% endif %}
+{% endblock messages %}
+
+
+{% block extra_scripts %}
+  
+  {{ block.super }}
+  
+  <!-- daterangepicker 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.1.1/daterangepicker.min.js"></script>
+  -->
+
+  <!-- htmx -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/htmx/2.0.1/htmx.min.js"
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"></script>
+
+  <!-- Inputmask -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.9/jquery.inputmask.min.js"
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"></script>
+  
+  <!-- formset -->
+  <script src="{% static 'js/jquery.formset.js' %}"></script>
+
+  <!-- SweetAlerts -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  
+  <!-- AdminLTE App -->
+  <script src="{% static 'vendor/adminlte/js/adminlte.min.js' %}"></script>
+
+  
+  <!--Expotec -->
+  <script src="{% static 'js/expotec.js' %}"></script>
+{% endblock %}
+

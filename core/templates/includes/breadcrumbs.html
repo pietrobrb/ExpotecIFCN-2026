@@ -1,0 +1,16 @@
+
+<ol class="breadcrumb float-sm-right">
+  
+  {% for breadcrumb in breadcrumbs %}
+    <!--begin::Item-->
+    <li class="breadcrumb-item text-muted">
+      {% if breadcrumb.url %}
+        <a href="{{ breadcrumb.url }}" class="text-muted">{{ breadcrumb }}</a>
+      {% else %}
+        {{ breadcrumb }}
+      {% endif %}
+    </li>
+    <!--end::Item-->
+  {% endfor %}
+
+</ol>

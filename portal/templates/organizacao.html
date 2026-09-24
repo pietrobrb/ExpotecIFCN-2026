@@ -1,0 +1,87 @@
+{% extends 'public/layout.html' %}
+{% load static i18n custom_tags %}
+{% block title %} Chamadas de Trabalhos {% endblock title %}
+{% block bodyclass %}bg-black single-page{% endblock bodyclass %}
+
+{% block extrastyle %}
+    {{ super.block }}
+    <link rel="stylesheet" href="{%static 'css/main.css'%}">
+    <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
+{% endblock extrastyle %}
+
+
+{% block content %}
+
+<section id="speakers" class="section speakers bg-white">
+    <div class="container">
+
+        {% for c in evento.comissoes.all %}
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="section-title">{{c.nome}}</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="main-carousel">
+                {% for m in c.membros.all %}
+                
+                    <div class="carousel-cell col-4 col-md-3 me-1 speaker">
+                        <figure class="figure-fit">
+                            {% if m.usuario.foto_perfil %}
+                            <img src="{{m.usuario.foto_perfil.url}}" class="img-fluid center-block" style="min-height: 156px;">
+                            {% else %}
+                            <img src="{% static 'img/placeholders/avatar.png' %}" class="img-fluid center-block">
+                            {% endif %}
+
+                        </figure>
+                        {% if m.usuario.first_name %}
+                        <h6 class="mb-0 mt-2">{{m.usuario.first_name}} {{m.usuario.last_name}}</h6>
+                        {% else %}
+                        <h6 class="mb-0 mt-2">{{ m.usuario.get_primeiro_nome }} {{ m.usuario.get_ultimo_nome }}</h6>
+                        {% endif %}
+                        {% if m.presidente %}
+                        <p class="small mt-0 mb-3">Presidente</p>
+                        {% else %}
+                        <p class="small mt-0 mb-3">Membro</p>
+                        {% endif %}
+                        
+                </div>
+
+                {% empty %}
+                <div class="col-md-12">
+                    <p>Nenhum membro cadastrado.</p>
+                </div>
+                {% endfor %}
+        </div>
+        </div>
+        
+        {% empty %}
+        <div class="col-md-12">
+            <p>EM BREVE</p>
+        </div>
+        {% endfor %}
+    </div><!-- /.row -->
+    </div><!-- /.container -->
+</section>
+
+{% endblock content %}
+
+
+
+{% block extra_scripts %}
+    {{ super.block }}
+    <script src="{%static 'vendor/smoothscroll/smooth-scroll.min.js'%}"></script>
+    <script src="{%static 'js/main.js'%}"></script>
+    
+    <!-- JavaScript -->
+    <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
+    <script>
+        $('.main-carousel').flickity({
+            // options
+            cellAlign: 'left',
+            contain: true,
+            // disable previous & next buttons and dots
+            pageDots: false,
+        });
+    </script>
+{% endblock extra_scripts %}

@@ -1,0 +1,35 @@
+{% extends "private/layout.html" %}
+{% load i18n crispy_forms_tags %}
+
+{% block content %}
+  <div class="card shadow-none">
+    <div class="card-body ">
+      <fieldset class="px-0">
+        <div class="d-flex flex-column flex-fill">
+        {% crispy form %}
+        </div>
+      </fieldset>
+      <fieldset>
+        {%include "includes/trabalho_submissao_list.html" %}
+      </fieldset>
+    </div>
+    <div class="card-foot pb-3 px-3">
+      <a class="btn btn-outline-primary ms-2" href="{%url 'user:trabalho-meus_trabalhos' %}">Cancelar</a>
+      {%if object.status == 'RASCUNHO' and  object.tipo_chamada.primeira_chamada.status == 'aberto' %}
+      <a class="btn btn-primary ms-2 text-light"
+        href="{% url 'user:trabalho-edit' object.pk  %}">
+        Editar
+      </a>
+      <a class="btn btn-success ms-2 text-light" hx-get="{% url 'user:trabalho-submeter' object.pk %}" hx-target="#app-modal"
+        hx-trigger="click" data-bs-toggle="modal" data-bs-target="#app-modal"
+        href="{% url 'user:trabalho-submeter' object.pk  %}">
+        Submeter
+      </a>
+      {% endif %}
+     
+    </div>
+  </div>
+{% endblock content %}
+{% block preloader %}
+{% endblock preloader %}
+

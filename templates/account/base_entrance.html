@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ request.evento.titulo }} | {% block title %}{% endblock title %}</title>
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'vendor/adminlte/css/adminlte.min.css' %}">
+  <!-- Expotec -->
+  <link rel="stylesheet" href="{% static 'css/variaveis.css' %}">
+  <link rel="stylesheet" href="{% static 'css/expotec.css' %}">
+
+  {% if request.evento.logo_mini %}
+  <link rel="icon" type="image/png" href="{{ request.evento.logo_mini.url  }}">
+  {% endif %}
+  
+  {% block extrastyle %}{% endblock extrastyle %}
+</head>
+
+<body class="hold-transition {% block bodyclass %}login-page{% endblock bodyclass %}">
+
+  <div class="login-box">
+    <div class="login-logo">
+      <a href="{% url 'portal:index' %}">
+      {%if request.evento.logo %}
+        <img src="{{request.evento.logo.url}}" alt="Logo" width="200px">
+      {% else %}
+        <img src="{% static 'img/logos/logo.png' %}" alt="Logo" width="200px">
+      {% endif %}
+      </a>
+    </div>
+    <div class="card">
+      <div class="card-body login-card-body">
+        {% block content %}{% endblock content %}
+      </div>
+    </div>
+  </div>
+  
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <!-- Bootstrap 4 -->
+  <script src="{% static 'vendor/bootstrap5/js/bootstrap.bundle.min.js' %}"></script>
+  <!-- AdminLTE App -->
+  <script src="{% static 'vendor/adminlte/js/adminlte.min.js' %}"></script>
+  
+  {% block extra_scripts %}{% endblock extra_scripts %}
+
+</body>
+</html>

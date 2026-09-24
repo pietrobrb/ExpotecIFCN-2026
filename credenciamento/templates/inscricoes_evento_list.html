@@ -1,0 +1,153 @@
+{% extends "private/layout.html" %}
+{% load crispy_forms_tags i18n formset_tags %}
+
+{% block extrahead %}
+  {{ block.super }}
+  {{ form.media.css }}
+{% endblock extrahead %}
+
+
+{% block content %}
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link text-active-primary ms-0 me-10 fw-light active" href="{% url 'credenciamento:inscricaoevento-list' %}">
+        Inscrições no Evento
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-active-primary ms-0 me-10 fw-light" href="{% url 'credenciamento:inscricaoatividade-list' %}">
+        Inscrições nas Atividades
+      </a>
+    </li>   
+    <li class="nav-item">
+        <a class="nav-link text-active-primary ms-0 me-10 fw-light" href="{% url 'evento:avaliador-list' %}">
+            Inscrições de Avaliadores
+        </a>
+    </li>         
+</ul>
+
+<div class="card shadow-none">
+    <div class="card-header">
+        <form method="GET">
+            <div class="form-group">
+                <fieldset class="px-0">
+                    <div class="d-flex flex-column flex-fill">
+                        {{ form.non_field_errors }}
+                        {{ filtro_form.email|as_crispy_field }}  
+                        {{ filtro_form.vinculo|as_crispy_field }} 
+                    </div>
+                </fieldset>
+            </div>
+            
+            <div class="col-md-12 d-flex justify-content-center mt-4">
+                <button type="submit" class="btn btn-primary mx-2">Filtrar</button>
+                <a href="{% url 'credenciamento:inscricaoevento-list' %}" class="btn btn-secondary mx-2">Limpar</a>
+            </div>            
+        </form>
+    </div>
+    <div class="card-body">
+        <div class="table-container table-responsive container-fluid">
+            <table class="table table-bordered custom-table">
+                <thead>
+                    <tr>
+                        <th style="width: 10%; text-align: center; vertical-align: middle;">Foto do perfil</th>
+                        <th style="width: 20%; text-align: center; vertical-align: middle;">Nome Completo</th>
+                        <th style="width: 15%; text-align: center; vertical-align: middle;">CPF</th>
+                        <th style="width: 20%; text-align: center; vertical-align: middle;">Email</th>
+                        <th style="width: 15%; text-align: center; vertical-align: middle;">Data de Inscrição</th>
+                        <th style="width: 20%; text-align: center; vertical-align: middle;">Credenciar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for inscricao in inscricoes %}
+                    <tr>
+                        {% if inscricao.usuario.foto_perfil %}
+                            <td style="text-align: center;">
+                                <img src="{{ inscricao.usuario.foto_perfil.url }}" 
+                                    style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
+                            </td>
+                        {% else %}
+                            <td style="text-align: center;"><i class="fa-solid fa-person"></i></td>
+                        {% endif %}
+                        <td style="text-align: center; vertical-align: middle;">{{ inscricao.usuario.nome_completo }}</td>
+                        <td style="text-align: center; vertical-align: middle;">{{ inscricao.usuario.cpf }}</td>
+                        <td style="text-align: center; vertical-align: middle;">{{ inscricao.usuario.email }}</td>
+                        <td style="text-align: center; vertical-align: middle;">{{ inscricao.data_inscricao }}</td>
+                        <td style="text-align: center; vertical-align: middle;">
+                            <div class="d-flex flex-column">
+                                <div class="form-check form-switch px-0">
+                                    <input class="form-check-input" type="checkbox"
+                                        data-id="{{ inscricao.id }}" 
+                                        style="width: 40px; height: 20px; margin-left: -1.5em;"
+                                        {% if inscricao.credenciado %} checked {% endif %}>
+                                </div>
+                                
+                                <label class="form-check-label ms-2" for="flexSwitchCheck{{ inscricao.id }}">
+                                    {% if inscricao.credenciado %} Credenciado(a) {% else %} Não Credenciado(a) {% endif %}
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        
+        </div>
+    </div>
+    <div class="card-footer bg-white">
+        <div class="pagination-container">
+        {% if table.paginator %}
+            <nav aria-label="Page navigation">
+                {% include "includes/pagination.html" %}
+            </nav>
+        {% endif %}
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock content %}
+
+
+{% block extra_scripts %}
+  {{ block.super }}
+  {{ form.media.js }}
+
+  <script>
+    
+    document.querySelectorAll('.form-check-input').forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            const inscricaoId = this.getAttribute('data-id');
+            const credenciado = this.checked;
+            const checkboxElement = this;
+
+            fetch('', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    'inscricao_id': inscricaoId,
+                    'credenciado': credenciado
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const label = checkboxElement.nextElementSibling;
+                    if (credenciado) {
+                        label.textContent = 'Credenciado(a)';
+                    } else {
+                        label.textContent = 'Não Credenciado(a)';
+                    }
+                }
+            });
+        });
+     });
+    </script>
+{% endblock extra_scripts %}
+
+{% block preloader %}
+{% endblock preloader %}

@@ -1,0 +1,301 @@
+{% extends 'public/layout.html' %}
+{% load static i18n custom_tags %}
+{% block title %} Início {% endblock title %}
+
+{% block content %}
+  
+<header id="site-header" class="site-header valign-center"> 
+    <div class="intro px-0">
+        <div id="carousel_noticias" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner pt-md-0 pt-5">
+                {% if evento.video_promocional %}
+                <div id="promo" class="carousel-item active">
+                    <video id="promo_video" muted loop autoplay>
+                        <source src="{{evento.video_promocional.url}}" type="video/mp4">
+                    </video>
+                    <div class="carousel-caption d-md-block" style="top:80%; z-index: 9999;">
+                        <a class="btn btn-success text-light" href="{%url 'account_login'%}">Acessar</a>
+                    </div>
+                </div>
+                {% endif %}
+                {% for n in evento.top5_noticias %}
+                    <div class="carousel-item {% if forloop.first and not evento.video_promocional %}active{% endif %}">
+                        {% if n.poster %}  
+                            <img src="{{n.poster.url}}" class=" w-100">
+                        {% else %}
+                            <img src="{% static 'img/placeholders/noticias.jpg' %}" class="w-100">
+                        {% endif %}
+                        <div class="carousel-caption d-md-block">
+                            <h2>{{n.titulo}}</h2>
+                            <h1>{{n.subtitulo}}</h1>
+                            <p class="fs-6 text-lowercase">{{n.texto}}</p>
+                            {% if n.url %}  
+                                <a class="btn btn-success text-light" href="{{n.url}}">Acessar</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="carousel-item active">
+                        <img src="{% static 'img/placeholders/noticias.jpg' %}" class="d-block w-100">
+                        <div class="carousel-caption d-md-block">
+                            <h2>{{evento.dt_inicio | date:"j M Y"}} - {{evento.endereco.local|default:'IFRN'}}</h2>
+                            <h1>{{evento.edicao|default:'4ª'}} {{evento.titulo|default:'Expotec'}}</h1>
+                            <p class="fs-6 text-lowercase">{{evento.subtitulo}}</p>
+                            <a class="btn btn-success text-light" href="{% url 'account_login' %}">Acessar</a>
+                        </div>
+                    </div>
+                {% endfor %}
+
+            
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carousel_noticias" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Anterior</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#carousel_noticias" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Próximo</span>
+              </button>
+        </div>
+    </div>
+</header>
+
+<section id="about" class="section about">
+    <div class="container">
+        <div class="row">
+            <h3 class="section-title text-center">{{ evento.edicao }} {{ evento.titulo }} <br><small class="fs-6">{{ evento.subtitulo }}</small></h3>
+        </div>
+        {% if evento.apresentacao|length <= 1500 %}
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="text-justify">{{ evento.apresentacao|default:"Apresentação do Evento"|safe }}</div>
+                </div><!-- /.col-sm-6 -->
+
+                <div class="col-md-6">
+                    <figure>
+                        {% if evento.imagem_promocional %}
+                            <img src="{{ evento.imagem_promocional.url }}" class="img-fluid">
+                        {% else %}
+                            <img src="{% static 'img/about-us.jpg' %}" class="img-fluid">
+                        {% endif %}
+                    </figure>
+                </div><!-- /.col-sm-6 -->
+            </div><!-- /.row -->
+        {% else %}
+           
+            <div class="row">
+                {% with evento.apresentacao|split_text as split_text %}
+                <div class="col-sm-6">
+                    <div class="text-justify">{{ split_text.0 |safe}}</div>
+                </div><!-- /.col-sm-6 -->
+        
+                <div class="col-sm-6">
+                    <div class="text-justify">{{ split_text.1 |safe}}</div>
+                </div><!-- /.col-sm-6 -->
+                {% endwith %}
+            </div><!-- /.row -->
+            <div class="row">
+                <div class="col-sm-6 mx-auto">
+                <figure>
+                    {% if evento.imagem_promocional %}
+                        <img src="{{ evento.imagem_promocional.url }}" class="img-fluid">
+                    {% else %}
+                        <img src="{% static 'img/about-us.jpg' %}" class="img-fluid">
+                    {% endif %}
+                </figure>
+                </div>
+            </div>
+        {% endif %}
+        <div class="row">
+        </div>
+    </div><!-- /.container -->
+</section>
+
+<section id="gallery" class="section gallery">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-3 row-cols-md-4 g-12 g-md-2">
+            {% for j in evento.ItemGaleria.all %}
+            <a  class="text-decoration-none" target="{% if j.url %}_blank{% endif %}" href="{{j.url|default:'javascript:void(0)'}}">
+                <figure class="figure-fit gallery-item">
+                    <img src="{{j.img.url}}" class="img-fluid center-block" style="min-height: 156px;">
+                    
+                </figure>
+            </a>
+            {% endfor %}
+        </div>
+</section>
+
+<section id="facts" class="section bg-image-1 facts text-center text-light fs-1">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3">
+
+                <i class="ion-ios-calendar"></i>
+                <h3>{{evento.dt_inicio | date:"j M" }}<br><small>{{evento.ano}}</small></h3>
+            
+            </div>
+            <div class="col-sm-3">
+
+                <i class="ion-ios-location"></i>
+                <h3>{{evento.endereco.local|default:'IFRN'}}<br><small>{{evento.endereco.cidade|default:'São Paulo do Potengi'}}</small></h3>
+            
+            </div>
+            <div class="col-sm-3">
+
+                <i class="ion-pricetags"></i>
+                <h3>Entrada<br/><small>Livre</small></h3>
+            
+            </div>
+            <div class="col-sm-3">
+            
+                <i class="ion-speakerphone"></i>
+                <h3>{{evento.areas_tematicas.all|length|default:'0'}}<br><small>Áreas Temáticas</small></h3>
+            
+            </div>
+        </div><!-- row -->
+    </div><!-- container -->
+</section>
+
+<section id="schedule" class="section schedule">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="section-title">Áreas Temáticas</h3>
+            </div>
+        </div>
+        <div class="row">
+            {% for a in object.areas_tematicas.all %}
+            <div class="col-md-4 col-sm-6  mb-3  d-flex">
+                <a href="{% url 'portal:evento-area' a.pk %}" class="schedule-box flex-fill text-decoration-none"  style="background:{{a.cor|default:'royaleblue'}} linear-gradient(90deg, rgba(255, 255, 255, 0.6), {{a.cor|default:'royaleblue'}}) repeat-x !important;">
+                    
+                    <h3 class="text-wrap text-break p-3  text-light">
+                        {%if a.icon %}
+                            <i class="fas {{a.icon}}>"></i>
+                        {% endif %}
+                        {{a.nome}}
+                    </h3>
+                
+                </a>
+            </div>
+            {%empty%}
+                EM BREVE
+            {% endfor %}
+          
+</section>
+
+<section id="contribution" class="section bg-image-2 contribution">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="text-uppercase mt0 font-400">Submissão de Trabalhos</h3>
+                
+                <p>Não perca a chance de compartilhar seus trabalhos e projetos durante a {{evento.edicao}} {{evento.titulo}}!</p>
+
+
+                <a class="btn btn-secondary" href="{%url 'account_login' %}">Acessar</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="partner" class="section partner">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="section-title">Parceiros</h3>
+            </div>
+        </div>
+        <div class="row row-cols-1 row-cols-md-4 g-12 g-md-2">
+            {% for p in evento.parceiros.all %}
+            <div class="col text-center bg-white me-2 p-3">
+                <a class="partner-box w-100" target="{%if p.url %}_blank{% endif %}" href="{{p.url|default:'javascript:void(0)'}}" style="background: url({{p.logo.url}}) no-repeat center center;"></a>
+            </div>
+            {%empty%}
+            <div class="col text-center bg-white">
+                <a class="partner-box mx-auto partner-box-1"></a>
+            </div>
+            {% endfor %}
+        </div>
+</section>
+
+
+
+<section id="location" class="section location">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3">
+                <h3 class="section-title">Localização</h3>
+                <address>
+                    {{evento.endereco.local | default:'IFRN' }}<br>
+                    <div class="small">
+                    {{evento.endereco.logradouro | default:'Av. Potengi' }}<br>
+                    {{evento.endereco.cidade |  default:'São Paulo do Potengi'}}<br>
+                    {{evento.endereco.estado | default:'RN'}}<br>
+                    </div>
+                </address>
+                <div class="contact-info">
+                    {% for c in evento.contatos.all %}
+                       
+                            {{ c.nome }}
+                            <div class="small">
+                            {% if c.telefone and c.email %}
+                                {{ c.telefone }}, {{ c.email }}
+                            {% elif c.telefone %}
+                                {{ c.telefone }}
+                            {% elif c.email %}
+                                {{ c.email }}
+                            {% endif %}
+                            </div>
+                       
+                    {%empty%}
+                        <div class="small">84-40054112</div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-sm-9">
+                <div id="map" class="w-100"></div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+
+{% block extra_scripts %}
+    {{ super.block }}
+    <script src="{%static 'vendor/smoothscroll/smooth-scroll.min.js'%}"></script>
+    <script src="{%static 'js/main.js'%}"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkg4j28B11Wqwrv9v3uGvwYXT8M-VHzYw&libraries=geometry"></script>
+    <script>
+        function initMap() {
+            const map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 17
+            });
+
+            const endereco = "{{evento.endereco}}";
+            const geocoder = new google.maps.Geocoder();
+
+            geocoder.geocode({ 'address': endereco }, function(results, status) {
+                if (status === 'OK') {
+                    const latLng = results[0].geometry.location;
+                    map.setCenter(latLng);
+                } else {
+                    alert('Geocode was not successful for the following reason: ' + status);
+                }
+            });
+        }
+
+        window.onload = function() {
+            initMap();
+            video = $("#promo_video")[0];
+            video.addEventListener('canplaythrough', function() {
+                video.play();
+            });
+            
+            $("#carousel_noticias").carousel({
+                pause: "hover"
+            });
+        };
+            
+    </script>
+{% endblock extra_scripts %}

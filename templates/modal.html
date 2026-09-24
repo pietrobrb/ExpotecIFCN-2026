@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content_header %}
+{% endblock content_header %}
+{% block layout %}
+  {% if not request.htmx %}
+    <div class="app-content">
+      <div class="modal modal-inline" tabindex="-1" id="action-modal">
+      {% endif %}
+      <div class="modal-dialog modal-dialog-centered {% block modalclasses %}{% endblock modalclasses %}">
+        <div class="modal-content">
+          {% block modalcontent %}
+          {% endblock modalcontent %}
+        </div>
+      </div>
+      {% if not request.htmx %}
+      </div>
+    </div>
+  {% endif %}
+{% endblock layout %}

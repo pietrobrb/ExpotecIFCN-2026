@@ -1,0 +1,23 @@
+{% load i18n %}
+{% for name, action in actions.items %}
+
+  <a title="{{ action.verbose_name|default:name|capfirst }}"
+     class="btn btn-light btn-link text-black action-{{ name }} px-2 py-2"
+     {% if name == "delete" %} 
+      hx-get="{% url view.urls.delete record.pk %}" 
+      hx-target="#app-modal" 
+      hx-trigger="click" 
+      data-bs-toggle="modal" 
+      data-bs-target="#app-modal" 
+    {%elif name == "deletar" %}
+      hx-get="{% url view.urls.deletar record.pk %}" 
+      hx-target="#app-modal" 
+      hx-trigger="click" 
+      data-bs-toggle="modal" 
+      data-bs-target="#app-modal"
+    {% endif %}
+     href="{% url action.url record.pk %}" target="{{action.target|default:'_self'}}">
+    <i class="{{ action.icon }}"></i>
+  </a>
+
+{% endfor %}

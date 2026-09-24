@@ -1,0 +1,23 @@
+{% extends "private/layout.html" %}
+{% load i18n crispy_forms_tags %}
+
+{% block content %}
+  <div class="card shadow-none">
+    <div class="card-body read-only">
+      {% crispy form %}
+    </div>
+    {% block actions %}
+    <div class="card-foot  pb-3 px-3">
+
+        {% if view.urls.edit %}
+        <a class="btn btn-primary" href="{% url view.urls.edit object.pk %}">
+          <i class="fas fa-pencil"></i> {% trans "Editar" %}
+        </a>
+        {% endif %}
+    </div>
+    {% endblock actions %}
+  </div>
+ 
+{% endblock content %}
+{% block preloader %}
+{% endblock preloader %}

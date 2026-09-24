@@ -1,0 +1,73 @@
+{% extends "account/base_manage.html" %}
+{% load i18n allauth crispy_forms_tags %}
+
+{% block title %}
+    {% trans "Email Address" %}
+{% endblock title %}
+{% block page_title %}
+    {% trans "Email Address" %}
+{% endblock page_title %}
+{% block extrahead %}
+  {{ block.super }}
+  {{ form.media.css }}
+{% endblock extrahead %}
+
+{% block content %}
+    <form method="post"
+          id="change-form"
+          enctype="multipart/form-data"
+          novalidate>
+      {% block form_content %}
+        <div class="card shadow-none">
+          <div class="card-body">
+            <div class="d-flex flex-column flex-fill">
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                  {% for error in form.non_field_errors  %}
+                    <small class="text-danger mb-3">{{ error }}</small>
+                  {% endfor %}
+                {% endif %}
+                {% if new_emailaddress %}
+                  <div class="d-flex flex-column flex-fill">
+                    <label for="new_mail">{% translate 'Current email' %}:</label>
+                    <input type="email" name="email" id="new_email" value={{ new_emailaddress.email }} disabled class="form-control">
+                    <div class="form-text">
+                      {% blocktranslate %}Your email address is still pending verification.{% endblocktranslate %}
+                      <button form="pending-email" type="submit" name="action_send" class="btn btn-link btn-sm">{% trans "Re-send Verification" %}</button>
+                      {% if current_emailaddress %}
+                      <button form="pending-email" type="submit" name="action_remove" class="btn btn-link btn-sm">{% trans "Cancel Change" %}</button>
+                      {% endif %}
+                    </div>
+                  </div>
+                {% endif %}
+                <label for="{{form.email.auto_id}}">{% translate 'Change to' %}:</label>
+                  <input type="email" name="email" id="{{form.email.auto_id}}" class="form-control">
+            </div>
+          </div>
+          <div class="card-foot pb-3 px-3">
+            <a class="btn btn-outline-primary ms-2"
+              href="{{ view.get_success_url }}">Cancelar</a>
+            <button type="submit" class="btn btn-primary ms-2">{% trans "Change Email" %}</button>
+          </div>
+        </div>
+
+      {% endblock form_content %}
+      
+    </form>
+    {% if new_emailaddress %}
+        <form style="display: none"
+              id="pending-email"
+              method="post"
+              action="{% url 'account_email' %}">
+            {% csrf_token %}
+            <input type="hidden" name="email" value="{{ new_emailaddress.email }}">
+        </form>
+    {% endif %}
+{% endblock content %}
+{% block extra_scripts %}
+  {{ block.super }}
+  {{ form.media.js }}
+{% endblock extra_scripts %}
+
+{% block preloader %}
+{% endblock preloader %}

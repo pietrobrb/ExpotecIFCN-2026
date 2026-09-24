@@ -1,0 +1,111 @@
+
+{% extends "private/layout.html" %}
+{% load i18n crispy_forms_tags %}
+{% load render_table from django_tables2 %}
+
+{% block extrahead %}
+  {{ block.super }}
+  {{ form.media.css }}
+{% endblock extrahead %}
+{% block content %}
+<div class="small text-muted mb-2">Inscrições em Eventos</div>
+<div class="card shadow-none">
+  <div class="card-body p-0 m-0 px-1">
+    <div class="table-responsive">
+      <table class="table table-hover table-sm  mb-0">
+        <thead>
+          <tr>
+            <th scope="col">Evento</th>
+            <th scope="col">Data</th>
+            <th scope="col">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for inscricao in user.inscricoes_eventos.all %}
+          <tr>
+            <td>{{ inscricao.evento }}</td>
+            <td>{{ inscricao.evento.dt_inicio|date:"d/m/Y" }}</td>
+            <td>
+            </td>
+          </tr>
+          {%empty%}
+          <tr>
+          <td colspan="3">
+            <p class="text-muted m-0">Você não tem inscrições em eventos.</p>
+          </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="small text-muted mb-2">Inscrições em Atividades</div>
+<div class="card shadow-none">
+  <div class="card-header px-2">
+    <form id="search-form" class="d-flex flex-md-row flex-column"  method="get">
+      <div class="container-fluid">
+          {% if filterset.form %}
+          <div class="small text-muted mb-2">Buscar</div>
+          <div class="filters d-flex flex-column flex-md-row mb-3">
+            
+            {% block filters %}
+              {% if filterset %}
+              
+                {% include "includes/list_filters.html" %}
+              {% endif %}
+            {% endblock filters %}
+            <a href="{% url 'user:atividade-list' %}" class="btn btn-success text-light">
+              <i class="fa-solid fa-plus"></i> Inscrição
+            </a>
+          </div>
+          {% endif %}
+      
+    </form>
+  </div>
+  <div class="card-body p-0 m-0">
+    
+    {% render_table table "includes/table.html" %}
+    
+  </div>
+  <div class="card-footer  px-0 bg-white">
+    <div class="pagination-container">
+      {% if table.paginator %}
+          <nav aria-label="Page navigation">
+            {% include "includes/pagination.html" %}
+          </nav>
+      {% endif %}
+    </div>
+  </div>
+{% endblock content %}
+{% block extra_scripts %}
+  {{ block.super }}
+  {{ form.media.js }}
+  <script src="https://cdn.datatables.net/2.1.5/js/dataTables.js"></script>
+  <script>
+    $(document).ready(function() {
+      
+    $("#toggleSelectAll").click((event) => {
+      const target = event.currentTarget;
+      const checkboxes = document.getElementsByName("selection");
+      [...checkboxes].forEach((el) => {
+        el.checked = target.checked;
+        $(el).trigger("change");
+      });
+    });
+    $('input[type="checkbox"]').change((e) => {
+      const $row = $(e.target).closest("tr");
+      if (e.target.checked) {
+          $row.addClass('selected-row');
+      } else {
+          $row.removeClass('selected-row');
+      }
+    });
+    });
+  </script>
+{% endblock extra_scripts %}
+
+{% block preloader %}
+{% endblock preloader %}
+  

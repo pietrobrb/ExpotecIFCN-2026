@@ -1,0 +1,8 @@
+<ul class="nav nav-tabs">
+  {% for tab in tabs %}
+  <li class="nav-item">
+    <a class="nav-link text-active-primary ms-0 me-10 fw-light {%if view.action.name == tab.action %} active {% endif %}"
+      href="{% url tab.url %}">{{ tab.title|capfirst }}</a>
+  </li>
+  {% endfor %}
+</ul>

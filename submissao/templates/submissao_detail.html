@@ -1,0 +1,137 @@
+{% extends "private/layout.html" %}
+{% load i18n crispy_forms_tags %}
+
+{% block content %}
+<div class="card shadow-none">
+    <div class="card-header">
+        <h3 class="card-title fw-bold">{{ object.trabalho.titulo }}</h3>
+    </div>
+
+    <div class="card-body ">
+        <fieldset>
+            <div class="row row-cols-1 row-cols-md-5">
+                <div class="col">
+                    <strong>Chamada:</strong><br>
+                    {{ object.chamada }}
+                </div>
+                <div class="col">
+                    <strong>Autores:</strong><br>
+                    {{ object.trabalho.autores_string }}
+                </div>
+                <div class="col">
+                    <strong>Área Temática:</strong><br>
+                    {{ object.trabalho.area_tematica }}
+                </div>
+                <div class="col">
+                    <strong>Status do Trabalho:</strong><br>
+                    {{ object.trabalho.get_status_display }}
+                </div>
+
+                <div class="col">
+                    <strong>Parecer:</strong><br>
+                    {{ object.get_status_avaliacao_display }}
+                </div>
+                
+                <div class="col">
+                    <strong>Nota Final:</strong><br>
+                    {{ object.nota_final | default:"-" }}
+                </div>
+            </div>
+            <div class="row row-cols-1">
+                <div class="col">
+                    <strong>Resumo:</strong><br>
+                    {{ object.trabalho.resumo }}
+                </div>
+                <div class="col">
+                    <strong>Palavras-Chave:</strong><br>
+                    {{ object.trabalho.palavras_chave }}
+                </div>
+            </div>
+            {% if object.chamada.tem_submissao %}
+            <div class="row row-cols-1">
+                <div class="col">
+                    <strong>Documento:</strong><br>
+                    {% if object.documento %}
+                    <a href="{{ object.documento.file.url }}" target="_blank">Visualizar Documento</a>
+                    {% else %}
+                    Não Enviado
+                    {% endif %}
+                </div>
+            <div>
+            {% endif %}
+        
+    </fieldset>
+    <fieldset class="mt-3">
+        <legend class="small text-muted">Avaliações</legend>
+        <div class="table-responsive">
+            <table class="table table-hover table-sm  mb-0">
+                  <thead>
+                    <tr>
+                      <th scope="col">Avaliador</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Nota Parcial</th>
+                      <th scope="col">Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for a in object.avaliacoes.all %}
+                    <tr>
+                      <td>{{ a.avaliador }}</td>
+                      <td>
+                        {{ a.status}}<br/>
+                        {% if a.status == 'SOLICITADA' %}
+                        <small class="small">Limite para aceite: {{ a.dt_limite_aceite|date:'d/M'}}</small>
+                        {% endif %}
+                      </td>
+                      <td>{{ a.nota_parcial | default:'-' }}</td>
+                      <td>
+                        
+                        <a href="{% url 'submissao:avaliacao-detail' object.pk a.pk %}" class="btn btn-light btn-link text-black action-detail px-2 py-2"
+                            hx-get="{% url 'submissao:avaliacao-detail' object.pk a.pk %}" 
+                            hx-target="#app-modal" 
+                            hx-trigger="click" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#app-modal"
+                            >
+                                <i class="fa-solid fa-eye"></i>
+                            
+                        </a>
+                        <a href="{% url 'submissao:avaliacao-delete' object.pk a.pk %}" class="btn btn-light btn-link text-black action-delete px-2 py-2"
+                        hx-get="{% url 'submissao:avaliacao-delete' object.pk a.pk %}" 
+                        hx-target="#app-modal" 
+                        hx-trigger="click" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#app-modal"
+                        >
+                            <i class="fa-solid fa-trash"></i>
+                        
+                        </a>
+                      </td>
+                    </tr>
+                    {%empty%}
+                    <tr>
+                    <td colspan="5">
+                      <p class="text-muted m-0">Nenhum avaliação cadastrada.</p>
+                    </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+            </table>
+        </div>
+    </fieldset>
+    
+    {% if object.avaliacoes_realizadas.count < object.chamada.min_avaliacoes %}
+    <div class="card-footer bg-transparent px-0 mx-0">
+        <a href="{% url 'submissao:submissao-list' %}" class="btn btn-primary">Voltar</a>
+        <a href="{% url 'submissao:avaliacao-add' object.pk %}" class="btn btn-success text-light">
+            <i class="fa-solid fa-user-plus"></i> Avaliação
+        </a>
+    </div>
+    {% endif %}
+
+</div>
+
+
+{% endblock content %}
+{% block preloader %}
+{% endblock preloader %}

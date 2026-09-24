@@ -1,0 +1,62 @@
+{% extends "form_detail.html" %}
+{% load i18n crispy_forms_tags formset_tags%}
+
+{% block detail_content %}
+  
+  {% if parent %}
+    <div class="card shadow-none">
+      <div class="card-body">
+          {% include "includes/parent_detail.html" %}
+      </div>
+    </div>
+  {% endif %}
+  
+{% endblock detail_content %}
+
+{% block form_content %}
+      <fieldset class="px-4">
+        <div class="d-flex flex-column flex-fill">
+          {% crispy form.evento %}
+        </div>
+      </fieldset>
+      <fieldset id="endereco_formset" class="border-top px-4" data-formset-prefix="{{ endereco_form.prefix }}">
+          <div class="d-flex flex-row">
+            <legend class="text-secondary fs-6 mt-3">Endereço</legend>
+            
+          </div>
+          <div class="d-flex flex-column flex-fill">
+            {% crispy form.endereco %}
+          </div>
+      </fieldset>
+      <fieldset id="endereco_formset" class="border-top px-4" data-formset-prefix="{{ endereco_form.prefix }}">
+        <div class="d-flex flex-row">
+          <legend class="text-secondary fs-6 mt-3">Contatos</legend>
+        </div>
+        <div class="d-flex flex-column flex-fill">
+          <div data-formset-body>
+            {% for f in contato_forms %}
+            <div data-formset-form class="row my-2">
+                <div class="col">
+                    {% crispy f %}
+                    {% for fld in f.hidden_fields %}{{ fld }}{% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+    </fieldset>
+      
+    {% block actions %}
+    <div class="pb-3 px-4">
+        {% if view.urls.edit %}
+        <a class="btn btn-primary" href="{% url view.urls.edit object.pk %}">
+          <i class="fas fa-pencil"></i> {% trans "Editar" %}
+        </a>
+        {% endif %}
+    </div>
+    {% endblock actions %}
+ 
+{% endblock form_content %}
+
+{% block preloader %}
+{% endblock preloader %}

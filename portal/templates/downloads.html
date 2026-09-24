@@ -1,0 +1,35 @@
+{% extends 'public/layout.html' %}
+{% load static i18n %}
+{% block title %} Downloads {% endblock title %}
+{% block bodyclass %}bg-black single-page{% endblock bodyclass %}
+
+{% block content %}
+
+<section class="section faq bg-white">
+      <div class="container">
+
+          <div class="row">
+              <div class="col-md-12">
+                  <h3 class="section-title">Downloads</h3>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-md-12">
+                <div class="list-group">
+                  {% for ed in evento.downloads %}
+                  <div class="list-group-item bg-dark mb-2">
+                      <a class="d-block text-light text-start text-decoration-none text-capitalize" href="{{ed.documento.file.url}}" target="_blank">
+                        <span class=" me-2"><i class="fas fa-download"></i></span>
+                        {{ed.documento.descricao}}
+                      </a>
+                  </div>
+                  {%empty%}
+                    <h1>EM BREVE</h1>
+                  {% endfor %}
+                </div> 
+              </div>
+          </div>
+         
+  </section>
+  
+{% endblock content %}

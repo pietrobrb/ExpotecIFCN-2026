@@ -1,0 +1,24 @@
+{% extends "modal.html" %}
+{% load crispy_forms_tags i18n %}
+{% block modalclasses %}
+  modal-lg
+{% endblock modalclasses %}
+{% block modalcontent %}
+<div class="modal-header">
+  <div class="modal-title">{{ page_title }}</div>
+  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+  </button>
+</div>
+<div class="modal-body">
+  <div class="row w-100">
+    {% for _, detail in details.items %}
+    <div class="col-12 mb-4">
+      <div class="fw-bold">{{ detail.label }}</div>
+      <div>{{ detail.value | default:"-" | safe }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  
+</div>
+
+{% endblock modalcontent %}

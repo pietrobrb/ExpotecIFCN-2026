@@ -1,0 +1,17 @@
+{% extends "private/layout.html" %}
+{% load crispy_forms_tags i18n formset_tags %}
+
+{% block extrahead %}
+  {{ block.super }}
+  {{ form.media.css }}
+{% endblock extrahead %}
+
+{% block content %}
+<div class="row">
+  {% include "includes/form_avaliador.html" %}
+</div>
+{% endblock content %}
+
+
+{% block preloader %}
+{% endblock preloader %}

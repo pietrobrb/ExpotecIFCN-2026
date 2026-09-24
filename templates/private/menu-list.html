@@ -1,0 +1,76 @@
+{% load i18n static simple_menu %}
+{% generate_menu %}
+<ul class="nav nav-pills nav-sidebar nav-child-indent " data-widget="treeview" role="menu" data-accordion="false">
+    
+    {% for item in menus.main %}
+    <li class="nav-item">
+      {% if item.children %}
+      <a href="#" class="nav-link{{ item.active|yesno:' active,' }}">
+        <div class="d-flex">
+          {% if item.icon %}<i class="nav-icon {{ item.icon }} fs-5"></i>{% endif %}
+          <p class="flex-grow-1">{{ item.title }}</p>
+          <i class="nav-arrow fa fa-solid fa-caret-up fs-9 align-self-end"></i>
+        </div>
+        
+      </a>
+      <ul class="nav nav-treeview">
+        {% for subitem in item.children %}
+        <li class="nav-item pl-3">
+          <a href="{{ subitem.url }}" class="nav-link">
+            <p>{{ subitem.title }}</p>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <a href="{{ item.url }}" class="nav-link{{ item.active|yesno:' active,' }}">
+        {% if item.icon %}<i class="nav-icon {{ item.icon }} fs-5"></i>{% endif %}
+        <p>{{ item.title }}</p>
+      </a>
+      {% endif %}
+    </li>
+    {% endfor %}
+
+
+    {% for item in menus.evento %}
+    {%if forloop.first %}
+    <li class="nav-item border-top w-100"></li>
+    <span class="nav-link badge rounded-pill bg-none text-start my-2">Gerenciar</span>
+    </li>
+    {% endif %}
+    <li class="nav-item">
+      {% if item.children %}
+      <a href="#" class="nav-link{{ item.active|yesno:' active,' }}">
+        <div class="d-flex">
+          {% if item.icon %}<i class="nav-icon {{ item.icon }} fs-5"></i>{% endif %}
+          <p class="flex-grow-1">{{ item.title }}</p>
+          <i class="nav-arrow fa fa-solid fa-caret-up fs-9 align-self-end"></i>
+        </div>
+        
+      </a>
+      <ul class="nav nav-treeview">
+        {% for subitem in item.children %}
+        <li class="nav-item pl-3">
+          <a href="{{ subitem.url }}" class="nav-link">
+            <p>{{ subitem.title }}</p>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <a href="{{ item.url }}" class="nav-link{{ item.active|yesno:' active,' }}">
+        {% if item.icon %}<i class="nav-icon {{ item.icon }} fs-5"></i>{% endif %}
+        <p>{{ item.title }}</p>
+      </a>
+      {% endif %}
+    </li>
+    {% endfor %}
+
+    <li class="nav-item">
+      <a target="_blank" href="#" class="nav-link">
+        <i class="fa fa-question nav-icon"></i>
+        <p>Suporte</p>
+      </a>
+    </li>         
+    
+  </ul>

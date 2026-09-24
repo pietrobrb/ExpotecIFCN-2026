@@ -1,0 +1,63 @@
+{% extends 'public/layout.html' %}
+{% load static i18n %}
+{% load render_table from django_tables2 %}
+{% block title %} Atividades {% endblock title %}
+{% block bodyclass %}bg-black single-page{% endblock bodyclass %}
+{% block content %}
+
+<section class="section bg-white">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <h3 class="section-title text-break">PROGRAMAÇÃO</h3>
+            </div>
+           
+            <div class="col-md-9 ">
+                <div class="d-flex justify-content-center  justify-content-md-end flex-wrap mb-3">
+                <div class=" mb-1 ms-1">
+                    <div class="flex-fill fw-light p-2 {% if tipo_atual is None %}schedule-box mt-0 {%endif%}" style="background:black; text-shadow: 0px 1px 3px #000;">
+                        <a href="{% url 'portal:evento-list_dia' dia=dia_atual %}" class="text-decoration-none"><small class="text-wrap text-light px-1">Todas</small></a>
+                    </div>
+                </div>
+                {% for a in request.evento.tipos_de_atividade.all %}
+                <div class=" mb-1 ms-1 ">
+                    <a href="{% url 'portal:evento-list_dia' dia=dia_atual %}?tipo={{a.id}}" class="text-decoration-none">
+                        <div class="flex-fill fw-light p-2  {% if tipo_atual.pk == a.pk %} schedule-box  mt-0 {% endif %}" style="background:{{a.cor}}; text-shadow: 0px 1px 3px #000;">
+                            <small class="text-wrap text-light px-1">{{a.nome}}</small>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="nav nav-tabs">
+                    {% for dia in request.evento.dias_do_evento %}
+                    <li class="nav-item mb-0 pb-0">
+                    <a class="nav-link text-active-primary ms-0 me-10 fw-light {% if dia_atual == forloop.counter %} active {% endif %}"
+                        href="{% url 'portal:evento-list_dia' dia=forloop.counter %}{% if tipo_atual.pk %}?tipo={{tipo_atual.pk}}{% endif %}">{{ dia|date:"d/m/Y" }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="row mt-1">
+            <div class="col-md-12">
+                {% render_table table "includes/item_agenda.html" %}
+            </div>
+        </div>
+        <div class="row">
+          
+          <div class="col-md-12 pagination-container">
+            {% if table.paginator %}
+                <nav aria-label="Page navigation">
+                    {% include "includes/pagination.html" %}
+                </nav>
+            {% endif %}
+          </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

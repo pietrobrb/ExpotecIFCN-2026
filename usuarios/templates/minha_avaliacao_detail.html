@@ -1,0 +1,25 @@
+{% extends "private/layout.html" %}
+{% load i18n crispy_forms_tags %}
+
+{% block content %}
+  <div class="card shadow-none">
+    <div class="card-body ">
+    {% for _, detail in details.items %}
+    <div class="col-12 mb-4">
+      <div class="fw-bold">{{ detail.label }}</div>
+      <div>{{ detail.value | default:"-" | safe }}</div>
+    </div>
+    {% endfor %}
+    </div>
+    
+    <div class="card-foot  pb-3 px-3">
+        <a class="btn btn-outline-primary ms-2" href="{%url 'user:avaliacao-minhas_avaliacoes'%}">
+          {% trans "Voltar" %}
+        </a>
+    </div>
+    
+  </div>
+ 
+{% endblock content %}
+{% block preloader %}
+{% endblock preloader %}

@@ -1,0 +1,43 @@
+{% extends "private/layout.html" %}
+{% load crispy_forms_tags i18n %}
+{% block extrahead %}
+  {{ block.super }}
+  {{ form.media.css }}
+{% endblock extrahead %}
+{% block content %}
+    {% block detail_content %}
+      
+        {% if parent %}
+          <div class="card shadow-none">
+            <div class="card-body">
+                {% include "includes/parent_detail.html" %}
+            </div>
+          </div>
+        {% endif %}
+
+    {% endblock detail_content %}
+    
+    {% include "includes/action_tabs.html" %}
+
+    <div class="card shadow-none">
+      <div class="card-body mx-0 px-0">
+    
+        <form method="post"
+              id="change-form" 
+              enctype="multipart/form-data"
+              novalidate>
+              {% csrf_token %}
+              {% block form_content %}
+              {% endblock form_content %}
+        </form>
+      </div>
+    </div>
+  
+{% endblock content %}
+{% block extra_scripts %}
+  {{ block.super }}
+  {{ form.media.js }}
+{% endblock extra_scripts %}
+
+{% block preloader %}
+{% endblock preloader %}

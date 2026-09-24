@@ -1,0 +1,8 @@
+<div class="row w-100 row-cols-1  row-cols-sm-2  row-cols-md-3  row-cols-lg-3">
+  {% for _, detail in details.items %}
+  <div class="col mb-4">
+    <div class="fw-bold">{{ detail.label }}</div>
+    <div>{{ detail.value | default:"-"}}</div>
+  </div>
+  {% endfor %}
+</div>

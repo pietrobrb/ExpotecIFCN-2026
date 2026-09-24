@@ -1,0 +1,29 @@
+{% extends "modal.html" %}
+{% load i18n %}
+{% block modalcontent %}
+  <form class="form"
+        method="post"
+        id="delete-modal-form"
+        action="{{ request.path }}">
+    {% csrf_token %}
+    <div class="modal-header">
+      <button type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <p>{{ delete_message|safe }}</p>
+    </div>
+    <div class="modal-footer">
+      {% if request.htmx %}
+        <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Cancelar</button>
+      {% else %}
+        <a class="btn btn-outline-primary" href="{% url view.urls.list %}">Cancelar</a>
+      {% endif %}
+      <button type="submit" class="btn btn-primary ms-2">Excluir</button>
+    </div>
+  </form>
+{% endblock modalcontent %}
+{% block preloader %}
+{% endblock preloader %}

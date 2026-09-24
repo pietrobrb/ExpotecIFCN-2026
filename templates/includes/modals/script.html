@@ -1,0 +1,9 @@
+<script>
+  $("#app-modal").on("htmx:afterSwap", function (e) {
+    const $target = $(e.target)
+    $target.modal("show")
+    $target.find("[data-dismiss=modal]").click(function () {
+      $target.modal("hide")
+    })
+  })
+</script>
