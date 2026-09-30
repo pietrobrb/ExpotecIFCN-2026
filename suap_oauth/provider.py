@@ -34,7 +34,7 @@ class SuapProvider(OAuth2Provider):
         if nome_social := data.get('nome_social'):
             nome_completo = nome_social
         primeiro_nome, *_, ultimo_nome = nome_completo.split()
-        curso = data.get('curso') if data.get('curso') else ""
+        curso = response.get('curso') if data.get('curso') else ""
         if "Servidor" in data.get('tipo_usuario'):
             vinculo = Vinculos.SERVIDOR
         else:
