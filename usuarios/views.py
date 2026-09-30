@@ -73,8 +73,8 @@ class InscreverseView(CreateView):
     template_name ="inscricao_evento.html"
 
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any):
-        if request.evento.inscricoes.filter(usuario = request.user).exists():
-            return redirect('user:minhas_inscricoes')
+        if request.evento.inscricoes.filter(usuario=request.user).exists():
+            return redirect('user:minhas_inscricoes')  
         return super().get(request, *args, **kwargs)
     
     def get_success_url(self) -> str:
@@ -718,7 +718,7 @@ class MinhasInscricoesView(TableListView):
 
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any):
         if not(request.evento.inscricoes.filter(usuario = request.user).exists()):
-            return redirect('user:inscreverse')
+            return redirect('user:inscricaoevento')
         return super().get(request, *args, **kwargs)
 
     def get_queryset(self) -> QuerySet[Any]:

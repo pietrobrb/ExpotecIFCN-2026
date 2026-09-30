@@ -9,11 +9,6 @@ from re import sub
 
 class SuapAccount(ProviderAccount):
     pass
-    # def get_profile_url(self):
-        # return self.account.extra_data.get("html_url")
-
-    # def get_avatar_url(self):
-        # return self.account.extra_data.get("avatar_url")
 
 
 class SuapProvider(OAuth2Provider):
@@ -27,28 +22,53 @@ class SuapProvider(OAuth2Provider):
         return scope
 
     def extract_uid(self, data):
-        return str(sub(r"\D","",data.get('cpf')))
+        cpf = data.get("cpf")
+        if cpf:
+            return str(sub(r"\D", "", cpf))
+
+        identificacao = (
+            data.get("identificacao")
+            or data.get("email_preferencial")
+            or data.get("email")
+            or ""
+        ).strip()
+
+        if not identificacao:
+            raise ValueError("SUAP payload sem cpf/identificacao/email")
+
+        return str(identificacao)
 
     def extract_common_fields(self, data):
-        nome_completo = data.get('nome_registro')
-        if nome_social := data.get('nome_social'):
-            nome_completo = nome_social
-        primeiro_nome, *_, ultimo_nome = nome_completo.split()
-        curso = response.get('curso') if data.get('curso') else ""
-        if "Servidor" in data.get('tipo_usuario'):
-            vinculo = Vinculos.SERVIDOR
+        nome_completo = (
+            data.get("nome_registro")
+            or data.get("nome_social")
+            or data.get("nome")
+            or ""
+        ).strip()
+        nomes = nome_completo.split()
+
+        if nomes:
+            primeiro_nome = nomes[0]
+            ultimo_nome = nomes[-1] if len(nomes) > 1 else ""
         else:
-            vinculo = Vinculos.ALUNO
+            primeiro_nome = "Usuário"
+            ultimo_nome = ""
+
+        tipo_usuario = data.get("tipo_usuario") or ""
+        vinculo = Vinculos.SERVIDOR if "Servidor" in tipo_usuario else Vinculos.ALUNO
+
+        email = data.get("email_preferencial") or data.get("email") or ""
+
         return dict(
-            nome_completo=nome_completo,
-            email=data.get("email_preferencial"),
-            username=data.get('email_preferencial'),
-            cpf=sub(r"\D","",data.get('cpf')),
-            matricula=data.get('identificacao'),
+            nome_completo=nome_completo or "Usuário",
+            email=email,
+            username=email,
+            cpf=sub(r"\D", "", (data.get("cpf") or "")),
+            matricula=data.get("identificacao"),
             first_name=primeiro_nome,
             last_name=ultimo_nome,
-            campus=data.get('campus'),
-            curso=curso,
+            campus=data.get("campus"),
+            curso=data.get("curso") or "",
             vinculo=vinculo,
             instituicao="IFRN",
         )

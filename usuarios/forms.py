@@ -15,7 +15,6 @@ from crispy_forms.layout import Layout, Row, Column, Fieldset
 from .models import User, Vinculos
 import re
 
-
 class UserSignupForm(SignupForm):
     nome_completo = forms.CharField(
         max_length=100,
