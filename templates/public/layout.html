@@ -28,23 +28,23 @@
             </button>
             <div class="collapse navbar-collapse" id="navbar-items">
               {% include 'public/menu-list.html'  %}
-            
+
             </div>
         </div>
     </nav>
     {% block content %}
-    
-    <header id="site-header" class="site-header valign-center"> 
+
+    <header id="site-header" class="site-header valign-center">
         <div class="intro">
 
             <h2>25 April, 2015 / Townhall California</h2>
-            
+
             <h1>Freelancer Conference 2015</h1>
-            
+
             <p>First &amp; Largest Conference</p>
-            
+
             <a class="btn btn-white" data-scroll href="#registration">Register Now</a>
-        
+
         </div>
     </header>
 
@@ -75,7 +75,7 @@
                         <li>Have dedicated 2-to-1 meetings with the experts</li>
                         <li>Reach more consumers for less by learning new digital media skills</li>
                         <li>Save money when spending in online advertising</li>
-                    
+
                     </ul>
 
                 </div><!-- /.col-sm-6 -->
@@ -90,25 +90,25 @@
 
                     <i class="ion-ios-calendar"></i>
                     <h3>2015<br>June 25</h3>
-                
+
                 </div>
                 <div class="col-sm-3">
 
                     <i class="ion-ios-location"></i>
                     <h3>California<br>USA</h3>
-                
+
                 </div>
                 <div class="col-sm-3">
 
                     <i class="ion-pricetags"></i>
                     <h3>150<br>Tickets</h3>
-                
+
                 </div>
                 <div class="col-sm-3">
-                
+
                     <i class="ion-speakerphone"></i>
                     <h3>06<br>Speakers</h3>
-                
+
                 </div>
             </div><!-- row -->
         </div><!-- container -->
@@ -120,7 +120,7 @@
                 <div class="col-md-12">
 
                     <h3 class="section-title">Speakers</h3>
-                
+
                 </div>
             </div>
 
@@ -258,7 +258,7 @@
                     <h3 class="section-title">Registration &amp; Pricing</h3>
                 </div>
             </div>
-                
+
             <form action="#" id="registration-form">
                 <div class="row">
                     <div class="col-md-12" id="registration-msg" style="display:none;">
@@ -323,7 +323,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <h3 class="text-uppercase mt0 font-400">Submit Your Contribution Work</h3>
-                    
+
                     <p>You've inspired new consumer, racked up click-thru's, blown-up brand awareness. We can't give you back the weekends you worked, or erase the pain of being forced to make the logo bigger. But if you submit your best work.</p>
 
                     <a class="btn btn-white" href="#">Submit</a>
@@ -405,7 +405,7 @@
                 <div class="col-sm-3">
                     <a class="partner-box partner-box-8"></a>
                 </div>
-            </div>   
+            </div>
     </section>
 
     <section id="faq" class="section faq">
@@ -418,7 +418,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                        
+
                         <div class="panel panel-default">
                             <div class="panel-heading" role="tab" id="headingOne">
                                 <h4 class="panel-title">
@@ -445,7 +445,7 @@
                                 <div class="panel-body">Hello</div>
                             </div>
                         </div>
-  
+
                         <div class="panel panel-default">
                             <div class="panel-heading" role="tab" id="headingThree">
                                 <h4 class="panel-title">
@@ -496,7 +496,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <ul class="grid">
-                        
+
                         <li class="grid-item grid-item-sm-6">
                             <img alt="" class="img-fluid center-block" src="{%static 'img/photos/photos-1.jpg'%}">
                         </li>
@@ -508,7 +508,7 @@
                         <li class="grid-item grid-item-sm-3">
                             <img alt="" class="img-fluid center-block" src="{%static 'img/photos/photos-3.jpg'%}">
                         </li>
-                    
+
                         <li class="grid-item grid-item-sm-3">
                             <img alt="" class="img-fluid center-block" src="{%static 'img/photos/photos-5.jpg'%}">
                         </li>
@@ -534,7 +534,7 @@
                         </li>
                     </ul>
                 </div>
-            </div>            
+            </div>
         </div>
     </section>
 
@@ -559,7 +559,12 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <p class="site-info text-muted">{{evento.edicao}} {{evento.titulo}}<br> <small>{{evento.subtitulo}}</small></p>
+                    <p class="site-info text-muted">
+                        {{ evento.edicao }} {{ evento.titulo }}
+                        {% if evento.subtitulo %}
+                            <br><small>{{ evento.subtitulo }}</small>
+                        {% endif %}
+                    </p>
                     <ul class="social-block">
                         {%if evento.instagram %}
                         <li><a href="{{evento.instagram}}" target="_blank"><i class="ion-social-instagram"></i></a></li>
@@ -578,7 +583,7 @@
 
 {% block extra_scripts %}
 {{ super.block }}
-    
+
 <script src="{%static 'vendor/smoothscroll/smooth-scroll.min.js'%}"></script>
 <script src="{%static 'js/main.js'%}"></script>
 {% endblock extra_scripts %}

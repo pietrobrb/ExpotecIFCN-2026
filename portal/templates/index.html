@@ -168,14 +168,14 @@
             </div>
         </div>
         <div class="row">
-            {% for a in object.areas_tematicas.all %}
+            {% for a in evento.areas_tematicas.all %}
             <div class="col-md-4 col-sm-6  mb-3  d-flex">
                 <a href="{% url 'portal:evento-area' a.pk %}" class="schedule-box flex-fill text-decoration-none"
                     style="background:{{a.cor|default:'royaleblue'}} linear-gradient(90deg, rgba(255, 255, 255, 0.6), {{a.cor|default:'royaleblue'}}) repeat-x !important;">
 
                     <h3 class="text-wrap text-break p-3  text-light">
-                        {%if a.icon %}
-                        <i class="fas {{ a.icon }}"></i>
+                        {% if a.icone %}
+                            <i class="fas {{ a.icone }}"></i>
                         {% endif %}
                         {{a.nome}}
                     </h3>
