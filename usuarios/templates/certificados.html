@@ -1,0 +1,65 @@
+{% extends 'private/layout.html' %}
+
+{% block title %}Certificados{% endblock title %}
+
+{% block content %}
+<section aria-labelledby="certificados-title">
+  <h2 id="certificados-title" class="h5 mb-3">Meus certificados</h2>
+  {% if not signature_configured %}
+  <div class="alert alert-warning" role="status">
+    A equipe do evento precisa configurar o nome, cargo e imagem da assinatura oficial para liberar os downloads.
+  </div>
+  {% endif %}
+
+  <div class="card shadow-none mb-4">
+    <div class="card-body">
+      <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
+        <div>
+          <h3 class="h5 mb-1">Certificado geral do evento</h3>
+          {% if minimum_hours != None %}
+            <p class="text-muted mb-2">Carga confirmada: {{ total_duration_label }} de {{ minimum_hours }}h exigidas.</p>
+            <div class="progress" role="progressbar" aria-label="Progresso da carga horária" aria-valuenow="{{ event_progress_percent }}" aria-valuemin="0" aria-valuemax="100">
+              <div class="progress-bar bg-success" style="width: {{ event_progress_percent }}%"></div>
+            </div>
+          {% else %}
+            <p class="text-muted mb-0">A carga horária mínima ainda não foi configurada para este evento.</p>
+          {% endif %}
+        </div>
+        {% if event_certificate_available %}
+          <a class="btn btn-primary" href="{% url 'user:certificado_evento_pdf' %}">
+            <i class="fas fa-download" aria-hidden="true"></i> Baixar certificado
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <h3 class="h5 mb-3">Certificados de atividades</h3>
+  <div class="row row-cols-1 row-cols-md-2 g-3">
+    {% for inscricao in activity_certificates %}
+    <div class="col">
+      <article class="card h-100 shadow-none">
+        <div class="card-body d-flex flex-column">
+          <div class="small text-muted mb-1">{{ inscricao.atividade.tipo.nome }}</div>
+          <h4 class="h6">{{ inscricao.atividade.titulo }}</h4>
+          <p class="text-muted small">Carga horária: {{ inscricao.atividade.duracao }}</p>
+          {% if signature_configured %}
+            <a class="btn btn-outline-primary mt-auto align-self-start" href="{% url 'user:certificado_atividade_pdf' inscricao.atividade_id %}">
+              <i class="fas fa-download" aria-hidden="true"></i> Baixar certificado
+            </a>
+          {% endif %}
+        </div>
+      </article>
+    </div>
+    {% empty %}
+    <div class="col-12">
+      <p class="text-muted mb-0">Nenhuma presença em atividade foi confirmada para sua conta neste evento.</p>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="mt-4">
+    <a href="{% url 'user:dashboard' %}" class="btn btn-outline-secondary">Voltar ao dashboard</a>
+  </div>
+</section>
+{% endblock content %}

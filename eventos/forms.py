@@ -30,7 +30,11 @@ class EventoForm(forms.ModelForm):
             'logo_mini', 
             'imagem_promocional', 
             'video_promocional', 
-            'ch_total'
+            'ch_total',
+            'ch_min_certificado',
+            'certificado_signatario_nome',
+            'certificado_signatario_cargo',
+            'certificado_signatario_assinatura',
         ]
         widgets = { 'dt_inicio': DateInput(),
                     'dt_encerramento': DateInput(),
@@ -40,6 +44,7 @@ class EventoForm(forms.ModelForm):
                     'logo_mini': forms.FileInput(attrs={'accept': 'image/*'}),
                     'imagem_promocional': forms.FileInput(attrs={'accept': 'image/*'}),
                     'video_promocional': forms.FileInput(attrs={'accept': 'video/*'}),
+                    'certificado_signatario_assinatura': forms.FileInput(attrs={'accept': 'image/*'}),
                 }
         
     helper = FormHelper()
@@ -54,12 +59,17 @@ class EventoForm(forms.ModelForm):
                 Column("dt_inicio", css_class="col-md-3"),
                 Column("dt_encerramento", css_class="col-md-3"),
                 Column("ch_total", css_class="col-md-2"),
+                Column("ch_min_certificado", css_class="col-md-3"),
             
                 Column("instagram", css_class="col-md-6"),
                 Column("youtube", css_class="col-md-6"),
                  
                 Column("logo", css_class="col-md-6"),
                 Column("logo_mini", css_class="col-md-6"),
+
+                Column("certificado_signatario_nome", css_class="col-md-4"),
+                Column("certificado_signatario_cargo", css_class="col-md-4"),
+                Column("certificado_signatario_assinatura", css_class="col-md-4"),
 
                 Column("imagem_promocional", css_class="col-md-6"),
                 Column("video_promocional", css_class="col-md-6"),

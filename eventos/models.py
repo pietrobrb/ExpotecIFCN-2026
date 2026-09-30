@@ -82,6 +82,23 @@ class Evento(models.Model):
         blank=True,
         null=True,
     )
+
+    certificado_signatario_nome = models.CharField(
+        max_length=120,
+        blank=True,
+        verbose_name=_("Nome do Signatário dos Certificados"),
+    )
+    certificado_signatario_cargo = models.CharField(
+        max_length=120,
+        blank=True,
+        verbose_name=_("Cargo do Signatário dos Certificados"),
+    )
+    certificado_signatario_assinatura = models.ImageField(
+        upload_to="eventos/certificados/assinaturas/",
+        blank=True,
+        null=True,
+        verbose_name=_("Imagem da Assinatura dos Certificados"),
+    )
     
     endereco = models.ForeignKey(
         Endereco,

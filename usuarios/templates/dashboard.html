@@ -40,9 +40,9 @@
   {%endif%}
   <div class="col">
     <div class="card p-2 text-center dashboard-menu-cards w-100 bg-info" >
-      <a href="#" class="text-decoration-none text-white">
+      <a href="{% url 'user:certificados' %}" class="text-decoration-none text-white">
       <div class="card-body d-flex flex-column justify-content-center align-items-center">
-        <h3 class="mb-0 pb-0 text-bold text-white">0</h3>
+        <h3 class="mb-0 pb-0 text-bold text-white">{{ certificados_total }}</h3>
         <p class="text-light fs-5">CERTIFICADOS</p>
       </div>
       </a>

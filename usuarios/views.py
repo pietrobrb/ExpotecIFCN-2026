@@ -3,9 +3,10 @@ from django import forms
 from django.core.paginator import Paginator
 from django.db.models.base import Model as Model
 from django.db.models.query import QuerySet
-from django.http import HttpRequest, HttpResponse
+from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.utils.text import slugify
 import rules
 from atividades.filtersets import AtividadeFilter, AtividadeInscricaoFilter
 from atividades.models import Agendamento, Atividade, InscricaoAtividade, StatusAtividade
@@ -19,6 +20,7 @@ from submissao.models import Avaliacao, AvaliacaoCriterio, StatusAvaliacao, Stat
 from usuarios.forms import InscricaoEventoMuiltForm, MeuPerfilMuiltForm, EventoAvaliadorForm
 from usuarios.mixins import MeustrabalhosMixin, MinhasAvaliacoesMixin, MinhasSubmissoesMixin
 from usuarios.tables import AtividadeInscricaoTable, MinhasInscricoesAtividadeTable, MeusTrabalhosTable, MinhasAvaliacoesTable
+from usuarios.certificados import format_duration, generate_certificate_pdf, get_user_certificate_data
 from usuarios.filtersets import InscricaoAtividadeFilter
 from usuarios.models import User
 from eventos.models import Evento, InscricaoEvento, Avaliador, Monitor, Noticia
@@ -54,7 +56,98 @@ class DashboardView(DetailView):
         atividades_evento = list(self.request.evento.atividades)
         context["atividades_evento"] = atividades_evento
         context["atividades_total"] = len(atividades_evento)
+        context["certificados_total"] = get_user_certificate_data(
+            self.request.user,
+            self.request.evento,
+        )["available_count"]
         return context
+
+class CertificadosView(DetailView):
+    model = Evento
+    template_name = "certificados.html"
+    permission_required = ["is_user_rule"]
+
+    def get_object(self, queryset=None):
+        return self.request.evento
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "Certificados"
+        certificate_data = get_user_certificate_data(self.request.user, self.request.evento)
+        context.update(certificate_data)
+        context["total_duration_label"] = format_duration(certificate_data["total_duration"])
+        context["event_certificate_available"] = (
+            certificate_data["event_eligible"] and certificate_data["signature_configured"]
+        )
+        if certificate_data["minimum_hours"] is not None and certificate_data["minimum_hours"] > 0:
+            required_seconds = certificate_data["minimum_hours"] * 3600
+            context["event_progress_percent"] = min(
+                100,
+                int(certificate_data["total_duration"].total_seconds() * 100 / required_seconds),
+            )
+        elif certificate_data["event_eligible"]:
+            context["event_progress_percent"] = 100
+        else:
+            context["event_progress_percent"] = 0
+        return context
+
+
+def certificate_pdf_response(pdf_bytes, filename):
+    safe_filename = slugify(filename) or "certificado"
+    response = HttpResponse(pdf_bytes, content_type="application/pdf")
+    response["Content-Disposition"] = f'attachment; filename="{safe_filename}.pdf"'
+    return response
+
+
+class CertificadoAtividadePdfView(DetailView):
+    model = InscricaoAtividade
+    permission_required = ["is_user_rule"]
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(
+            InscricaoAtividade.objects.select_related("atividade__tipo__evento"),
+            atividade_id=self.kwargs["atividade_id"],
+            usuario=self.request.user,
+            presente=True,
+            atividade__tipo__evento=self.request.evento,
+        )
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        event = self.request.evento
+        if not get_user_certificate_data(request.user, event)["signature_configured"]:
+            raise Http404("Assinatura do certificado não configurada")
+        activity = self.object.atividade
+        pdf_bytes = generate_certificate_pdf(
+            event,
+            request.user,
+            activity.duracao,
+            activity=activity,
+        )
+        return certificate_pdf_response(
+            pdf_bytes,
+            f"certificado-atividade-{activity.titulo}",
+        )
+
+
+class CertificadoEventoPdfView(DetailView):
+    model = Evento
+    permission_required = ["is_user_rule"]
+
+    def get_object(self, queryset=None):
+        return self.request.evento
+
+    def get(self, request, *args, **kwargs):
+        event = self.get_object()
+        certificate_data = get_user_certificate_data(request.user, event)
+        if not certificate_data["event_eligible"] or not certificate_data["signature_configured"]:
+            raise Http404("Certificado do evento indisponível")
+        pdf_bytes = generate_certificate_pdf(
+            event,
+            request.user,
+            certificate_data["total_duration"],
+        )
+        return certificate_pdf_response(pdf_bytes, f"certificado-evento-{event.titulo}")
 
 class IndexView(DetailView):
     model = User
