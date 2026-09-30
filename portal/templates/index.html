@@ -605,7 +605,7 @@
 <script src="{%static 'vendor/smoothscroll/smooth-scroll.min.js'%}"></script>
 <script src="{%static 'js/main.js'%}"></script>
 <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkg4j28B11Wqwrv9v3uGvwYXT8M-VHzYw&libraries=geometry"></script>
+    src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&libraries=geometry"></script>
 <script>
     function initMap() {
         const map = new google.maps.Map(document.getElementById('map'), {
