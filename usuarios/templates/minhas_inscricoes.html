@@ -42,6 +42,95 @@
 </div>
 
 <div class="small text-muted mb-2">Inscrições em Atividades</div>
+<section class="mb-4" aria-labelledby="available-activities-title">
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <div>
+      <h2 id="available-activities-title" class="h5 mb-1">Disponíveis para inscrição</h2>
+      <div class="small text-muted">{{ available_activities.paginator.count }} atividades</div>
+    </div>
+  </div>
+  <form method="get" class="row g-2 align-items-end mb-3">
+    <div class="col-12 col-md-4">
+      {{ available_filterset.form.titulo }}
+    </div>
+    <div class="col-12 col-md-3">
+      {{ available_filterset.form.tipo }}
+    </div>
+    <div class="col-auto">
+      <button type="submit" class="btn btn-primary">
+        <i class="fas fa-filter" aria-hidden="true"></i> Filtrar
+      </button>
+    </div>
+    <div class="col-auto">
+      <a href="{% url 'user:minhas_inscricoes' %}" class="btn btn-outline-secondary">Limpar</a>
+    </div>
+  </form>
+
+  <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3">
+    {% for atividade in available_activities %}
+    <div class="col">
+      <article class="card h-100 shadow-sm">
+        <div class="card-body d-flex flex-column">
+          <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+            <span class="badge text-dark" style="background-color: {{ atividade.tipo.cor }};">{{ atividade.tipo }}</span>
+            {% if atividade.status == "inscricoes_abertas" %}
+              <span class="badge text-bg-success">Inscrições abertas</span>
+            {% elif atividade.status == "inscricoes_embreve" %}
+              <span class="badge text-bg-info">Em breve</span>
+            {% elif atividade.status == "sem_vaga" %}
+              <span class="badge text-bg-danger">Sem vagas</span>
+            {% elif atividade.status == "inscricoes_encerradas" %}
+              <span class="badge text-bg-secondary">Encerradas</span>
+            {% else %}
+              <span class="badge text-bg-secondary">Indisponível</span>
+            {% endif %}
+          </div>
+          <h3 class="h5 card-title">{{ atividade.titulo }}</h3>
+          <p class="card-text text-muted small flex-grow-1">{{ atividade.descricao|striptags|truncatewords:28 }}</p>
+          <dl class="row small mb-3">
+            <dt class="col-5">Duração</dt>
+            <dd class="col-7">{{ atividade.duracao }}</dd>
+            <dt class="col-5">Período</dt>
+            <dd class="col-7 mb-0">
+              {{ atividade.inicio_inscricoes|date:"d/m/Y"|default:"-" }} a {{ atividade.fim_inscricoes|date:"d/m/Y"|default:"-" }}
+            </dd>
+          </dl>
+          <div class="d-flex gap-2 mt-auto">
+            <a href="{% url 'user:atividade-detail' atividade.pk %}" class="btn btn-outline-secondary flex-fill"
+               hx-get="{% url 'user:atividade-detail' atividade.pk %}" hx-target="#app-modal" data-bs-toggle="modal" data-bs-target="#app-modal">
+              <i class="fas fa-eye" aria-hidden="true"></i> Detalhes
+            </a>
+            {% if atividade.status == "inscricoes_abertas" %}
+              <a href="{% url 'user:atividade-inscreverse' atividade.pk %}" class="btn btn-success flex-fill"
+                 hx-get="{% url 'user:atividade-inscreverse' atividade.pk %}" hx-target="#app-modal" data-bs-toggle="modal" data-bs-target="#app-modal">
+                <i class="fas fa-check" aria-hidden="true"></i> Inscrever-se
+              </a>
+            {% else %}
+              <button type="button" class="btn btn-secondary flex-fill" disabled>
+                {% if atividade.status == "inscricoes_embreve" %}Em breve{% elif atividade.status == "sem_vaga" %}Sem vagas{% else %}Indisponível{% endif %}
+              </button>
+            {% endif %}
+          </div>
+        </div>
+      </article>
+    </div>
+    {% empty %}
+    <div class="col-12">
+      <p class="text-muted mb-0">Não há atividades disponíveis para inscrição com esses filtros.</p>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if available_activities.has_other_pages %}
+  <nav class="d-flex justify-content-center align-items-center gap-3 mt-3" aria-label="Paginação das atividades disponíveis">
+    {% if available_previous_url %}<a class="btn btn-outline-secondary btn-sm" href="{{ available_previous_url }}">Anterior</a>{% endif %}
+    <span class="small text-muted">Página {{ available_activities.number }} de {{ available_activities.paginator.num_pages }}</span>
+    {% if available_next_url %}<a class="btn btn-outline-secondary btn-sm" href="{{ available_next_url }}">Próxima</a>{% endif %}
+  </nav>
+  {% endif %}
+</section>
+
+<div class="small text-muted mb-2">Minhas inscrições em atividades</div>
 <div class="card shadow-none">
   <div class="card-header px-2">
     <form id="search-form" class="d-flex flex-md-row flex-column"  method="get">

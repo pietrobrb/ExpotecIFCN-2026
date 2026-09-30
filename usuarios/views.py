@@ -1,5 +1,6 @@
 from typing import Any
 from django import forms
+from django.core.paginator import Paginator
 from django.db.models.base import Model as Model
 from django.db.models.query import QuerySet
 from django.http import HttpRequest, HttpResponse
@@ -7,7 +8,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 import rules
 from atividades.filtersets import AtividadeFilter, AtividadeInscricaoFilter
-from atividades.models import Atividade, InscricaoAtividade, StatusAtividade
+from atividades.models import Agendamento, Atividade, InscricaoAtividade, StatusAtividade
 from chamadas.models import CriterioAvaliacao, StatusChamada, TipoChamada
 from core.models import get_hoje
 from core.viewsets import ViewSet
@@ -23,7 +24,7 @@ from usuarios.models import User
 from eventos.models import Evento, InscricaoEvento, Avaliador, Monitor, Noticia
 from core.views import CreateView, DeleteView, DetailView, EditWithInlinesView, FormView, TableListView, EditView
 from eventos.forms import MonitorForm
-from django.db.models import Q
+from django.db.models import Prefetch, Q
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
 
@@ -50,6 +51,9 @@ class DashboardView(DetailView):
         context = super().get_context_data(**kwargs)
         context["page_title"] = "Dashboard"
         context["trabalhos_usuario"] = self.trabalhos_usuario
+        atividades_evento = list(self.request.evento.atividades)
+        context["atividades_evento"] = atividades_evento
+        context["atividades_total"] = len(atividades_evento)
         return context
 
 class IndexView(DetailView):
@@ -722,11 +726,50 @@ class MinhasInscricoesView(TableListView):
         return super().get(request, *args, **kwargs)
 
     def get_queryset(self) -> QuerySet[Any]:
-        return self.request.user.inscricoes_atividades.all()
+        agendamentos = Agendamento.objects.filter(
+            dia__gte=self.request.evento.dt_inicio
+        ).select_related("sala").order_by("dia", "inicio")
+        return self.request.user.inscricoes_atividades.select_related(
+            "atividade__tipo__evento"
+        ).prefetch_related(
+            Prefetch(
+                "atividade__agendamentos",
+                queryset=agendamentos,
+                to_attr="agenda_dashboard",
+            )
+        )
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["page_title"] = "Minhas Inscrições"
+
+        available_queryset = Atividade.objects.filter(
+            tipo__evento=self.request.evento,
+            com_inscricoes=True,
+        ).exclude(
+            inscricoes__usuario=self.request.user,
+        ).order_by("tipo", "titulo").distinct()
+        available_filterset = AtividadeInscricaoFilter(
+            self.request.GET or None,
+            queryset=available_queryset,
+            request=self.request,
+            prefix="disponiveis",
+        )
+        available_paginator = Paginator(available_filterset.qs, 9)
+        available_page = available_paginator.get_page(
+            self.request.GET.get("disponiveis_page", 1)
+        )
+
+        context["available_filterset"] = available_filterset
+        context["available_activities"] = available_page
+        if available_page.has_previous():
+            params = self.request.GET.copy()
+            params["disponiveis_page"] = available_page.previous_page_number()
+            context["available_previous_url"] = f"?{params.urlencode()}"
+        if available_page.has_next():
+            params = self.request.GET.copy()
+            params["disponiveis_page"] = available_page.next_page_number()
+            context["available_next_url"] = f"?{params.urlencode()}"
         return context
 
 @insc_atividades_vs.action('delete')

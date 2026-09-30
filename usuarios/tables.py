@@ -11,8 +11,8 @@ from submissao.models import Avaliacao, StatusAvaliacao, StatusTrabalho, Trabalh
 class MinhasInscricoesAtividadeTable(tables.Table):
     tipo_atividade = tables.Column(accessor="atividade__tipo", verbose_name="Tipo")
     atividade = tables.Column(accessor="atividade__titulo", verbose_name="Atividade")
-    dt_inicio = tables.Column(accessor="inicio", verbose_name="Início")
-    local = tables.Column(accessor="local", verbose_name="Local")
+    dt_inicio = tables.Column(verbose_name="Início", empty_values=())
+    local = tables.Column(verbose_name="Local", empty_values=())
     actions = tables.Column(verbose_name="Ações", orderable=False, empty_values=()) 
 
     class Meta:
@@ -24,6 +24,23 @@ class MinhasInscricoesAtividadeTable(tables.Table):
             "local",
         )
     
+    def render_dt_inicio(self, record):
+        agendamentos = getattr(record.atividade, "agenda_dashboard", [])
+        if not agendamentos:
+            return "A definir"
+        agendamento = agendamentos[0]
+        return format_html(
+            "{} às {}",
+            agendamento.dia.strftime("%d/%m/%Y"),
+            agendamento.inicio.strftime("%H:%M"),
+        )
+
+    def render_local(self, record):
+        agendamentos = getattr(record.atividade, "agenda_dashboard", [])
+        if not agendamentos:
+            return "A definir"
+        return agendamentos[0].sala.nome
+
     def render_actions(self, record):
         delete_url = reverse("user:inscricaoatividade-delete", args=[record.id])
         return format_html(
