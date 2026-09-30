@@ -61,11 +61,13 @@ class User(AbstractUser):
 
     @property
     def get_primeiro_nome(self):
-        return self.nome_completo.split()[0]    
+        nomes = (self.nome_completo or "").split()
+        return nomes[0] if nomes else "Usuário"
 
     @property
     def get_ultimo_nome(self):
-        return self.nome_completo.split()[-1]    
+        nomes = (self.nome_completo or "").split()
+        return nomes[-1] if nomes else "Usuário"
     
     @property
     def get_email(self):

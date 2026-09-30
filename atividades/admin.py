@@ -25,10 +25,10 @@ class AtividadeAdmin(admin.ModelAdmin):
     )
     search_fields = ("tipo__nome","titulo")
     fields = [
-        'tipo'
+        'tipo',
         'titulo', 
         'descricao', 
-        'vagas_limitadas', 
+        'com_inscricoes',
         'qtd_vagas', 
         'inicio_inscricoes', 
         'fim_inscricoes', 
