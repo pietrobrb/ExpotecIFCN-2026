@@ -8,44 +8,84 @@
     <div class="intro px-0">
         <div id="carousel_noticias" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner pt-md-0 pt-5">
+
                 {% if evento.video_promocional %}
                 <div id="promo" class="carousel-item active">
                     <video id="promo_video" muted loop autoplay>
-                        <source src="{{evento.video_promocional.url}}" type="video/mp4">
+                        <source src="{{ evento.video_promocional.url }}" type="video/mp4">
                     </video>
-                    <div class="carousel-caption d-md-block" style="top:80%; z-index: 9999;">
-                        <a class="btn btn-success text-light" href="{%url 'account_login'%}">Acessar</a>
+
+                    <div class="carousel-caption d-md-block" style="top:80%; z-index:9999;">
+                        <a class="btn btn-success text-light" href="{% url 'account_login' %}">
+                            Acessar
+                        </a>
                     </div>
                 </div>
                 {% endif %}
+
                 {% for n in evento.top5_noticias %}
+
                 <div class="carousel-item {% if forloop.first and not evento.video_promocional %}active{% endif %}">
+
                     {% if n.poster %}
-                    <img src="{{n.poster.url}}" class=" w-100">
+                    <img src="{{ n.poster.url }}" class="w-100">
                     {% else %}
                     <img src="{% static 'img/placeholders/noticias.jpg' %}" class="w-100">
                     {% endif %}
+
                     <div class="carousel-caption d-md-block">
-                        <h2>{{n.titulo}}</h2>
-                        <h1>{{n.subtitulo}}</h1>
-                        <p class="fs-6 text-lowercase">{{n.texto}}</p>
+                        <h2>{{ n.titulo }}</h2>
+                        <h1>{{ n.subtitulo }}</h1>
+                        <p class="fs-6 text-lowercase">{{ n.texto }}</p>
+
                         {% if n.url %}
-                        <a class="btn btn-success text-light" href="{{n.url}}">Acessar</a>
+                        <a class="btn btn-success text-light" href="{{ n.url }}">
+                            Acessar
+                        </a>
                         {% endif %}
                     </div>
-                </div>
-                {% empty %}
-                <div class="carousel-item active">
-                    <img src="{% static 'img/placeholders/noticias.jpg' %}" class="d-block w-100">
-                    <div class="carousel-caption d-md-block">
-                        <h2>{{evento.dt_inicio | date:"j M Y"}} - {{evento.endereco.local|default:'IFRN'}}</h2>
-                        <h1>{{ evento.edicao }} {{ evento.titulo|default:'Expotec' }}</h1>
-                        <p class="fs-6 text-lowercase">{{ evento.subtitulo|default_if_none:'' }}</p>
-                        <a class="btn btn-success text-light" href="{% url 'account_login' %}">Acessar</a>
-                    </div>
-                </div>
-                {% endfor %}
 
+                </div>
+
+                {% empty %}
+
+                <div class="carousel-item active hero-evento">
+
+                    <div class="hero-evento-content">
+
+                        <span class="hero-evento-edicao">
+                            {{ evento.edicao }} EDIÇÃO
+                        </span>
+
+                        <h1>
+                            {{ evento.titulo|default:'EXPOTEC' }}
+                        </h1>
+
+                        <p class="hero-evento-data">
+                            {% if evento.dt_inicio %}
+                            {{ evento.dt_inicio|date:"d/m/Y" }}
+
+                            {% if evento.dt_encerramento %}
+                            — {{ evento.dt_encerramento|date:"d/m/Y" }}
+                            {% endif %}
+                            {% endif %}
+                        </p>
+
+                        {% if evento.subtitulo %}
+                        <p class="hero-evento-subtitulo">
+                            {{ evento.subtitulo }}
+                        </p>
+                        {% endif %}
+
+                        <a class="btn btn-success text-light" href="#about">
+                            Conheça o evento
+                        </a>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
 
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#carousel_noticias"
@@ -64,206 +104,497 @@
 
 <section id="about" class="section about">
     <div class="container">
-        <div class="row">
-            <h3 class="section-title text-center">{{ evento.edicao }} {{ evento.titulo }} <br><small class="fs-6">{{
-                    evento.subtitulo|default_if_none:'' }}</small></h3>
-        </div>
-        {% if evento.apresentacao|length <= 1500 %} <div class="row">
-            <div class="col-md-6">
-                <div class="text-justify">{{ evento.apresentacao|default:"Apresentação do Evento"|safe }}</div>
-            </div><!-- /.col-sm-6 -->
 
-            <div class="col-md-6">
-                <figure>
-                    {% if evento.imagem_promocional %}
-                    <img src="{{ evento.imagem_promocional.url }}" class="img-fluid">
-                    {% else %}
-                    <img src="{% static 'img/about-us.jpg' %}" class="img-fluid">
-                    {% endif %}
-                </figure>
-            </div><!-- /.col-sm-6 -->
-    </div><!-- /.row -->
-    {% else %}
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <span class="about-kicker">
+                    {{ evento.edicao }} EDIÇÃO
+                </span>
 
-    <div class="row">
-        {% with evento.apresentacao|split_text as split_text %}
-        <div class="col-sm-6">
-            <div class="text-justify">{{ split_text.0 |safe}}</div>
-        </div><!-- /.col-sm-6 -->
+                <h2 class="about-title">
+                    {{ evento.titulo|default:"EXPOTEC" }}
+                </h2>
 
-        <div class="col-sm-6">
-            <div class="text-justify">{{ split_text.1 |safe}}</div>
-        </div><!-- /.col-sm-6 -->
-        {% endwith %}
-    </div><!-- /.row -->
-    <div class="row">
-        <div class="col-sm-6 mx-auto">
-            <figure>
-                {% if evento.imagem_promocional %}
-                <img src="{{ evento.imagem_promocional.url }}" class="img-fluid">
-                {% else %}
-                <img src="{% static 'img/about-us.jpg' %}" class="img-fluid">
+                {% if evento.subtitulo %}
+                <p class="about-subtitle">
+                    {{ evento.subtitulo }}
+                </p>
                 {% endif %}
-            </figure>
+            </div>
         </div>
+
+        <div class="row align-items-center g-5">
+
+            <div class="col-lg-6">
+                <div class="about-content">
+
+                    <h3>Sobre o evento</h3>
+
+                    {% if evento.apresentacao %}
+                    <div class="about-text">
+                        {{ evento.apresentacao|safe }}
+                    </div>
+                    {% else %}
+                    <p class="about-placeholder">
+                        As informações sobre a {{ evento.edicao }} edição da
+                        {{ evento.titulo|default:"Expotec" }} serão divulgadas em breve.
+                    </p>
+                    {% endif %}
+
+                    <div class="about-info">
+
+                        {% if evento.dt_inicio %}
+                        <div class="about-info-item">
+                            <span class="about-info-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </span>
+
+                            <div>
+                                <strong>Data</strong>
+                                <p>
+                                    {{ evento.dt_inicio|date:"d/m/Y" }}
+                                    {% if evento.dt_encerramento %}
+                                    — {{ evento.dt_encerramento|date:"d/m/Y" }}
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if evento.endereco %}
+                        <div class="about-info-item">
+                            <span class="about-info-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </span>
+
+                            <div>
+                                <strong>Local</strong>
+                                <p>
+                                    {{ evento.endereco.local|default:"IFRN" }}
+                                    {% if evento.endereco.cidade %}
+                                    · {{ evento.endereco.cidade }}
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                {% if evento.imagem_promocional %}
+                <div class="about-image">
+                    <img src="{{ evento.imagem_promocional.url }}" alt="{{ evento.titulo|default:'Expotec' }}"
+                        class="img-fluid">
+                </div>
+                {% else %}
+                <div class="about-image about-image-placeholder">
+                    <div>
+                        <span>{{ evento.edicao }}</span>
+                        <strong>{{ evento.titulo|default:"EXPOTEC" }}</strong>
+                        <small>2026</small>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+        </div>
+
     </div>
-    {% endif %}
-    <div class="row">
-    </div>
-    </div><!-- /.container -->
 </section>
 
+{% if evento.ItemGaleria.all %}
 <section id="gallery" class="section gallery">
     <div class="container">
-        <div class="row row-cols-1 row-cols-sm-3 row-cols-md-4 g-12 g-md-2">
+
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <span class="about-kicker">
+                    MOMENTOS
+                </span>
+
+                <h2 class="about-title">
+                    Galeria
+                </h2>
+
+                <p class="about-subtitle">
+                    Confira registros e momentos da Expotec.
+                </p>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+
             {% for j in evento.ItemGaleria.all %}
-            <a class="text-decoration-none" target="{% if j.url %}_blank{% endif %}"
-                href="{{j.url|default:'javascript:void(0)'}}">
-                <figure class="figure-fit gallery-item">
-                    <img src="{{j.img.url}}" class="img-fluid center-block" style="min-height: 156px;">
+            <div class="col">
+                <a class="gallery-link" {% if j.url %} href="{{ j.url }}" target="_blank" rel="noopener noreferrer" {%
+                    else %} href="{{ j.img.url }}" target="_blank" {% endif %}>
+                    <figure class="gallery-card">
 
-                </figure>
-            </a>
+                        <img src="{{ j.img.url }}" alt="Imagem da {{ evento.titulo|default:'Expotec' }}"
+                            class="img-fluid">
+
+                        <div class="gallery-overlay">
+                            <i class="fas fa-expand"></i>
+                        </div>
+
+                    </figure>
+                </a>
+            </div>
             {% endfor %}
+
         </div>
+
+    </div>
 </section>
+{% endif %}
 
-<section id="facts" class="section bg-image-1 facts text-center text-light fs-1">
+<section id="facts" class="section event-facts">
     <div class="container">
-        <div class="row">
-            <div class="col-sm-3">
 
-                <i class="ion-ios-calendar"></i>
-                <h3>{{evento.dt_inicio | date:"j M" }}<br><small>{{evento.ano}}</small></h3>
+        <div class="row g-4">
 
-            </div>
-            <div class="col-sm-3">
+            <div class="col-6 col-lg-3">
+                <div class="fact-card">
+                    <div class="fact-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
 
-                <i class="ion-ios-location"></i>
-                <h3>{{evento.endereco.local|default:'IFRN'}}<br><small>{{evento.endereco.cidade|default:'São Paulo do
-                        Potengi'}}</small></h3>
+                    <span class="fact-label">Data</span>
 
-            </div>
-            <div class="col-sm-3">
-
-                <i class="ion-pricetags"></i>
-                <h3>Entrada<br /><small>Livre</small></h3>
-
-            </div>
-            <div class="col-sm-3">
-
-                <i class="ion-speakerphone"></i>
-                <h3>{{evento.areas_tematicas.all|length|default:'0'}}<br><small>Áreas Temáticas</small></h3>
-
-            </div>
-        </div><!-- row -->
-    </div><!-- container -->
-</section>
-
-<section id="schedule" class="section schedule">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h3 class="section-title">Áreas Temáticas</h3>
-            </div>
-        </div>
-        <div class="row">
-            {% for a in evento.areas_tematicas.all %}
-            <div class="col-md-4 col-sm-6  mb-3  d-flex">
-                <a href="{% url 'portal:evento-area' a.pk %}" class="schedule-box flex-fill text-decoration-none"
-                    style="background:{{a.cor|default:'royaleblue'}} linear-gradient(90deg, rgba(255, 255, 255, 0.6), {{a.cor|default:'royaleblue'}}) repeat-x !important;">
-
-                    <h3 class="text-wrap text-break p-3  text-light">
-                        {% if a.icone %}
-                            <i class="fas {{ a.icone }}"></i>
+                    <strong class="fact-value">
+                        {% if evento.dt_inicio %}
+                        {{ evento.dt_inicio|date:"d/m" }}
+                        {% if evento.dt_encerramento %}
+                        — {{ evento.dt_encerramento|date:"d/m" }}
                         {% endif %}
-                        {{a.nome}}
-                    </h3>
+                        {% else %}
+                        Em breve
+                        {% endif %}
+                    </strong>
+
+                    {% if evento.ano %}
+                    <small>{{ evento.ano }}</small>
+                    {% endif %}
+                </div>
+            </div>
+
+
+            <div class="col-6 col-lg-3">
+                <div class="fact-card">
+                    <div class="fact-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+
+                    <span class="fact-label">Local</span>
+
+                    <strong class="fact-value">
+                        {% if evento.endereco %}
+                        {{ evento.endereco.local|default:"IFRN" }}
+                        {% else %}
+                        IFRN
+                        {% endif %}
+                    </strong>
+
+                    {% if evento.endereco.cidade %}
+                    <small>{{ evento.endereco.cidade }}</small>
+                    {% endif %}
+                </div>
+            </div>
+
+
+            <div class="col-6 col-lg-3">
+                <div class="fact-card">
+                    <div class="fact-icon">
+                        <i class="fas fa-ticket-alt"></i>
+                    </div>
+
+                    <span class="fact-label">Entrada</span>
+
+                    <strong class="fact-value">
+                        Livre
+                    </strong>
+
+                    <small>Aberta ao público</small>
+                </div>
+            </div>
+
+
+            <div class="col-6 col-lg-3">
+                <div class="fact-card">
+                    <div class="fact-icon">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+
+                    <span class="fact-label">Programação</span>
+
+                    <strong class="fact-value">
+                        {{ evento.areas_tematicas.all|length }}
+                    </strong>
+
+                    <small>Áreas temáticas</small>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<section id="schedule" class="section thematic-areas">
+    <div class="container">
+
+        <div class="section-heading text-center">
+            <span class="section-kicker">XI EXPOTEC</span>
+            <h3 class="section-title">Áreas Temáticas</h3>
+            <p>
+                Conheça os temas que fazem parte da programação da XI Expotec.
+            </p>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+
+            {% for a in evento.areas_tematicas.all %}
+
+            <div class="col-md-4 col-sm-6 d-flex">
+                <a href="{% url 'portal:evento-area' a.pk %}" class="thematic-area-card flex-fill text-decoration-none"
+                    style="--area-color: {{ a.cor|default:'#198754' }};">
+
+                    <div class="thematic-area-icon">
+                        {% if a.icone %}
+                        <i class="fas {{ a.icone }}"></i>
+                        {% else %}
+                        <i class="fas fa-lightbulb"></i>
+                        {% endif %}
+                    </div>
+
+                    <div class="thematic-area-content">
+                        <h3>{{ a.nome }}</h3>
+
+                        {% if a.descricao %}
+                        <p>{{ a.descricao }}</p>
+                        {% endif %}
+                    </div>
+
+                    <span class="thematic-area-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </span>
 
                 </a>
             </div>
-            {%empty%}
-            EM BREVE
+
+            {% empty %}
+
+            <div class="col-12">
+                <div class="thematic-empty">
+                    <div class="thematic-empty-icon">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+
+                    <h4>Em breve</h4>
+
+                    <p>
+                        As áreas temáticas da XI Expotec serão divulgadas em breve.
+                    </p>
+                </div>
+            </div>
+
             {% endfor %}
 
+        </div>
+
+    </div>
 </section>
 
-<section id="contribution" class="section bg-image-2 contribution">
+<section id="contribution" class="section contribution-section">
     <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h3 class="text-uppercase mt0 font-400">Submissão de Trabalhos</h3>
+        <div class="contribution-content">
 
-                <p>Não perca a chance de compartilhar seus trabalhos e projetos durante a {{evento.edicao}}
-                    {{evento.titulo}}!</p>
+            <span class="section-kicker contribution-kicker">
+                XI EXPOTEC
+            </span>
 
+            <h3>
+                Submissão de Trabalhos
+            </h3>
 
-                <a class="btn btn-secondary" href="{%url 'account_login' %}">Acessar</a>
-            </div>
+            <p>
+                Compartilhe seus trabalhos, projetos e pesquisas durante a
+                {{ evento.edicao }} {{ evento.titulo|default:"Expotec" }}.
+            </p>
+
+            <a class="btn contribution-button" href="{% url 'account_login' %}">
+                Acessar área de submissões
+                <i class="fas fa-arrow-right ms-2"></i>
+            </a>
+
         </div>
     </div>
 </section>
 
-<section id="partner" class="section partner">
+<section id="partner" class="section partners-section">
     <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h3 class="section-title">Parceiros</h3>
-            </div>
+
+        <div class="section-heading text-center">
+            <span class="section-kicker">
+                XI EXPOTEC
+            </span>
+
+            <h3 class="section-title">
+                Parceiros
+            </h3>
+
+            <p>
+                Instituições e organizações que apoiam a realização da Expotec.
+            </p>
         </div>
-        <div class="row row-cols-1 row-cols-md-4 g-12 g-md-2">
+
+        <div class="row g-4 justify-content-center">
+
             {% for p in evento.parceiros.all %}
-            <div class="col text-center bg-white me-2 p-3">
-                <a class="partner-box w-100" target="{%if p.url %}_blank{% endif %}"
-                    href="{{p.url|default:'javascript:void(0)'}}"
-                    style="background: url({{p.logo.url}}) no-repeat center center;"></a>
+
+            <div class="col-6 col-md-4 col-lg-3">
+
+                {% if p.url %}
+                <a class="partner-card" href="{{ p.url }}" target="_blank" rel="noopener noreferrer">
+                    {% else %}
+                    <div class="partner-card">
+                        {% endif %}
+
+                        {% if p.logo %}
+                        <img src="{{ p.logo.url }}" alt="Logo do parceiro">
+                        {% endif %}
+
+                        {% if p.url %}
+                </a>
+                {% else %}
             </div>
-            {%empty%}
-            <div class="col text-center bg-white">
-                <a class="partner-box mx-auto partner-box-1"></a>
-            </div>
-            {% endfor %}
+            {% endif %}
+
         </div>
+
+        {% empty %}
+
+        <div class="col-12">
+            <div class="partners-empty">
+
+                <div class="partners-empty-icon">
+                    <i class="fas fa-handshake"></i>
+                </div>
+
+                <h4>Em breve</h4>
+
+                <p>
+                    Os parceiros da XI Expotec serão divulgados em breve.
+                </p>
+
+            </div>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    </div>
 </section>
 
-
-
-<section id="location" class="section location">
+<section id="location" class="section location-section">
     <div class="container">
-        <div class="row">
-            <div class="col-sm-3">
-                <h3 class="section-title">Localização</h3>
-                <address>
-                    {{evento.endereco.local | default:'IFRN' }}<br>
-                    <div class="small">
-                        {{evento.endereco.logradouro | default:'Av. Potengi' }}<br>
-                        {{evento.endereco.cidade | default:'São Paulo do Potengi'}}<br>
-                        {{evento.endereco.estado | default:'RN'}}<br>
-                    </div>
-                </address>
-                <div class="contact-info">
-                    {% for c in evento.contatos.all %}
 
-                    {{ c.nome }}
-                    <div class="small">
-                        {% if c.telefone and c.email %}
-                        {{ c.telefone }}, {{ c.email }}
-                        {% elif c.telefone %}
-                        {{ c.telefone }}
-                        {% elif c.email %}
-                        {{ c.email }}
+        <div class="section-heading text-center">
+            <span class="section-kicker">
+                COMO CHEGAR
+            </span>
+
+            <h3 class="section-title">
+                Localização
+            </h3>
+
+            <p>
+                Confira onde será realizada a {{ evento.edicao }}
+                {{ evento.titulo|default:"Expotec" }}.
+            </p>
+        </div>
+
+        <div class="row g-4 align-items-stretch">
+
+            <div class="col-lg-4">
+                <div class="location-info">
+
+                    <div class="location-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+
+                    <h4>
+                        {% if evento.endereco %}
+                        {{ evento.endereco.local|default:"IFRN" }}
+                        {% else %}
+                        IFRN
                         {% endif %}
+                    </h4>
+
+                    {% if evento.endereco %}
+                    <address>
+
+                        {% if evento.endereco.logradouro %}
+                        {{ evento.endereco.logradouro }}<br>
+                        {% endif %}
+
+                        {% if evento.endereco.cidade %}
+                        {{ evento.endereco.cidade }}
+                        {% endif %}
+
+                        {% if evento.endereco.estado %}
+                        — {{ evento.endereco.estado }}
+                        {% endif %}
+
+                    </address>
+                    {% endif %}
+
+
+                    {% if evento.contatos.all %}
+
+                    <div class="location-contact">
+
+                        {% for c in evento.contatos.all %}
+
+                        {% if c.telefone %}
+                        <div>
+                            <i class="fas fa-phone"></i>
+                            {{ c.telefone }}
+                        </div>
+                        {% endif %}
+
+                        {% if c.email %}
+                        <div>
+                            <i class="fas fa-envelope"></i>
+                            {{ c.email }}
+                        </div>
+                        {% endif %}
+
+                        {% endfor %}
+
                     </div>
 
-                    {%empty%}
-                    <div class="small">84-40054112</div>
-                    {% endfor %}
+                    {% endif %}
+
                 </div>
             </div>
-            <div class="col-sm-9">
-                <div id="map" class="w-100"></div>
+
+
+            <div class="col-lg-8">
+
+                <div class="location-map">
+                    <div id="map" class="w-100 h-100"></div>
+                </div>
+
             </div>
+
         </div>
+
     </div>
 </section>
 {% endblock content %}
