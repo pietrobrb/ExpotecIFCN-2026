@@ -6,20 +6,26 @@
         id="submit-modal-form"
         action="{{ request.path }}">
     {% csrf_token %}
-    
-      <div class="modal-header">
-      <div class="modal-title fw-bold">{{ page_title }}</div>
-      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-      </button>
-    
+
+    <div class="modal-header border-0 pb-2">
+      <div class="modal-title fw-bold fs-5">{{ page_title }}</div>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
     </div>
-    <div class="modal-body">
-      <p>{{ confirm_message|safe }}</p>
+
+    <div class="modal-body pt-0">
+      <div class="alert alert-warning border-0 mb-3" role="alert">
+        <div class="d-flex align-items-start gap-2">
+          <i class="fa-solid fa-circle-exclamation mt-1 text-warning"></i>
+          <div>
+            {{ confirm_message|safe }}
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="modal-footer">
-      
-      <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Cancelar</button>
-      <button type="submit" class="btn btn-primary ms-2">Sim</button>
+
+    <div class="modal-footer border-0 pt-0">
+      <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Cancelar</button>
+      <button type="submit" class="btn btn-success ms-2">Confirmar submissão</button>
     </div>
   </form>
 {% endblock modalcontent %}

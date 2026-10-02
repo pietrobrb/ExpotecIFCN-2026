@@ -116,14 +116,10 @@ class MeusTrabalhosTable(tables.Table):
         fields = ['tipo_chamada', 'titulo', 'autores_string', 'status', 'actions']
     
     def render_status(self, record):
-        if record.tipo_chamada.chamada_atual.status == StatusChamada.ABERTO and record.status in [StatusTrabalho.APROVADO, StatusTrabalho.REPROVADO, StatusTrabalho.N_APRESENTADO]:
-            return format_html(
-                'Em avaliação'
-            )
-        else:
-            return format_html(
-               record.get_status_display()
-            )
+        chamada_atual = getattr(record.tipo_chamada, 'chamada_atual', None)
+        if chamada_atual and chamada_atual.status == StatusChamada.ABERTO and record.status in [StatusTrabalho.APROVADO, StatusTrabalho.REPROVADO, StatusTrabalho.N_APRESENTADO]:
+            return format_html('Em avaliação')
+        return format_html(record.get_status_display())
             
          
     def render_actions(self, record):

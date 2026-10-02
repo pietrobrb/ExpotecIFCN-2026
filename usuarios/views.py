@@ -439,13 +439,15 @@ class MeuTrabalhoDetailView(MeustrabalhosMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         trabalho = self.get_object()
-        
+
         form = MeuTrabalhoForm(instance=trabalho)
         for field_name, field in form.fields.items():
             field.widget.attrs['disabled'] = 'disabled'
 
         context['form'] = form
         context['submissoes'] = trabalho.submissoes_p_etapa
+        context['submit_checklist'] = trabalho.get_submit_checklist()
+        context['can_submit'] = trabalho.can_submit()
         context['page_title'] = f"Meu Trabalho"
 
         return context
@@ -493,16 +495,43 @@ class MeuTrabalhoSubmitView(MeustrabalhosMixin, EditView):
         if self.request.user not in self.object.autores:
             messages.error(self.request, "Você não tem permissão para editar este trabalho.")
             return redirect(self.get_success_url())
-        if self.object.tipo_chamada.primeira_chamada.status == StatusChamada.ENCERRADO:
+        if self.object.tipo_chamada.primeira_chamada and self.object.tipo_chamada.primeira_chamada.status == StatusChamada.ENCERRADO:
             messages.error(self.request, "Não é possível submeter o trabalho pois a chamada inicial da etapa foi encerrada.")
-            return redirect(reverse('user:trabalho-detail', kwargs={'pk': self.object.pk}))  
+            return redirect(reverse('user:trabalho-detail', kwargs={'pk': self.object.pk}))
+        if not self.object.can_submit():
+            missing_fields = self.object.get_missing_submit_fields()
+            missing_labels = {
+                "titulo": "título",
+                "area_tematica": "área temática",
+                "tipo_chamada": "tipo da chamada",
+                "autor_principal": "autor principal",
+                "resumo": "resumo",
+                "palavras_chave": "palavras-chave",
+                "descricao": "descrição",
+                "documento_n_identificado": "documento da etapa inicial",
+                "documento_identificado": "documento da etapa final",
+            }
+            labels = ", ".join(missing_labels.get(field, field) for field in missing_fields)
+            messages.error(self.request, f"Não foi possível submeter o trabalho. Faltam: {labels}.")
+            return redirect(reverse('user:trabalho-detail', kwargs={'pk': self.object.pk}))
         return super().get(request, *args, **kwargs)
     
     def get_confirm_message(self, **kwargs):
         obj = self.get_object()
-        return self.confirm_message.format(object=obj)
+        checklist_items = "".join(
+            f'<li><span class="{ "text-success" if item["complete"] else "text-danger" }">{ "✓" if item["complete"] else "✕" }</span> {item["label"]}</li>'
+            for item in obj.get_submit_checklist()
+        )
+        return (
+            f'{self.confirm_message.format(object=obj)}'
+            f'<div class="mt-3"><strong>Checklist final:</strong><ul class="mb-0 mt-2">{checklist_items}</ul></div>'
+            '<div class="mt-3 small text-muted">Após a submissão, o trabalho não poderá mais ser editado.</div>'
+        )
     
     def form_valid(self, form):
+        if not form.instance.can_submit():
+            messages.error(self.request, "O trabalho ainda não está pronto para submissão.")
+            return redirect(reverse('user:trabalho-detail', kwargs={'pk': form.instance.pk}))
         form.instance.status = StatusTrabalho.SUBMETIDO
         return super().form_valid(form)
 
