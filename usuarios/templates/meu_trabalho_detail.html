@@ -9,6 +9,28 @@
         {% crispy form %}
         </div>
       </fieldset>
+
+      {% if object.status == 'RASCUNHO' %}
+      <fieldset class="border rounded p-3 mt-3 bg-light-subtle">
+        <legend class="bg-light px-2 small text-secondary mb-0">Revisão final antes da submissão</legend>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <strong>Status do envio</strong>
+          {% if can_submit %}
+            <span class="badge bg-success-subtle text-success-emphasis">Pronto para submissão</span>
+          {% else %}
+            <span class="badge bg-warning-subtle text-warning-emphasis">Faltam itens</span>
+          {% endif %}
+        </div>
+        <ul class="mb-0 ps-3">
+          {% for item in submit_checklist %}
+            <li class="{% if item.complete %}text-success{% else %}text-danger{% endif %} mb-1">
+              {% if item.complete %}<i class="fa-solid fa-circle-check me-2"></i>{% else %}<i class="fa-solid fa-circle-xmark me-2"></i>{% endif %}{{ item.label }}
+            </li>
+          {% endfor %}
+        </ul>
+      </fieldset>
+      {% endif %}
+
       <fieldset>
         {%include "includes/trabalho_submissao_list.html" %}
       </fieldset>
@@ -20,13 +42,14 @@
         href="{% url 'user:trabalho-edit' object.pk  %}">
         Editar
       </a>
-      <a class="btn btn-success ms-2 text-light" hx-get="{% url 'user:trabalho-submeter' object.pk %}" hx-target="#app-modal"
+      <a class="btn btn-success ms-2 text-light {% if not can_submit %}disabled{% endif %}"
+        hx-get="{% url 'user:trabalho-submeter' object.pk %}" hx-target="#app-modal"
         hx-trigger="click" data-bs-toggle="modal" data-bs-target="#app-modal"
-        href="{% url 'user:trabalho-submeter' object.pk  %}">
+        href="{% if can_submit %}{% url 'user:trabalho-submeter' object.pk %}{% else %}#{% endif %}">
         Submeter
       </a>
       {% endif %}
-     
+
     </div>
   </div>
 {% endblock content %}

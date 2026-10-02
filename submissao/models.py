@@ -2,7 +2,7 @@ from django.db import models
 from core.models import get_hoje, validate_future_date
 from documentos.models import Documento, TipoDocumento
 from eventos.models  import AreaTematica
-from chamadas.models import EtapaChamada, FormaAvaliacao, StatusChamada, TipoChamada, Chamada, CriterioAvaliacao
+from chamadas.models import EtapaChamada, FormaAvaliacao, OpcoesChamada, StatusChamada, TipoChamada, Chamada, CriterioAvaliacao
 from usuarios.models import User
 from eventos.models import Avaliador
 from django.utils.translation import gettext_lazy as _
@@ -57,10 +57,69 @@ class Trabalho(models.Model):
         for chamada in self.tipo_chamada.lista_chamadas:
             submissao = self.submissoes.filter(chamada=chamada).first()
             if not submissao:
-                submissao = Submissao.objects.create(trabalho=self, chamada=chamada, documento=documento)
+                submissao = Submissao.objects.create(trabalho=self, chamada=chamada)
             submissoes.append(submissao)
         return submissoes
-    
+
+    def get_missing_submit_fields(self):
+        missing_fields = []
+        if not self.titulo:
+            missing_fields.append("titulo")
+        if not self.area_tematica_id:
+            missing_fields.append("area_tematica")
+        if not self.tipo_chamada_id:
+            missing_fields.append("tipo_chamada")
+        if not self.autor_principal_id:
+            missing_fields.append("autor_principal")
+
+        if self.tipo_chamada:
+            opcoes = list(self.tipo_chamada.opcoes or [])
+            if OpcoesChamada.RESUMO in opcoes and not self.resumo:
+                missing_fields.append("resumo")
+            if OpcoesChamada.RESUMO in opcoes and not self.palavras_chave:
+                missing_fields.append("palavras_chave")
+            if OpcoesChamada.DESCRICAO in opcoes and not self.descricao:
+                missing_fields.append("descricao")
+
+        if self.tipo_chamada and self.tipo_chamada.primeira_chamada and self.tipo_chamada.primeira_chamada.tem_submissao:
+            submissao_inicial = self.submissoes.filter(chamada=self.tipo_chamada.primeira_chamada).first()
+            if not submissao_inicial or not submissao_inicial.documento or not submissao_inicial.documento.file:
+                missing_fields.append("documento_n_identificado")
+
+        if self.tipo_chamada and self.tipo_chamada.ultima_chamada and self.tipo_chamada.ultima_chamada.tem_submissao:
+            submissao_final = self.submissoes.filter(chamada=self.tipo_chamada.ultima_chamada).first()
+            if not submissao_final or not submissao_final.documento or not submissao_final.documento.file:
+                missing_fields.append("documento_identificado")
+
+        return missing_fields
+
+    def get_submit_checklist(self):
+        missing_fields = set(self.get_missing_submit_fields())
+        required_fields = [
+            ("titulo", "Título"),
+            ("area_tematica", "Área temática"),
+            ("tipo_chamada", "Tipo de chamada"),
+            ("autor_principal", "Autor principal"),
+            ("resumo", "Resumo"),
+            ("palavras_chave", "Palavras-chave"),
+            ("descricao", "Descrição"),
+            ("documento_n_identificado", "Documento da etapa inicial"),
+            ("documento_identificado", "Documento da etapa final"),
+        ]
+
+        checklist = []
+        for field_name, label in required_fields:
+            checklist.append({
+                "field": field_name,
+                "label": label,
+                "complete": field_name not in missing_fields,
+            })
+
+        return checklist
+
+    def can_submit(self):
+        return self.status == StatusTrabalho.RASCUNHO and not self.get_missing_submit_fields()
+
     def save(self, *args, **kwargs):
         self.slug = slugify(self.titulo)
         super().save(*args, **kwargs)

@@ -122,19 +122,17 @@ class MeuTrabalhoForm(forms.ModelForm):
 
     def validate_campos_opcionais(self, tipo_chamada):
         if tipo_chamada:
-            print(tipo_chamada.opcoes)
             if OpcoesChamada.RESUMO in tipo_chamada.opcoes and not self.cleaned_data.get('resumo'):
                 self.add_error('resumo', 'Resumo é obrigatório para esta chamada.')
-                raise forms.ValidationError("Resumo e palavras chave são obrigatórios para esta chamada.")
             if OpcoesChamada.RESUMO in tipo_chamada.opcoes and not self.cleaned_data.get('palavras_chave'):
-                self.add_error('palavras_chave', 'Palavras-chaves são obrigatórias para esta chamada.')    
-                raise forms.ValidationError("Palavras-chaves são obrigatórias para esta chamada.")
+                self.add_error('palavras_chave', 'Palavras-chaves são obrigatórias para esta chamada.')
             if OpcoesChamada.DESCRICAO in tipo_chamada.opcoes and not self.cleaned_data.get('descricao'):
                 self.add_error('descricao', 'Descrição é obrigatória para esta chamada.')
-                raise forms.ValidationError("Descrição é obrigatória para esta chamada.")
 
 
 class MeuTrabalhoAutoSubmissaoForm(MeuTrabalhoForm):
+    MAX_DOCUMENT_SIZE = 10 * 1024 * 1024
+
     documento_identificado = forms.FileField(
         required=False, 
         label="Documento identificado (ex: *.doc, *.docx)", 
@@ -203,8 +201,20 @@ class MeuTrabalhoAutoSubmissaoForm(MeuTrabalhoForm):
 
     def validate_file_format(self, field_name, allowed_extensions):
         file = self.cleaned_data.get(field_name)
-        if file and file.name.split('.')[-1].lower() not in allowed_extensions:
-            raise forms.ValidationError(f"O {field_name.replace('_', ' ')} deve estar no formato {', '.join(allowed_extensions).upper()}.")
+        if not file:
+            return file
+
+        extension = file.name.rsplit('.', 1)[-1].lower() if '.' in file.name else ''
+        if extension not in allowed_extensions:
+            raise forms.ValidationError(
+                f"O {field_name.replace('_', ' ')} deve estar no formato {', '.join(allowed_extensions).upper()}"
+            )
+
+        if getattr(file, 'size', 0) > self.MAX_DOCUMENT_SIZE:
+            raise forms.ValidationError(
+                f"O {field_name.replace('_', ' ')} deve ter no máximo 10 MB."
+            )
+
         return file
 
     def clean(self):
@@ -240,28 +250,38 @@ class MeuTrabalhoAutoSubmissaoForm(MeuTrabalhoForm):
 
     def create_or_update_submission(self, instance, chamada):
         submissao, created = instance.submissoes.get_or_create(chamada=chamada)
-        documento = None
+        documento = submissao.documento
+
         if chamada.etapa == EtapaChamada.INICIAL:
-            # Se for inicial, adiciona o documento não identificado, se presente
             documento_n_identificado = self.cleaned_data.get('documento_n_identificado')
             if documento_n_identificado:
-                documento = Documento.objects.create(
-                    file=documento_n_identificado,
-                    tipo=TipoDocumento.TRABALHO,
-                    descricao=f'Documento da Chamada Inicial - {instance.id}'
-                )
-                
+                if documento is None:
+                    documento = Documento.objects.create(
+                        file=documento_n_identificado,
+                        tipo=TipoDocumento.TRABALHO,
+                        descricao=f'Documento da Chamada Inicial - {instance.id}'
+                    )
+                else:
+                    documento.file = documento_n_identificado
+                    documento.descricao = f'Documento da Chamada Inicial - {instance.id}'
+                    documento.tipo = TipoDocumento.TRABALHO
+                    documento.save()
+
         elif chamada.etapa == EtapaChamada.FINAL:
-            # Se for final, adiciona o documento identificado, se presente
             documento_identificado = self.cleaned_data.get('documento_identificado')
             if documento_identificado:
-                documento = Documento.objects.create(
-                    file=documento_identificado,
-                    tipo=TipoDocumento.TRABALHO,
-                    descricao=f'Documento da Chamada Final - {instance.id}'
-                )
-        else:
-            # Para outras chamadas, cria uma submissão sem arquivo, com nome e ID do trabalho
+                if documento is None:
+                    documento = Documento.objects.create(
+                        file=documento_identificado,
+                        tipo=TipoDocumento.TRABALHO,
+                        descricao=f'Documento da Chamada Final - {instance.id}'
+                    )
+                else:
+                    documento.file = documento_identificado
+                    documento.descricao = f'Documento da Chamada Final - {instance.id}'
+                    documento.tipo = TipoDocumento.TRABALHO
+                    documento.save()
+        elif not documento:
             documento = Documento.objects.create(
                 tipo=TipoDocumento.TRABALHO,
                 descricao=f'Documento associado à chamada {chamada} sem arquivo.'
