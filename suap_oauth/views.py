@@ -1,5 +1,3 @@
-from typing import Optional
-
 from allauth.socialaccount import app_settings
 from allauth.socialaccount.adapter import get_adapter
 from allauth.socialaccount.providers.oauth2.views import (
@@ -11,27 +9,43 @@ from allauth.socialaccount.providers.oauth2.views import (
 
 class SuapOAuth2Adapter(OAuth2Adapter):
     provider_id = "suap"
+
+    # O SUAP utiliza um cliente OAuth2 do tipo Confidential.
+    # O allauth envia client_id e client_secret no corpo da
+    # requisição para o endpoint de token.
+    basic_auth = False
+
     settings = app_settings.PROVIDERS.get(provider_id, {})
 
     if "SUAP_URL" in settings:
         web_url = settings.get("SUAP_URL").rstrip("/")
-        api_url = "{0}/api".format(web_url)
+        api_url = f"{web_url}/api"
     else:
         web_url = "https://suap.ifrn.edu.br"
         api_url = "https://suap.ifrn.edu.br/api"
 
-    access_token_url = "{0}/o/token/".format(web_url)
-    authorize_url = "{0}/o/authorize/".format(web_url)
-    profile_url = "{0}/eu/".format(api_url)
+    access_token_url = f"{web_url}/o/token/"
+    authorize_url = f"{web_url}/o/authorize/"
+    profile_url = f"{api_url}/rh/eu/"
 
     def complete_login(self, request, app, token, **kwargs):
-        headers = {"Authorization": "Bearer {}".format(token.token)}
-        resp = (
-            get_adapter().get_requests_session().get(self.profile_url, headers=headers)
+        headers = {
+            "Authorization": f"Bearer {token.token}",
+        }
+
+        response = get_adapter().get_requests_session().get(
+            self.profile_url,
+            headers=headers,
         )
-        resp.raise_for_status()
-        extra_data = resp.json()
-        return self.get_provider().sociallogin_from_response(request, extra_data)
+
+        response.raise_for_status()
+
+        extra_data = response.json()
+
+        return self.get_provider().sociallogin_from_response(
+            request,
+            extra_data,
+        )
 
 
 oauth2_login = OAuth2LoginView.adapter_view(SuapOAuth2Adapter)
