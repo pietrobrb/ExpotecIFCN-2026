@@ -42,7 +42,7 @@ Verifique a configuração e inicie o servidor:
 
 Acesse `http://127.0.0.1:8000/portal/`.
 
-O `.env`, o banco local `db.sqlite3` e o ambiente `venv` não são enviados ao GitHub. Cada pessoa que clonar o projeto precisa preparar seu ambiente.
+O `.env`, o banco local `db.sqlite3` e o ambiente `venv` não são enviados ao GitHub. Cada pessoa que clonar o projeto precisa preparar seu próprio ambiente.
 
 ## Integração com o SUAP
 
@@ -55,7 +55,26 @@ Acesse [a página de aplicações OAuth2 do SUAP](https://suap.ifrn.edu.br/admin
   - `http://localhost:8000/accounts/suap/login/callback/`
 - **Client type:** `Confidential`.
 
-Anote o Client ID e o Client Secret gerados e coloque-os no seu `.env`, nas variáveis `SUAP_CLIENT_ID` e `SUAP_CLIENT_SECRET`. Não envie essas credenciais ao GitHub.
+Anote o Client ID e o Client Secret gerados e coloque-os no seu `.env`, nas variáveis `SUAP_CLIENT_ID` e `SUAP_CLIENT_SECRET`.
+
+**Nunca envie essas credenciais ao GitHub.**
+
+Para informações adicionais sobre a integração OAuth2 com o SUAP, consulte [`doc/suap_oauth.md`](doc/suap_oauth.md).
+
+## Estrutura do projeto
+
+O projeto é dividido em aplicações Django com responsabilidades específicas:
+
+- `eventos/` — gerenciamento dos eventos e informações das edições.
+- `chamadas/` — gerenciamento das chamadas, etapas, critérios e documentos relacionados.
+- `submissao/` — gerenciamento da submissão de trabalhos.
+- `credenciamento/` — funcionalidades relacionadas ao credenciamento.
+- `documentos/` — gerenciamento de documentos.
+- `enderecos/` — gerenciamento de endereços.
+- `usuarios/` — gerenciamento dos usuários e informações dos participantes.
+- `portal/` — páginas públicas do evento.
+- `suap_oauth/` — integração de autenticação com o SUAP.
+- `config/` — configurações, URLs e arquivos gerais do projeto.
 
 ## Atualizar os dados iniciais
 
@@ -67,13 +86,83 @@ Quando for necessário atualizar o arquivo de dados iniciais do projeto:
 
 Confira as alterações nesse arquivo antes de incluí-lo em um commit.
 
+## Testes e verificações
+
+Antes de abrir um Pull Request, verifique a configuração do projeto:
+
+```powershell
+.\venv\Scripts\python.exe manage.py check
+```
+
+Execute os testes:
+
+```powershell
+.\venv\Scripts\python.exe manage.py test
+```
+
+Também é recomendado verificar problemas de whitespace no diff:
+
+```powershell
+git diff --check
+```
+
+Os testes relevantes devem passar antes da abertura do Pull Request.
+
 ## Fluxo de desenvolvimento
 
 1. Clone o repositório e configure o ambiente seguindo as instruções acima.
-2. Antes de começar um novo trabalho, use `git pull` para receber as alterações da equipe.
-3. Faça e teste suas alterações. Confira os arquivos modificados com `git status`.
-4. Adicione apenas os arquivos relacionados à alteração e crie um commit com uma mensagem clara.
-5. Use `git push` para enviar o commit ao GitHub.
+
+2. Antes de começar um novo trabalho, atualize a `main`:
+
+   ```powershell
+   git checkout main
+   git pull origin main
+   ```
+
+3. Crie uma branch específica para a tarefa:
+
+   ```powershell
+   git checkout -b feature/nome-da-funcionalidade
+   ```
+
+4. Faça e teste suas alterações.
+
+5. Confira os arquivos modificados:
+
+   ```powershell
+   git status
+   ```
+
+6. Adicione apenas os arquivos relacionados à alteração:
+
+   ```powershell
+   git add caminho/do/arquivo
+   ```
+
+7. Crie um commit com uma mensagem clara:
+
+   ```powershell
+   git commit -m "Descrição da alteração"
+   ```
+
+8. Envie a branch para o GitHub:
+
+   ```powershell
+   git push -u origin feature/nome-da-funcionalidade
+   ```
+
+9. Abra um Pull Request da sua branch para `main`.
+
+10. Aguarde a revisão e a execução dos testes do Pull Request.
+
+11. Após o merge, atualize novamente sua `main`:
+
+   ```powershell
+   git checkout main
+   git pull origin main
+   ```
+
+Não faça alterações diretamente na `main`.
 
 Consulte também o [GitHub Flow](https://docs.github.com/pt/get-started/using-github/github-flow).
 
@@ -90,4 +179,6 @@ Siga o [PEP 8](https://peps.python.org/pep-0008/) e o [guia de estilo do Django]
 
 ## Dependências
 
-Ao instalar um pacote necessário ao projeto, adicione-o ao `requirements.txt`, teste a instalação e inclua essa alteração no commit. Não substitua automaticamente o arquivo inteiro usando `pip freeze`, pois ele também pode listar pacotes sem relação com o projeto.
+Ao instalar um pacote necessário ao projeto, adicione-o ao `requirements.txt`, teste a instalação e inclua essa alteração no commit.
+
+Não substitua automaticamente o arquivo inteiro usando `pip freeze`, pois ele também pode listar pacotes sem relação com o projeto.
