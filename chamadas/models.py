@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -159,6 +160,26 @@ class Chamada(models.Model):
     def __str__(self):
         return f"{self.tipo} - {self.get_etapa_display()} ({self.get_status_display()})"
     
+    def clean(self):
+        super().clean()
+        erros = {}
+
+        if self.dt_inicio and self.dt_encerramento and self.dt_inicio > self.dt_encerramento:
+            erros['dt_encerramento'] = _(
+                "A data de encerramento deve ser igual ou posterior à data de início."
+            )
+
+        if self.forma_avaliacao != FormaAvaliacao.SEM:
+            if not self.min_avaliacoes or self.min_avaliacoes <= 0:
+                erros['min_avaliacoes'] = _("Mínimo de avaliações deve ser superior a 0.")
+            elif self.min_aprovacoes is not None and self.min_aprovacoes > self.min_avaliacoes:
+                erros['min_aprovacoes'] = _(
+                    "Mínimo de aprovações não pode ser maior que o mínimo de avaliações."
+                )
+
+        if erros:
+            raise ValidationError(erros)
+
     def save(self, *args, **kwargs):
         if self.status != StatusChamada.RASCUNHO:
             if self.dt_inicio <= get_hoje() <= self.dt_encerramento:
