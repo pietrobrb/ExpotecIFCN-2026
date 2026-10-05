@@ -1,0 +1,114 @@
+{% extends "private/layout.html" %}
+
+{% block title %}Suporte{% endblock title %}
+
+{% block content %}
+<section aria-labelledby="support-title">
+  <div class="row g-3">
+    <div class="col-12 col-xl-8">
+      <div class="mb-4">
+        <p class="text-muted small text-uppercase mb-1">{{ request.evento }}</p>
+        <h2 id="support-title" class="h4 mb-2">Como podemos ajudar?</h2>
+        <p class="text-muted mb-0">Encontre orientações para acessar sua conta, participar das atividades e acompanhar seus trabalhos.</p>
+      </div>
+
+      <div class="accordion" id="support-faq">
+        <article class="accordion-item">
+          <h3 class="accordion-header" id="support-heading-registration">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#support-registration" aria-expanded="true" aria-controls="support-registration">
+              Como faço minha inscrição no evento?
+            </button>
+          </h3>
+          <div id="support-registration" class="accordion-collapse collapse show" aria-labelledby="support-heading-registration" data-bs-parent="#support-faq">
+            <div class="accordion-body">
+              <p>Acesse a página de inscrição do evento e preencha os dados solicitados. Depois, consulte suas inscrições na área do participante.</p>
+              <a class="btn btn-sm btn-outline-primary" href="{% url 'user:inscricaoevento' %}">Ir para inscrição no evento</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="accordion-item">
+          <h3 class="accordion-header" id="support-heading-activities">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#support-activities" aria-expanded="false" aria-controls="support-activities">
+              Como me inscrevo em uma atividade?
+            </button>
+          </h3>
+          <div id="support-activities" class="accordion-collapse collapse" aria-labelledby="support-heading-activities" data-bs-parent="#support-faq">
+            <div class="accordion-body">
+              <p>Em Minhas Inscrições, consulte as atividades disponíveis, confira o período e a situação das vagas e selecione “Inscrever-se” quando a inscrição estiver aberta.</p>
+              <a class="btn btn-sm btn-outline-primary" href="{% url 'user:minhas_inscricoes' %}">Ver minhas inscrições</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="accordion-item">
+          <h3 class="accordion-header" id="support-heading-submissions">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#support-submissions" aria-expanded="false" aria-controls="support-submissions">
+              Onde envio ou acompanho um trabalho?
+            </button>
+          </h3>
+          <div id="support-submissions" class="accordion-collapse collapse" aria-labelledby="support-heading-submissions" data-bs-parent="#support-faq">
+            <div class="accordion-body">
+              <p>Acesse Meus Trabalhos para consultar as chamadas disponíveis e acompanhar suas submissões. Os prazos e critérios são informados em cada chamada.</p>
+              <a class="btn btn-sm btn-outline-primary" href="{% url 'user:trabalho-meus_trabalhos' %}">Acessar meus trabalhos</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="accordion-item">
+          <h3 class="accordion-header" id="support-heading-login">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#support-login" aria-expanded="false" aria-controls="support-login">
+              Como faço login com o SUAP?
+            </button>
+          </h3>
+          <div id="support-login" class="accordion-collapse collapse" aria-labelledby="support-heading-login" data-bs-parent="#support-faq">
+            <div class="accordion-body">
+              <p>Na tela de acesso, escolha “Acessar com o SUAP” e conclua a autenticação. Se sua conta já estiver aberta, saia dela antes de tentar acessar outra conta.</p>
+              <a class="btn btn-sm btn-outline-primary" href="{% url 'account_login' %}">Ir para a tela de acesso</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="accordion-item">
+          <h3 class="accordion-header" id="support-heading-certificates">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#support-certificates" aria-expanded="false" aria-controls="support-certificates">
+              Onde encontro meus certificados?
+            </button>
+          </h3>
+          <div id="support-certificates" class="accordion-collapse collapse" aria-labelledby="support-heading-certificates" data-bs-parent="#support-faq">
+            <div class="accordion-body">
+              <p>Consulte a página de certificados. A presença nas atividades precisa estar confirmada; o certificado geral também depende da carga horária mínima e da configuração da assinatura oficial.</p>
+              <a class="btn btn-sm btn-outline-primary" href="{% url 'user:certificados' %}">Ver certificados</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <aside class="col-12 col-xl-4" aria-labelledby="support-contact-title">
+      <div class="card shadow-none border h-100">
+        <div class="card-body">
+          <h2 id="support-contact-title" class="h5">Fale com a organização</h2>
+          {% for contato in contatos %}
+            <div class="border-top pt-3 mt-3">
+              <h3 class="h6 mb-2">{{ contato.nome }}</h3>
+              {% if contato.email %}
+                <p class="mb-1"><i class="fas fa-envelope text-muted mr-2" aria-hidden="true"></i><a href="mailto:{{ contato.email }}">{{ contato.email }}</a></p>
+              {% endif %}
+              {% if contato.telefone %}
+                <p class="mb-0"><i class="fas fa-phone text-muted mr-2" aria-hidden="true"></i><a href="tel:{{ contato.telefone }}">{{ contato.telefone }}</a></p>
+              {% endif %}
+            </div>
+          {% empty %}
+            <p class="text-muted mb-0">A organização ainda não publicou contatos para este evento. Consulte esta página novamente quando os canais oficiais forem cadastrados.</p>
+          {% endfor %}
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="mt-4">
+    <a href="{% url 'user:dashboard' %}" class="btn btn-outline-secondary">Voltar ao dashboard</a>
+  </div>
+</section>
+{% endblock content %}
