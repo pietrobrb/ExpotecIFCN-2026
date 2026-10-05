@@ -92,6 +92,21 @@ class CertificadosView(DetailView):
         return context
 
 
+class SuporteView(DetailView):
+    model = Evento
+    template_name = "suporte.html"
+    permission_required = ["is_user_rule"]
+
+    def get_object(self, queryset=None):
+        return self.request.evento
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "Suporte"
+        context["contatos"] = self.request.evento.contatos.all()
+        return context
+
+
 def certificate_pdf_response(pdf_bytes, filename):
     safe_filename = slugify(filename) or "certificado"
     response = HttpResponse(pdf_bytes, content_type="application/pdf")
