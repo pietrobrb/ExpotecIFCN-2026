@@ -126,39 +126,39 @@ Menu.add_item(portal, MenuItem(
 
 Menu.add_item(portal, MenuItem(
     "Programação",
-    url= reverse("portal:evento-atividades"),
-    icon='fas fa-home',
+    url=reverse("portal:evento-atividades"),
+    icon='fas fa-calendar-days',
 ))
 
 Menu.add_item(portal, MenuItem(
     "Chamada de Trabalhos",
-    url= reverse("portal:evento-chamadas"),
-    icon='fas fa-home',
+    url=reverse("portal:evento-chamadas"),
+    icon='fas fa-bullhorn',
 ))
-
 
 Menu.add_item(portal, MenuItem(
     "Downloads",
-    url= reverse("portal:evento-downloads"),
-    icon='fas fa-home',
-    check=lambda request: request.evento and request.evento.downloads.exists()))
+    url=reverse("portal:evento-downloads"),
+    icon='fas fa-download',
+    check=lambda request: request.evento and request.evento.downloads.exists()
+))
 
 Menu.add_item(portal, MenuItem(
     "Organização",
-    url= reverse("portal:evento-comissoes"),
-    icon='fas fa-home',
+    url=reverse("portal:evento-comissoes"),
+    icon='fas fa-users',
 ))
 
 Menu.add_item(portal, MenuItem(
     "Area do Usuário",
     reverse('user:index'),
-    icon='fas fa-home',
+    icon='fas fa-user',
     check=lambda request: request.user.is_authenticated
 ))
 
 Menu.add_item(portal, MenuItem(
     "Acessar",
     url=reverse('account_login'),
-    icon='fas fa-home',
+    icon='fas fa-right-to-bracket',
     check=lambda request: not request.user.is_authenticated
 ))
