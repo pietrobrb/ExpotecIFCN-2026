@@ -1,8 +1,6 @@
 from django.contrib import admin
 
 from atividades.models import TipoAtividade
-from documentos.forms import DocumentoForm
-from documentos.models import Documento
 from eventos.forms import  EventoDocumentoForm, EventoForm
 from eventos.models import AreaTematica, Avaliador, Comissao, Evento, EventoDocumento, InscricaoEvento, Membro, Monitor
 
@@ -80,6 +78,7 @@ class InscricaoEventoAdmin(admin.ModelAdmin):
     )
     search_fields = ("usuario__nome_completo","evento__titulo")
     fields = ["evento", "usuario", "credenciado", "data_inscricao"]
+    readonly_fields = ("data_inscricao",)
     inlines = []
  
 admin.site.register(InscricaoEvento, InscricaoEventoAdmin)
