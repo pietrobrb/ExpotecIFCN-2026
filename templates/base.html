@@ -55,11 +55,11 @@
   {% endif %}
   
 
-  <meta name="description" content="IV Exposição Científica, Tecnológica e Cultural – EXPOTEC - IFRN/SPP" />
+  <meta name="description" content="{{ request.evento.edicao }} {{ request.evento.titulo }} {{ request.evento.ano }} – IFRN Campus Currais Novos" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="{{request.evento.edicao}} {{request.evento.titulo}} SPP" />
+  <meta property="og:title" content="{{ request.evento.edicao }} {{ request.evento.titulo }} {{ request.evento.ano }} – IFRN/CN" />
   <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}" />
-  <meta property="og:description" content="IV Exposição Científica, Tecnológica e Cultural – EXPOTEC - IFRN/SPP" />
+  <meta property="og:description" content="{{ request.evento.edicao }} {{ request.evento.titulo }} {{ request.evento.ano }} – IFRN Campus Currais Novos" />
   {% if request.evento.logo %}
   <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ request.evento.logo.url }}" />
   {% endif %}

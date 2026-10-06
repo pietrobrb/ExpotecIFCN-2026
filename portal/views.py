@@ -48,7 +48,7 @@ class AtividadesEventoView(PublicTableListView):
         if dias:
             id_dia = self.kwargs.get('dia')
             id_dia = int(id_dia)-1
-            dia =dias[id_dia] if id_dia < len(dias) else None
+            dia = dias[id_dia] if 0 <= id_dia < len(dias) else None
             if dia:
                 qs = qs.filter(dia=dia)
         return qs
