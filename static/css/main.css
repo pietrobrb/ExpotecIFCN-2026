@@ -1873,7 +1873,7 @@ figure.figure-fit.gallery-item {
 /* Mapa */
 
 .location-map {
-  min-height: 380px;
+  height: 380px;
 
   overflow: hidden;
 
@@ -1884,8 +1884,13 @@ figure.figure-fit.gallery-item {
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
 }
 
-.location-map #map {
-  min-height: 380px;
+.location-map iframe {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  border: 0;
 }
 
 

@@ -1,11 +1,15 @@
 {% extends 'public/layout.html' %}
+
 {% load static i18n custom_tags %}
-{% block title %} Início {% endblock title %}
+
+{% block title %}Início{% endblock title %}
+
 
 {% block content %}
 
 <header id="site-header" class="site-header valign-center">
     <div class="intro px-0">
+
         <div id="carousel_noticias" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner pt-md-0 pt-5">
 
@@ -23,14 +27,15 @@
                 </div>
                 {% endif %}
 
+
                 {% for n in evento.top5_noticias %}
 
                 <div class="carousel-item {% if forloop.first and not evento.video_promocional %}active{% endif %}">
 
                     {% if n.poster %}
-                    <img src="{{ n.poster.url }}" class="w-100">
+                    <img src="{{ n.poster.url }}" class="w-100" alt="{{ n.titulo }}">
                     {% else %}
-                    <img src="{% static 'img/placeholders/noticias.jpg' %}" class="w-100">
+                    <img src="{% static 'img/placeholders/noticias.jpg' %}" class="w-100" alt="Imagem da notícia">
                     {% endif %}
 
                     <div class="carousel-caption d-md-block">
@@ -88,25 +93,30 @@
                 {% endfor %}
 
             </div>
+
             <button class="carousel-control-prev" type="button" data-bs-target="#carousel_noticias"
                 data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Anterior</span>
             </button>
+
             <button class="carousel-control-next" type="button" data-bs-target="#carousel_noticias"
                 data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Próximo</span>
             </button>
+
         </div>
     </div>
 </header>
+
 
 <section id="about" class="section about">
     <div class="container">
 
         <div class="row mb-5">
             <div class="col-12 text-center">
+
                 <span class="about-kicker">
                     {{ evento.edicao }} EDIÇÃO
                 </span>
@@ -120,8 +130,10 @@
                     {{ evento.subtitulo }}
                 </p>
                 {% endif %}
+
             </div>
         </div>
+
 
         <div class="row align-items-center g-5">
 
@@ -141,10 +153,12 @@
                     </p>
                     {% endif %}
 
+
                     <div class="about-info">
 
                         {% if evento.dt_inicio %}
                         <div class="about-info-item">
+
                             <span class="about-info-icon">
                                 <i class="fas fa-calendar-alt"></i>
                             </span>
@@ -153,16 +167,20 @@
                                 <strong>Data</strong>
                                 <p>
                                     {{ evento.dt_inicio|date:"d/m/Y" }}
+
                                     {% if evento.dt_encerramento %}
                                     — {{ evento.dt_encerramento|date:"d/m/Y" }}
                                     {% endif %}
                                 </p>
                             </div>
+
                         </div>
                         {% endif %}
 
+
                         {% if evento.endereco %}
                         <div class="about-info-item">
+
                             <span class="about-info-icon">
                                 <i class="fas fa-map-marker-alt"></i>
                             </span>
@@ -171,11 +189,13 @@
                                 <strong>Local</strong>
                                 <p>
                                     {{ evento.endereco.local|default:"IFRN" }}
+
                                     {% if evento.endereco.cidade %}
                                     · {{ evento.endereco.cidade }}
                                     {% endif %}
                                 </p>
                             </div>
+
                         </div>
                         {% endif %}
 
@@ -184,21 +204,27 @@
                 </div>
             </div>
 
+
             <div class="col-lg-6">
+
                 {% if evento.imagem_promocional %}
                 <div class="about-image">
                     <img src="{{ evento.imagem_promocional.url }}" alt="{{ evento.titulo|default:'Expotec' }}"
                         class="img-fluid">
                 </div>
+
                 {% else %}
+
                 <div class="about-image about-image-placeholder">
                     <div>
                         <span>{{ evento.edicao }}</span>
                         <strong>{{ evento.titulo|default:"EXPOTEC" }}</strong>
-                        <small>2026</small>
+                        <small>{{ evento.ano|default:"2026" }}</small>
                     </div>
                 </div>
+
                 {% endif %}
+
             </div>
 
         </div>
@@ -206,12 +232,15 @@
     </div>
 </section>
 
+
 {% if evento.ItemGaleria.all %}
 <section id="gallery" class="section gallery">
+
     <div class="container">
 
         <div class="row mb-5">
             <div class="col-12 text-center">
+
                 <span class="about-kicker">
                     MOMENTOS
                 </span>
@@ -223,15 +252,20 @@
                 <p class="about-subtitle">
                     Confira registros e momentos da Expotec.
                 </p>
+
             </div>
         </div>
+
 
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
 
             {% for j in evento.ItemGaleria.all %}
+
             <div class="col">
+
                 <a class="gallery-link" {% if j.url %} href="{{ j.url }}" target="_blank" rel="noopener noreferrer" {%
                     else %} href="{{ j.img.url }}" target="_blank" {% endif %}>
+
                     <figure class="gallery-card">
 
                         <img src="{{ j.img.url }}" alt="Imagem da {{ evento.titulo|default:'Expotec' }}"
@@ -242,23 +276,31 @@
                         </div>
 
                     </figure>
+
                 </a>
+
             </div>
+
             {% endfor %}
 
         </div>
 
     </div>
+
 </section>
 {% endif %}
 
+
 <section id="facts" class="section event-facts">
+
     <div class="container">
 
         <div class="row g-4">
 
             <div class="col-6 col-lg-3">
+
                 <div class="fact-card">
+
                     <div class="fact-icon">
                         <i class="fas fa-calendar-alt"></i>
                     </div>
@@ -266,25 +308,36 @@
                     <span class="fact-label">Data</span>
 
                     <strong class="fact-value">
+
                         {% if evento.dt_inicio %}
+
                         {{ evento.dt_inicio|date:"d/m" }}
+
                         {% if evento.dt_encerramento %}
                         — {{ evento.dt_encerramento|date:"d/m" }}
                         {% endif %}
+
                         {% else %}
+
                         Em breve
+
                         {% endif %}
+
                     </strong>
 
                     {% if evento.ano %}
                     <small>{{ evento.ano }}</small>
                     {% endif %}
+
                 </div>
+
             </div>
 
 
             <div class="col-6 col-lg-3">
+
                 <div class="fact-card">
+
                     <div class="fact-icon">
                         <i class="fas fa-map-marker-alt"></i>
                     </div>
@@ -292,22 +345,28 @@
                     <span class="fact-label">Local</span>
 
                     <strong class="fact-value">
+
                         {% if evento.endereco %}
                         {{ evento.endereco.local|default:"IFRN" }}
                         {% else %}
                         IFRN
                         {% endif %}
+
                     </strong>
 
                     {% if evento.endereco.cidade %}
                     <small>{{ evento.endereco.cidade }}</small>
                     {% endif %}
+
                 </div>
+
             </div>
 
 
             <div class="col-6 col-lg-3">
+
                 <div class="fact-card">
+
                     <div class="fact-icon">
                         <i class="fas fa-ticket-alt"></i>
                     </div>
@@ -319,12 +378,16 @@
                     </strong>
 
                     <small>Aberta ao público</small>
+
                 </div>
+
             </div>
 
 
             <div class="col-6 col-lg-3">
+
                 <div class="fact-card">
+
                     <div class="fact-icon">
                         <i class="fas fa-bullhorn"></i>
                     </div>
@@ -336,47 +399,70 @@
                     </strong>
 
                     <small>Áreas temáticas</small>
+
                 </div>
+
             </div>
 
         </div>
 
     </div>
+
 </section>
 
+
 <section id="schedule" class="section thematic-areas">
+
     <div class="container">
 
         <div class="section-heading text-center">
-            <span class="section-kicker">XI EXPOTEC</span>
-            <h3 class="section-title">Áreas Temáticas</h3>
+
+            <span class="section-kicker">
+                XI EXPOTEC
+            </span>
+
+            <h3 class="section-title">
+                Áreas Temáticas
+            </h3>
+
             <p>
                 Conheça os temas que fazem parte da programação da XI Expotec.
             </p>
+
         </div>
+
 
         <div class="row g-4 justify-content-center">
 
             {% for a in evento.areas_tematicas.all %}
 
             <div class="col-md-4 col-sm-6 d-flex">
+
                 <a href="{% url 'portal:evento-area' a.pk %}" class="thematic-area-card flex-fill text-decoration-none"
                     style="--area-color: {{ a.cor|default:'#198754' }};">
 
                     <div class="thematic-area-icon">
+
                         {% if a.icone %}
                         <i class="fas {{ a.icone }}"></i>
                         {% else %}
                         <i class="fas fa-lightbulb"></i>
                         {% endif %}
+
                     </div>
 
                     <div class="thematic-area-content">
-                        <h3>{{ a.nome }}</h3>
+
+                        <h3>
+                            {{ a.nome }}
+                        </h3>
 
                         {% if a.descricao %}
-                        <p>{{ a.descricao }}</p>
+                        <p>
+                            {{ a.descricao }}
+                        </p>
                         {% endif %}
+
                     </div>
 
                     <span class="thematic-area-arrow">
@@ -384,22 +470,30 @@
                     </span>
 
                 </a>
+
             </div>
+
 
             {% empty %}
 
             <div class="col-12">
+
                 <div class="thematic-empty">
+
                     <div class="thematic-empty-icon">
                         <i class="fas fa-layer-group"></i>
                     </div>
 
-                    <h4>Em breve</h4>
+                    <h4>
+                        Em breve
+                    </h4>
 
                     <p>
                         As áreas temáticas da XI Expotec serão divulgadas em breve.
                     </p>
+
                 </div>
+
             </div>
 
             {% endfor %}
@@ -407,10 +501,14 @@
         </div>
 
     </div>
+
 </section>
 
+
 <section id="contribution" class="section contribution-section">
+
     <div class="container">
+
         <div class="contribution-content">
 
             <span class="section-kicker contribution-kicker">
@@ -427,18 +525,26 @@
             </p>
 
             <a class="btn contribution-button" href="{% url 'account_login' %}">
+
                 Acessar área de submissões
+
                 <i class="fas fa-arrow-right ms-2"></i>
+
             </a>
 
         </div>
+
     </div>
+
 </section>
 
+
 <section id="partner" class="section partners-section">
+
     <div class="container">
 
         <div class="section-heading text-center">
+
             <span class="section-kicker">
                 XI EXPOTEC
             </span>
@@ -450,7 +556,9 @@
             <p>
                 Instituições e organizações que apoiam a realização da Expotec.
             </p>
+
         </div>
+
 
         <div class="row g-4 justify-content-center">
 
@@ -459,19 +567,29 @@
             <div class="col-6 col-md-4 col-lg-3">
 
                 {% if p.url %}
+
                 <a class="partner-card" href="{{ p.url }}" target="_blank" rel="noopener noreferrer">
+
                     {% else %}
+
                     <div class="partner-card">
+
                         {% endif %}
+
 
                         {% if p.logo %}
                         <img src="{{ p.logo.url }}" alt="Logo do parceiro">
                         {% endif %}
 
+
                         {% if p.url %}
+
                 </a>
+
                 {% else %}
+
             </div>
+
             {% endif %}
 
         </div>
@@ -479,19 +597,23 @@
         {% empty %}
 
         <div class="col-12">
+
             <div class="partners-empty">
 
                 <div class="partners-empty-icon">
                     <i class="fas fa-handshake"></i>
                 </div>
 
-                <h4>Em breve</h4>
+                <h4>
+                    Em breve
+                </h4>
 
                 <p>
                     Os parceiros da XI Expotec serão divulgados em breve.
                 </p>
 
             </div>
+
         </div>
 
         {% endfor %}
@@ -499,12 +621,16 @@
     </div>
 
     </div>
+
 </section>
 
+
 <section id="location" class="section location-section">
+
     <div class="container">
 
         <div class="section-heading text-center">
+
             <span class="section-kicker">
                 COMO CHEGAR
             </span>
@@ -517,11 +643,14 @@
                 Confira onde será realizada a {{ evento.edicao }}
                 {{ evento.titulo|default:"Expotec" }}.
             </p>
+
         </div>
+
 
         <div class="row g-4 align-items-stretch">
 
             <div class="col-lg-4">
+
                 <div class="location-info">
 
                     <div class="location-icon">
@@ -529,14 +658,18 @@
                     </div>
 
                     <h4>
+
                         {% if evento.endereco %}
                         {{ evento.endereco.local|default:"IFRN" }}
                         {% else %}
                         IFRN
                         {% endif %}
+
                     </h4>
 
+
                     {% if evento.endereco %}
+
                     <address>
 
                         {% if evento.endereco.logradouro %}
@@ -552,6 +685,7 @@
                         {% endif %}
 
                     </address>
+
                     {% endif %}
 
 
@@ -582,13 +716,20 @@
                     {% endif %}
 
                 </div>
+
             </div>
 
 
             <div class="col-lg-8">
 
                 <div class="location-map">
-                    <div id="map" class="w-100 h-100"></div>
+
+                    <iframe
+                        src="https://www.openstreetmap.org/export/embed.html?bbox=-36.5365%2C-6.2555%2C-36.5315%2C-6.2505&amp;layer=mapnik&amp;marker=-6.253073%2C-36.53412"
+                        loading="lazy"
+                        title="Mapa do IFRN Campus Currais Novos">
+                    </iframe>
+
                 </div>
 
             </div>
@@ -596,47 +737,42 @@
         </div>
 
     </div>
+
 </section>
+
 {% endblock content %}
 
 
 {% block extra_scripts %}
-{{ super.block }}
-<script src="{%static 'vendor/smoothscroll/smooth-scroll.min.js'%}"></script>
-<script src="{%static 'js/main.js'%}"></script>
-<script async defer
-    src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&libraries=geometry"></script>
+
+{{ block.super }}
+
+<script src="{% static 'vendor/smoothscroll/smooth-scroll.min.js' %}"></script>
+<script src="{% static 'js/main.js' %}"></script>
+
 <script>
-    function initMap() {
-        const map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 17
-        });
+    document.addEventListener("DOMContentLoaded", function () {
 
-        const endereco = "{% if evento.endereco %}{{ evento.endereco|escapejs }}{% endif %}";
-        if (!endereco) return;
-        const geocoder = new google.maps.Geocoder();
+        const promoVideo = document.getElementById("promo_video");
 
-        geocoder.geocode({ 'address': endereco }, function (results, status) {
-            if (status === 'OK') {
-                const latLng = results[0].geometry.location;
-                map.setCenter(latLng);
-            } else {
-                console.warn('Endereço não localizado:', status);
-            }
-        });
-    }
+        if (promoVideo) {
+            promoVideo.addEventListener("canplaythrough", function () {
+                promoVideo.play().catch(function () {
+                    // O navegador pode bloquear autoplay.
+                });
+            });
+        }
 
-    window.onload = function () {
-        initMap();
-        video = $("#promo_video")[0];
-        video.addEventListener('canplaythrough', function () {
-            video.play();
-        });
 
-        $("#carousel_noticias").carousel({
-            pause: "hover"
-        });
-    };
+        const carouselNoticias = $("#carousel_noticias");
 
+        if (carouselNoticias.length) {
+            carouselNoticias.carousel({
+                pause: "hover"
+            });
+        }
+
+    });
 </script>
+
 {% endblock extra_scripts %}
