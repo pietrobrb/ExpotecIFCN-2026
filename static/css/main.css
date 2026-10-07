@@ -649,7 +649,7 @@ ul li {
 
 
 .portal-logo img {
-  filter: brightness(100);
+  filter: none;
   height: 100px;
   transition: all 0.3s;
 }
