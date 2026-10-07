@@ -1,5 +1,6 @@
 # Sistema de Gerenciamento da Expotec 2026
 
+
 Projeto Django para gerenciamento da Expotec do IFRN Currais Novos.
 
 ## Configuração no Windows
@@ -180,5 +181,10 @@ Siga o [PEP 8](https://peps.python.org/pep-0008/) e o [guia de estilo do Django]
 ## Dependências
 
 Ao instalar um pacote necessário ao projeto, adicione-o ao `requirements.txt`, teste a instalação e inclua essa alteração no commit.
+
+[![Python 3.14+](https://img.shields.io/badge/python-3.14+-blue)](https://www.python.org/)
+[![Django 5.0+](https://img.shields.io/badge/django-5.0+-green)](https://www.djangoproject.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Tests Passing](https://github.com/pietrobrb/ExpotecIFCN-2026/actions/workflows/tests.yml/badge.svg)](https://github.com/pietrobrb/ExpotecIFCN-2026/actions)
 
 Não substitua automaticamente o arquivo inteiro usando `pip freeze`, pois ele também pode listar pacotes sem relação com o projeto.
