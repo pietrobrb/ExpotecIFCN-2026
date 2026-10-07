@@ -15,9 +15,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = (os.getenv('DEBUG', 'True').lower() == 'true')
+DEBUG = (os.getenv('DEBUG', 'False').lower() == 'true')
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", default="127.0.0.1").split(" ") 
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", default="127.0.0.1").split(" ")
 
 if os.getenv("CSRF_TRUSTED_ORIGINS"):
     CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS").split()
@@ -59,7 +59,7 @@ INSTALLED_APPS = [
     "enderecos",
     "documentos",
     "chamadas",
-    "submissao", 
+    "submissao",
     "credenciamento"
 ]
 
@@ -194,7 +194,6 @@ MEDIA_URL = "media/"
 # Diretórios adicionais para arquivos estáticos
 STATICFILES_DIRS = [
     BASE_DIR / "static",
-    os.path.join(BASE_DIR, 'static')
 ]
 
 # Diretório onde os arquivos estáticos coletados serão armazenados
@@ -259,7 +258,7 @@ SELECT2_JS = ""
 SELECT2_THEME = "bootstrap-5"
 
 
-SUMMERNOTE_THEME = 'bs5' 
+SUMMERNOTE_THEME = 'bs5'
 SUMMERNOTE_CONFIG = {
     'summernote': {
         'airMode': False,
@@ -284,3 +283,4 @@ SUMMERNOTE_CONFIG = {
 
 
 X_FRAME_OPTIONS = "SAMEORIGIN"
+
