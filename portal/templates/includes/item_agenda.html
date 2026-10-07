@@ -1,7 +1,7 @@
 {% load django_tables2 %}
 {% load i18n l10n %}
 {% block table-wrapper %}
-<div class="table-container table-responsive container-fluid m-0 p-0"">
+<div class="table-container table-responsive container-fluid m-0 p-0">
     {% block table %}
         <table {% render_attrs table.attrs class="table mb-0 table-hover text-nowrap custom-table"  %}>
             {% block table.thead %}
@@ -13,11 +13,11 @@
                     {% block table.tbody.row %}
                     <tr {{ row.attrs.as_html }} >
                         {% for column, cell in row.items %}
-                                <td {{ column.attrs.td.as_html }} 
-                                    class="text-start text-wrap align-middle" {% if forloop.counter == 1 %} 
-                                    style="font-size:24px; text-align: center !important; width: 117px; background-color: {{row.record.atividade.tipo.cor}};" 
-                                    {% endif %}>    
-                                    
+                                <td {{ column.attrs.td.as_html }}
+                                    class="text-start text-wrap align-middle" {% if forloop.counter == 1 %}
+                                    style="font-size:24px; text-align: center !important; width: 117px; background-color: {{row.record.atividade.tipo.cor}};"
+                                    {% endif %}>
+
                                     {% if column.localize == None %}
                                         {{ cell }}
                                     {% else %}
@@ -42,7 +42,7 @@
             {% endblock table.tbody %}
             {% block table.tfoot %}
             {% if table.has_footer %}
-            <tfoot {{ table.attrs.tfoot.as_html} class='boder-0'}>
+            <tfoot {{ table.attrs.tfoot.as_html }}>
                 <tr>
                 {% for column in table.columns %}
                     <td {{ column.attrs.tf.as_html }}>{{ column.footer }}</td>
