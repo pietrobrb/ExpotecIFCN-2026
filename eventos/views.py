@@ -76,7 +76,7 @@ class EventoDetailView(ActionTabsViewMixin, DetailView):
     def get_parent(self):
         return self.request.evento
 
-    def get_object(self, queryset: QuerySet[Any] | None = ...) -> Model:
+    def get_object(self, queryset: QuerySet[Any] | None = None) -> Model:
         return self.request.evento
     
     def get_context_data(self, **kwargs):
@@ -487,7 +487,7 @@ class EventoParceiroListView(ActionTabsViewMixin, TableListView):
     verbose_name="Item Galeria",
     hidden=True,
     tab=True,
-    icon='fas fa-handshake',
+    icon='fas fa-images',
     add_url="evento:itemgaleria-add"
 )
 class EventoItemGaleriaListView(ActionTabsViewMixin, TableListView):
@@ -516,7 +516,7 @@ class EventoParceiroCreateView(CreateView):
     permission_required = ["is_admin_rule"]
 
     def get_success_url(self) -> str:
-        return reverse("evento:evento-itensgaleria")
+        return reverse("evento:evento-parceiros")
     
     def form_valid(self, form):
         form.instance.evento = self.request.evento
@@ -709,7 +709,7 @@ class EventoTipoChamadaListView(ActionTabsViewMixin, TableListView):
     verbose_name="Salas",
     hidden=True,
     tab=True,
-    icon='fas fas fa-door-closed',
+    icon='fas fa-door-closed',
     add_url="atividade:sala-add"
 )
 class EventoSalasListView(ActionTabsViewMixin, TableListView):

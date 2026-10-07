@@ -1,4 +1,3 @@
-from collections import defaultdict
 from django.db import models,transaction
 
 from core.fields import FormatStringFileUpload, get_current_year_str

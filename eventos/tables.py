@@ -2,8 +2,10 @@ from django.urls import reverse
 import django_tables2 as tables
 from django.utils.html import format_html
 
-from atividades.models import TipoAtividade
-from eventos.models import AreaTematica, Avaliador, Comissao, EventoDocumento, ItemGaleria, Noticia
+from atividades.models import Sala, TipoAtividade
+from eventos.models import (
+    AreaTematica, Avaliador, Comissao, EventoDocumento, ItemGaleria, Noticia, Parceiro
+)
 
 class EventoAreaTematicaTable(tables.Table):
     id = tables.Column(accessor="id", verbose_name="Id", orderable=True)
@@ -29,9 +31,9 @@ class EventoAreaTematicaTable(tables.Table):
                 (
                     '<a title="Detalhar" class="btn btn-light btn-link text-black action-detail px-2 py-2" href="{}">'
                     '<i class="fas fa-eye"></i></a>'
-                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1"" href="{}">'
+                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1" href="{}">'
                     '<i class="fas fa-pencil"></i></a>'
-                    '<a title="Excluir" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1"" '
+                    '<a title="Excluir" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1" '
                     'hx-get="{}" hx-target="#app-modal" hx-trigger="click" data-bs-toggle="modal"'
                     'data-bs-target="#app-modal" href="{}"><i class="fas fa-trash"></i></a>'
                 ),
@@ -45,7 +47,7 @@ class EventoAreaTematicaTable(tables.Table):
                 (
                     '<a title="Detalhar" class="btn btn-light btn-link text-black action-detail px-2 py-2" href="{}">'
                     '<i class="fas fa-eye"></i></a>'
-                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1"" href="{}">'
+                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1" href="{}">'
                     '<i class="fas fa-pencil"></i></a>'
                 ),
                 detail_url,
@@ -76,9 +78,9 @@ class EventoTipoAtividadeTable(tables.Table):
                 (
                     '<a title="Detalhar" class="btn btn-light btn-link text-black action-detail px-2 py-2" href="{}">'
                     '<i class="fas fa-eye"></i></a>'
-                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1"" href="{}">'
+                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1" href="{}">'
                     '<i class="fas fa-pencil"></i></a>'
-                    '<a title="Excluir" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1"" '
+                    '<a title="Excluir" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1" '
                     'hx-get="{}" hx-target="#app-modal" hx-trigger="click" data-bs-toggle="modal"'
                     'data-bs-target="#app-modal" href="{}"><i class="fas fa-trash"></i></a>'
                 ),
@@ -92,7 +94,7 @@ class EventoTipoAtividadeTable(tables.Table):
                 (
                     '<a title="Detalhar" class="btn btn-light btn-link text-black action-detail px-2 py-2" href="{}">'
                     '<i class="fas fa-eye"></i></a>'
-                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1"" href="{}">'
+                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1" href="{}">'
                     '<i class="fas fa-pencil"></i></a>'
                 ),
                 detail_url,
@@ -124,9 +126,9 @@ class EventoDocumentoTable(tables.Table):
                 (
                     '<a title="Detalhar" class="btn btn-light btn-link text-black action-detail px-2 py-2" href="{}">'
                     '<i class="fas fa-eye"></i></a>'
-                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1"" href="{}">'
+                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1" href="{}">'
                     '<i class="fas fa-pencil"></i></a>'
-                    '<a title="Excluir" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1"" '
+                    '<a title="Excluir" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1" '
                     'hx-get="{}" hx-target="#app-modal" hx-trigger="click" data-bs-toggle="modal"'
                     'data-bs-target="#app-modal" href="{}"><i class="fas fa-trash"></i></a>'
                 ),
@@ -140,7 +142,7 @@ class EventoDocumentoTable(tables.Table):
                 (
                     '<a title="Detalhar" class="btn btn-light btn-link text-black action-detail px-2 py-2" href="{}">'
                     '<i class="fas fa-eye"></i></a>'
-                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1"" href="{}">'
+                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1" href="{}">'
                     '<i class="fas fa-pencil"></i></a>'
                 ),
                 detail_url,
@@ -171,9 +173,9 @@ class EventoComissaoTable(tables.Table):
                 (
                     '<a title="Detalhar" class="btn btn-light btn-link text-black action-detail px-2 py-2" href="{}">'
                     '<i class="fas fa-eye"></i></a>'
-                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1"" href="{}">'
+                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1" href="{}">'
                     '<i class="fas fa-pencil"></i></a>'
-                    '<a title="Excluir" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1"" '
+                    '<a title="Excluir" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1" '
                     'hx-get="{}" hx-target="#app-modal" hx-trigger="click" data-bs-toggle="modal"'
                     'data-bs-target="#app-modal" href="{}"><i class="fas fa-trash"></i></a>'
                 ),
@@ -187,7 +189,7 @@ class EventoComissaoTable(tables.Table):
                 (
                     '<a title="Detalhar" class="btn btn-light btn-link text-black action-detail px-2 py-2" href="{}">'
                     '<i class="fas fa-eye"></i></a>'
-                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1"" href="{}">'
+                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1" href="{}">'
                     '<i class="fas fa-pencil"></i></a>'
                 ),
                 detail_url,
@@ -202,7 +204,7 @@ class EventoParceiroTable(tables.Table):
     actions = tables.Column(verbose_name="Ações", orderable=False, empty_values=())
 
     class Meta:
-        model = Comissao
+        model = Parceiro
         fields = (
             "id",
             "nome",
@@ -220,9 +222,9 @@ class EventoParceiroTable(tables.Table):
                 (
                     '<a title="Detalhar" class="btn btn-light btn-link text-black action-detail px-2 py-2" href="{}">'
                     '<i class="fas fa-eye"></i></a>'
-                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1"" href="{}">'
+                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1" href="{}">'
                     '<i class="fas fa-pencil"></i></a>'
-                    '<a title="Excluir" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1"" '
+                    '<a title="Excluir" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1" '
                     'hx-get="{}" hx-target="#app-modal" hx-trigger="click" data-bs-toggle="modal"'
                     'data-bs-target="#app-modal" href="{}"><i class="fas fa-trash"></i></a>'
                 ),
@@ -236,7 +238,7 @@ class EventoParceiroTable(tables.Table):
                 (
                     '<a title="Detalhar" class="btn btn-light btn-link text-black action-detail px-2 py-2" href="{}">'
                     '<i class="fas fa-eye"></i></a>'
-                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1"" href="{}">'
+                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1" href="{}">'
                     '<i class="fas fa-pencil"></i></a>'
                 ),
                 detail_url,
@@ -269,9 +271,9 @@ class EventoItemGaleriaTable(tables.Table):
                 (
                     '<a title="Detalhar" class="btn btn-light btn-link text-black action-detail px-2 py-2" href="{}">'
                     '<i class="fas fa-eye"></i></a>'
-                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1"" href="{}">'
+                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1" href="{}">'
                     '<i class="fas fa-pencil"></i></a>'
-                    '<a title="Excluir" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1"" '
+                    '<a title="Excluir" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1" '
                     'hx-get="{}" hx-target="#app-modal" hx-trigger="click" data-bs-toggle="modal"'
                     'data-bs-target="#app-modal" href="{}"><i class="fas fa-trash"></i></a>'
                 ),
@@ -285,7 +287,7 @@ class EventoItemGaleriaTable(tables.Table):
                 (
                     '<a title="Detalhar" class="btn btn-light btn-link text-black action-detail px-2 py-2" href="{}">'
                     '<i class="fas fa-eye"></i></a>'
-                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1"" href="{}">'
+                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1" href="{}">'
                     '<i class="fas fa-pencil"></i></a>'
                 ),
                 detail_url,
@@ -320,9 +322,9 @@ class EventoNoticiaTable(tables.Table):
                 (
                     '<a title="Detalhar" class="btn btn-light btn-link text-black action-detail px-2 py-2" href="{}">'
                     '<i class="fas fa-eye"></i></a>'
-                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1"" href="{}">'
+                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1" href="{}">'
                     '<i class="fas fa-pencil"></i></a>'
-                    '<a title="Excluir" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1"" '
+                    '<a title="Excluir" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1" '
                     'hx-get="{}" hx-target="#app-modal" hx-trigger="click" data-bs-toggle="modal"'
                     'data-bs-target="#app-modal" href="{}"><i class="fas fa-trash"></i></a>'
                 ),
@@ -336,7 +338,7 @@ class EventoNoticiaTable(tables.Table):
                 (
                     '<a title="Detalhar" class="btn btn-light btn-link text-black action-detail px-2 py-2" href="{}">'
                     '<i class="fas fa-eye"></i></a>'
-                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1"" href="{}">'
+                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1" href="{}">'
                     '<i class="fas fa-pencil"></i></a>'
                 ),
                 detail_url,
@@ -368,9 +370,9 @@ class EventoTipoChamadaTable(tables.Table):
                 (
                     '<a title="Detalhar" class="btn btn-light btn-link text-black action-detail px-2 py-2" href="{}">'
                     '<i class="fas fa-eye"></i></a>'
-                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1"" href="{}">'
+                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1" href="{}">'
                     '<i class="fas fa-pencil"></i></a>'
-                    '<a title="Excluir" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1"" '
+                    '<a title="Excluir" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1" '
                     'hx-get="{}" hx-target="#app-modal" hx-trigger="click" data-bs-toggle="modal"'
                     'data-bs-target="#app-modal" href="{}"><i class="fas fa-trash"></i></a>'
                 ),
@@ -384,7 +386,7 @@ class EventoTipoChamadaTable(tables.Table):
                 (
                     '<a title="Detalhar" class="btn btn-light btn-link text-black action-detail px-2 py-2" href="{}">'
                     '<i class="fas fa-eye"></i></a>'
-                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1"" href="{}">'
+                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1" href="{}">'
                     '<i class="fas fa-pencil"></i></a>'
                 ),
                 detail_url,
@@ -399,7 +401,7 @@ class EventoSalaTable(tables.Table):
     actions = tables.Column(verbose_name="Ações", orderable=False, empty_values=())
 
     class Meta:
-        model = Noticia
+        model = Sala
         fields = (
             "id",
             "nome",
@@ -417,9 +419,9 @@ class EventoSalaTable(tables.Table):
                 (
                     '<a title="Detalhar" class="btn btn-light btn-link text-black action-detail px-2 py-2" href="{}">'
                     '<i class="fas fa-eye"></i></a>'
-                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1"" href="{}">'
+                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1" href="{}">'
                     '<i class="fas fa-pencil"></i></a>'
-                    '<a title="Excluir" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1"" '
+                    '<a title="Excluir" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1" '
                     'hx-get="{}" hx-target="#app-modal" hx-trigger="click" data-bs-toggle="modal"'
                     'data-bs-target="#app-modal" href="{}"><i class="fas fa-trash"></i></a>'
                 ),
@@ -433,7 +435,7 @@ class EventoSalaTable(tables.Table):
                 (
                     '<a title="Detalhar" class="btn btn-light btn-link text-black action-detail px-2 py-2" href="{}">'
                     '<i class="fas fa-eye"></i></a>'
-                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1"" href="{}">'
+                    '<a title="Alterar" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1" href="{}">'
                     '<i class="fas fa-pencil"></i></a>'
                 ),
                 detail_url,

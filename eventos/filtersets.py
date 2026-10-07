@@ -1,4 +1,3 @@
-from core.forms import Select2Widget
 from documentos.models import TipoDocumento
 from .models import AreaTematica, Avaliador, Comissao, EventoDocumento, ItemGaleria, Noticia, Parceiro
 from django_filters import filters

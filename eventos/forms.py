@@ -1,7 +1,6 @@
 from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column, Fieldset
-from django.urls import reverse_lazy
 from extra_views import InlineFormSetFactory
 
 from django.utils.translation import gettext_lazy as _
@@ -10,7 +9,7 @@ from documentos.models import Documento, TipoDocumento
 from enderecos.forms import  EnderecoForm
 from enderecos.models import Contato
 from usuarios.models import User, Vinculos
-from .models import AreaTematica, Avaliador, Comissao, Evento, EventoContato, EventoDocumento, ItemGaleria, Membro, Monitor, Noticia, Parceiro
+from .models import AreaTematica, Comissao, Evento, EventoContato, EventoDocumento, ItemGaleria, Membro, Monitor, Noticia, Parceiro
 from betterforms.multiform import MultiModelForm
 from django_summernote.widgets import SummernoteWidget    
 class EventoForm(forms.ModelForm):
@@ -78,6 +77,18 @@ class EventoForm(forms.ModelForm):
             ),
         )
     )
+
+
+    def clean(self):
+        cleaned_data = super().clean()
+        inicio = cleaned_data.get('dt_inicio')
+        encerramento = cleaned_data.get('dt_encerramento')
+        if inicio and encerramento and encerramento < inicio:
+            self.add_error(
+                'dt_encerramento',
+                _("A data de encerramento não pode ser anterior à data de início."),
+            )
+        return cleaned_data
 
 
 class EventoComissaoForm(forms.ModelForm):
