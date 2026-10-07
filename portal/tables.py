@@ -26,21 +26,19 @@ class PortalAgendamentoTable(tables.Table):
 
     
     def render_horario(self, value, record):
-        horario_formatado = value.strftime('%H:%M')  # Formata para hh:mm
         return format_html(
-            f"<div class='py-0 my-0'>{horario_formatado}</div><div class='xsmall'>{record.atividade.tipo}</div>"
+            "<div class='py-0 my-0'>{}</div><div class='xsmall'>{}</div>",
+            value.strftime('%H:%M'), record.atividade.tipo,
         )
 
     def render_atividade(self, value, record):
         return format_html(
-            f"<p class='py-0 my-0'><strong>{value}</strong><br/><small class='small'>{record.horario}</small></p>"
+            "<p class='py-0 my-0'><strong>{}</strong><br/><small class='small'>{}</small></p>",
+            value, record.horario,
         )
 
     def render_local(self, value, record):
         return format_html(
-            f"<p class='py-0 my-0 text-nowrap'><strong>Local</strong><br/><small class='small'>{value}</small></p>"
+            "<p class='py-0 my-0 text-nowrap'><strong>Local</strong><br/><small class='small'>{}</small></p>",
+            value,
         )
-    
-    
-
-   

@@ -1,6 +1,8 @@
 from django.contrib import admin
 
-from atividades.models import Agendamento, Atividade, InscricaoAtividade, TipoAtividade
+from atividades.models import (
+    Agendamento, Atividade, InscricaoAtividade, Responsavel, Sala, TipoAtividade
+)
 
 # Register your models here.
 
@@ -10,7 +12,7 @@ class TipoAtividadeAdmin(admin.ModelAdmin):
         "id",
         "nome",
     )
-    search_fields = ("titulo","edicao","ano")
+    search_fields = ("nome", "descricao")
     fields = ['evento', 'nome', 'descricao', 'cor', 'icone']
     inlines = []
     
@@ -65,3 +67,7 @@ class AgendamentoAdmin(admin.ModelAdmin):
     ]
     inlines = []
 admin.site.register(Agendamento, AgendamentoAdmin)
+
+
+admin.site.register(Sala)
+admin.site.register(Responsavel)

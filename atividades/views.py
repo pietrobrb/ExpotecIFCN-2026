@@ -63,7 +63,6 @@ class EventoAtividadeCreateView(CreateWithInlinesView):
         # Salva o formulário principal (atividade)
         atividade = form.save(commit=False)
         if not(atividade.com_inscricoes):
-            atividade.vagas_limitadas = None
             atividade.qtd_vagas = None
             atividade.inicio_inscricoes = None
             atividade.fim_inscricoes = None
@@ -146,7 +145,6 @@ class EventoAtividadeEditView(EditWithInlinesView):
         # Salva o formulário principal (atividade)
         atividade = form.save(commit=False)
         if not(atividade.com_inscricoes):
-            atividade.vagas_limitadas = None
             atividade.qtd_vagas = None
             atividade.inicio_inscricoes = None
             atividade.fim_inscricoes = None
@@ -281,7 +279,7 @@ class EventoSalaDeleteView(DeleteView):
     
 
 @agendamento_vs.action("list")
-class EventoAgendamentoListView(TemplateView):
+class EventoAgendamentoRedirectView(TemplateView):
     permission_required = ["is_admin_rule", "is_member_rule"]
     def get(self, request, *args, **kwargs):
         return redirect(reverse('atividade:agendamento-list_dia', kwargs={'dia': 1}))
@@ -299,7 +297,7 @@ class EventoAgendamentoListView(TableListView):
         if dias:
             id_dia = self.kwargs.get('dia')
             id_dia = int(id_dia)-1
-            dia =dias[id_dia] if id_dia < len(dias) else None
+            dia = dias[id_dia] if 0 <= id_dia < len(dias) else None
             if dia:
                 qs = qs.filter(dia=dia)
         return qs

@@ -177,7 +177,8 @@ class Atividade(models.Model):
     
     
     def save(self, *args, **kwargs):
-        if self.pk and self.status != StatusAtividade.RASCUNHO and self.com_inscricoes:
+        if (self.pk and self.status != StatusAtividade.RASCUNHO and self.com_inscricoes
+                and self.inicio_inscricoes and self.fim_inscricoes):
             total_inscritos = InscricaoAtividade.objects.filter(atividade=self).count()
             if self.qtd_vagas and self.qtd_vagas <= total_inscritos:
                 self.status = StatusAtividade.SEM_VAGA
@@ -324,10 +325,12 @@ class Responsavel(models.Model):
 def atualizar_status_atividades_on_save_inscricao(
     sender, instance: InscricaoAtividade, created, raw: bool = False, *args, **kwargs
 ):
+    if raw:
+        return
     atividade = instance.atividade
-    total_inscritos = atividade.inscricoes.count() 
-
-    if total_inscritos >= atividade.qtd_vagas:
+    if not atividade.qtd_vagas:
+        return
+    if atividade.inscricoes.count() >= atividade.qtd_vagas:
         atividade.status = StatusAtividade.SEM_VAGA
         atividade.save()
 
@@ -337,8 +340,9 @@ def atualizar_status_atividades_on_delete_inscricao(
     sender, instance: InscricaoAtividade, *args, **kwargs
 ):
     atividade = instance.atividade
-    total_inscritos = atividade.inscricoes.count()
-
-    if atividade.status == StatusAtividade.SEM_VAGA and total_inscritos < atividade.qtd_vagas:
+    if not atividade.qtd_vagas:
+        return
+    if (atividade.status == StatusAtividade.SEM_VAGA
+            and atividade.inscricoes.count() < atividade.qtd_vagas):
         atividade.status = StatusAtividade.INSCRICOES_ABERTAS
         atividade.save()
