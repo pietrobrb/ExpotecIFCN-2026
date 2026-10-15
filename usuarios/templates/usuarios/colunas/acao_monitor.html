@@ -1,0 +1,10 @@
+<form method="post" action="{% url 'user:alternar_selecao_monitor' record.pk %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-sm btn-primary">
+        {% if record.selecionado %}
+            Desselecionar
+        {% else %}
+            Selecionar
+        {% endif %}
+    </button>
+</form>

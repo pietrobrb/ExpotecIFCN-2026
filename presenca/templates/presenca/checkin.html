@@ -1,0 +1,53 @@
+{% extends "private/layout.html" %}
+
+{% block title %}
+Check-in | Expotec
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+
+    <div class="card shadow-sm">
+        <div class="card-body text-center">
+
+            {% if sucesso %}
+
+            <div class="alert alert-success">
+                <h2 class="mb-3">Presença registrada</h2>
+
+                <p class="mb-0">
+                    Sua presença foi registrada com sucesso.
+                </p>
+            </div>
+
+            {% if atividade %}
+            <h4 class="mt-4">
+                {{ atividade.titulo }}
+            </h4>
+            {% endif %}
+
+            {% elif erro %}
+
+            <div class="alert alert-danger">
+                <h2 class="mb-3">Não foi possível registrar</h2>
+
+                <p class="mb-0">
+                    {{ erro }}
+                </p>
+            </div>
+
+            {% if atividade %}
+            <h4 class="mt-4">
+                {{ atividade.titulo }}
+            </h4>
+            {% endif %}
+
+            {% endif %}
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
