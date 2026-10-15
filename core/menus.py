@@ -12,9 +12,6 @@ portal = "portal"
 credenciamento = "credenciamento"
 
 
-
-
-
 # Adicionando itens de menu
 Menu.add_item(main, MenuItem(
     "Dashboard",
@@ -24,13 +21,12 @@ Menu.add_item(main, MenuItem(
 ))
 
 
-
 Menu.add_item(main, MenuItem(
-    "Meus Trabalhos", 
-    url=reverse('user:trabalho-meus_trabalhos'), 
+    "Meus Trabalhos",
+    url=reverse('user:trabalho-meus_trabalhos'),
     icon='fas fa-sticky-note',
     check=lambda request: rules.test_rule('is_participant_rule', request)
-   
+
 ))
 
 Menu.add_item(main, MenuItem(
@@ -51,14 +47,14 @@ Menu.add_item(main, MenuItem(
     "Tornar-se Avaliador",
     url=reverse('user:add_avaliador'),
     icon='fas fa-check',
-    check=lambda request: rules.test_rule('can_evaluate_rule', request) 
+    check=lambda request: rules.test_rule('can_evaluate_rule', request)
 ))
 
 Menu.add_item(main, MenuItem(
     "Tornar-se Monitor",
     url=reverse('user:add_monitor'),
     icon='fas fa-user',
-    check=lambda request: rules.test_rule('can_monitor_rule', request) 
+    check=lambda request: rules.test_rule('can_monitor_rule', request)
 ))
 
 Menu.add_item(main, MenuItem(
@@ -68,12 +64,27 @@ Menu.add_item(main, MenuItem(
     check=lambda request: request.user.is_authenticated and request.user.is_monitor
 ))
 
+Menu.add_item(main, MenuItem(
+    "Gerenciar Monitores",
+    url=reverse("user:gerenciar_monitores"),
+    icon="fas fa-users-cog",
+    check=lambda request: rules.test_rule("is_admin_rule", request),
+))
+
+Menu.add_item(main, MenuItem(
+    "Controle de Presença",
+    url=reverse("presenca:monitor"),
+    icon="fas fa-clipboard-check",
+    check=lambda request: rules.test_rule("is_monitor_rule", request),
+))
+
+
 Menu.add_item(evento, MenuItem(
     "Evento",
     url=reverse('evento:evento-detalhar'),
     icon='fas fa-info',
     check=lambda request:  rules.test_rule('is_member_rule', request)
-))   
+))
 
 
 Menu.add_item(evento, MenuItem(

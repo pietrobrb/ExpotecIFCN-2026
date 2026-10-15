@@ -7,13 +7,14 @@ from django.utils.html import format_html
 
 from submissao.models import Avaliacao, StatusAvaliacao, StatusTrabalho, Trabalho
 
+from eventos.models import Monitor
 
 class MinhasInscricoesAtividadeTable(tables.Table):
     tipo_atividade = tables.Column(accessor="atividade__tipo", verbose_name="Tipo")
     atividade = tables.Column(accessor="atividade__titulo", verbose_name="Atividade")
     dt_inicio = tables.Column(verbose_name="Início", empty_values=())
     local = tables.Column(verbose_name="Local", empty_values=())
-    actions = tables.Column(verbose_name="Ações", orderable=False, empty_values=()) 
+    actions = tables.Column(verbose_name="Ações", orderable=False, empty_values=())
 
     class Meta:
         model = InscricaoAtividade
@@ -23,7 +24,7 @@ class MinhasInscricoesAtividadeTable(tables.Table):
             "dt_inicio",
             "local",
         )
-    
+
     def render_dt_inicio(self, record):
         agendamentos = getattr(record.atividade, "agenda_dashboard", [])
         if not agendamentos:
@@ -45,16 +46,16 @@ class MinhasInscricoesAtividadeTable(tables.Table):
         delete_url = reverse("user:inscricaoatividade-delete", args=[record.id])
         return format_html(
                 (
-                   
+
                     '<a title="Cancelar Inscrição" class="btn btn-light btn-link text-black action-delete px-2 py-2 ms-1"" '
-                    'hx-get="{}" hx-target="#app-modal" hx-trigger="click" data-bs-toggle="modal" data-bs-target="#app-modal"' 
+                    'hx-get="{}" hx-target="#app-modal" hx-trigger="click" data-bs-toggle="modal" data-bs-target="#app-modal"'
                     'href="{}">'
                     '<i class="fas fa-trash"></i></a>'
                 ),
                 delete_url,
                 delete_url,
             )
-        
+
 class AtividadeInscricaoTable(tables.Table):
     tipo = tables.Column(accessor="tipo", verbose_name="Tipo")
     titulo = tables.Column(accessor="titulo", verbose_name="Atividade")
@@ -75,8 +76,8 @@ class AtividadeInscricaoTable(tables.Table):
         return format_html(
                str(record.inicio_inscricoes) + " a " + str(record.fim_inscricoes)
         )
-            
-         
+
+
     def render_actions(self, record):
         detail_url = reverse("user:atividade-detail", args=[record.id])
         inscrever_url = reverse("user:atividade-inscreverse", args=[record.id])
@@ -84,11 +85,11 @@ class AtividadeInscricaoTable(tables.Table):
           return format_html(
                 (
                     '<a title="Detalhar" class="btn btn-light btn-link text-black action-detail px-2 py-2"'
-                    'hx-get="{}" hx-target="#app-modal" hx-trigger="click" data-bs-toggle="modal" data-bs-target="#app-modal"' 
+                    'hx-get="{}" hx-target="#app-modal" hx-trigger="click" data-bs-toggle="modal" data-bs-target="#app-modal"'
                     'href="{}">'
                     '<i class="fas fa-eye"></i></a>'
                     '<a title="Inscrever-se" class="btn btn-light btn-link text-black action-detail px-2 py-2 ms-1"" '
-                    'hx-get="{}" hx-target="#app-modal" hx-trigger="click" data-bs-toggle="modal" data-bs-target="#app-modal"' 
+                    'hx-get="{}" hx-target="#app-modal" hx-trigger="click" data-bs-toggle="modal" data-bs-target="#app-modal"'
                     'href="{}">'
                     '<i class="fas fa-check"></i></a>'
                 ),
@@ -105,7 +106,7 @@ class AtividadeInscricaoTable(tables.Table):
                 ),
                 detail_url,
             )
-    
+
 
 class MeusTrabalhosTable(tables.Table):
     autores_string = tables.Column(accessor='autores_string', verbose_name='Autores')
@@ -114,14 +115,14 @@ class MeusTrabalhosTable(tables.Table):
     class Meta:
         model = Trabalho
         fields = ['tipo_chamada', 'titulo', 'autores_string', 'status', 'actions']
-    
+
     def render_status(self, record):
         chamada_atual = getattr(record.tipo_chamada, 'chamada_atual', None)
         if chamada_atual and chamada_atual.status == StatusChamada.ABERTO and record.status in [StatusTrabalho.APROVADO, StatusTrabalho.REPROVADO, StatusTrabalho.N_APRESENTADO]:
             return format_html('Em avaliação')
         return format_html(record.get_status_display())
-            
-         
+
+
     def render_actions(self, record):
         detail_url = reverse("user:trabalho-detail", args=[record.id])
         edit_url = reverse("user:trabalho-edit", args=[record.id])
@@ -160,26 +161,26 @@ class MeusTrabalhosTable(tables.Table):
                 (
                     '<a title="Detalhar" class="btn btn-light btn-link text-black action-detail px-2 py-2" href="{}">'
                     '<i class="fas fa-eye"></i></a>'
-                
+
                 ),
                 detail_url,
                 )
 
-             
+
 class MinhasAvaliacoesTable(tables.Table):
     actions = tables.Column(verbose_name="Ações", orderable=False, empty_values=())
-    
+
     class Meta:
         model = Avaliacao
         fields = ['submissao__trabalho__titulo', 'submissao__chamada', 'status', 'nota_parcial', 'actions']
-    
+
     def render_actions(self, record):
 
         edit_url = reverse("user:avaliacao-edit", args=[record.id])
         detail_url = reverse("user:avaliacao-detail", args=[record.id])
         aceitar_url = reverse("user:avaliacao-aceitar_avaliacao", args=[record.id])
         cancelar_url = reverse("user:avaliacao-cancelar_avaliacao", args=[record.id])
-        
+
         if record.status == StatusAvaliacao.AVALIACAO_SOLICITADA:
             return format_html(
                 (
@@ -192,15 +193,15 @@ class MinhasAvaliacoesTable(tables.Table):
                 record.dt_limite_aceite.strftime("%d/%m")
             )
         elif record.status == StatusAvaliacao.EM_AVALIACAO:
-                return format_html(
+            return format_html(
                 (
-                    
+
                     '<a title="Cancelar Avaliação" class="btn btn-light btn-link text-black action-detail px-2 py-2 mr-1" href="{}">'
                     '<i class="fas fa-xmark"></i></a>'
                     '<a title="Editar" class="btn btn-light btn-link text-black action-detail px-2 py-2" href="{}">'
                     '<i class="fas fa-pencil"></i></a>'
                 ),
-            
+
                 cancelar_url,
                 edit_url,
 
@@ -211,4 +212,38 @@ class MinhasAvaliacoesTable(tables.Table):
                     '<i class="fas fa-eye"></i></a>',
                     detail_url
             )
-        
+
+
+class GerenciarMonitoresTable(tables.Table):
+    nome = tables.Column(
+        accessor="usuario__nome_completo",
+        verbose_name="Nome",
+    )
+    email = tables.Column(
+        accessor="usuario__email",
+        verbose_name="E-mail",
+    )
+    ano = tables.Column(verbose_name="Ano do curso")
+    ira = tables.Column(verbose_name="IRA")
+    selecionado = tables.BooleanColumn(
+        verbose_name="Selecionado",
+    )
+    acao = tables.TemplateColumn(
+        template_name="usuarios/colunas/acao_monitor.html",
+        verbose_name="Ação",
+        orderable=False,
+    )
+
+    class Meta:
+        model = Monitor
+        fields = (
+            "nome",
+            "email",
+            "ano",
+            "ira",
+            "selecionado",
+            "acao",
+        )
+        attrs = {
+            "class": "table table-striped table-hover align-middle",
+        }
