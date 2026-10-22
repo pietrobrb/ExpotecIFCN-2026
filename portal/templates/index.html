@@ -1,778 +1,87 @@
-{% extends 'public/layout.html' %}
+{% extends "public/expotec2026_layout.html" %}
+{% load static %}
 
-{% load static i18n custom_tags %}
+{% block title %}{{ request.evento.titulo|default:"XI EXPOTEC 2026 — Ciência Delas" }}{% endblock %}
 
-{% block title %}Início{% endblock title %}
+{% block page_name %}inicio{% endblock %}
 
+{% block page_css %}
+<link rel="stylesheet" href="{% static 'expotec2026/css/inicio.css' %}">
+{% endblock %}
 
 {% block content %}
-
-<header id="site-header" class="site-header valign-center">
-    <div class="intro px-0">
-
-        <div id="carousel_noticias" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-inner pt-md-0 pt-5">
-
-                {% if evento.video_promocional %}
-                <div id="promo" class="carousel-item active">
-                    <video id="promo_video" muted loop autoplay>
-                        <source src="{{ evento.video_promocional.url }}" type="video/mp4">
-                    </video>
-
-                    <div class="carousel-caption d-md-block" style="top:80%; z-index:9999;">
-                        <a class="btn btn-success text-light" href="{% url 'account_login' %}">
-                            Acessar
-                        </a>
-                    </div>
-                </div>
-                {% endif %}
-
-
-                {% for n in evento.top5_noticias %}
-
-                <div class="carousel-item {% if forloop.first and not evento.video_promocional %}active{% endif %}">
-
-                    {% if n.poster %}
-                    <img src="{{ n.poster.url }}" class="w-100" alt="{{ n.titulo }}">
-                    {% else %}
-                    <img src="{% static 'img/placeholders/noticias.jpg' %}" class="w-100" alt="Imagem da notícia">
-                    {% endif %}
-
-                    <div class="carousel-caption d-md-block">
-                        <h2>{{ n.titulo }}</h2>
-                        <h1>{{ n.subtitulo }}</h1>
-                        <p class="fs-6 text-lowercase">{{ n.texto }}</p>
-
-                        {% if n.url %}
-                        <a class="btn btn-success text-light" href="{{ n.url }}">
-                            Acessar
-                        </a>
-                        {% endif %}
-                    </div>
-
-                </div>
-
-                {% empty %}
-
-                <div class="carousel-item active hero-evento">
-
-                    <div class="hero-evento-content">
-
-                        <span class="hero-evento-edicao">
-                            {{ evento.edicao }} EDIÇÃO
-                        </span>
-
-                        <h1>
-                            {{ evento.titulo|default:'EXPOTEC' }}
-                        </h1>
-
-                        <p class="hero-evento-data">
-                            {% if evento.dt_inicio %}
-                            {{ evento.dt_inicio|date:"d/m/Y" }}
-
-                            {% if evento.dt_encerramento %}
-                            — {{ evento.dt_encerramento|date:"d/m/Y" }}
-                            {% endif %}
-                            {% endif %}
-                        </p>
-
-                        {% if evento.subtitulo %}
-                        <p class="hero-evento-subtitulo">
-                            {{ evento.subtitulo }}
-                        </p>
-                        {% endif %}
-
-                        <a class="btn btn-success text-light" href="#about">
-                            Conheça o evento
-                        </a>
-
-                    </div>
-
-                </div>
-
-                {% endfor %}
-
-            </div>
-
-            <button class="carousel-control-prev" type="button" data-bs-target="#carousel_noticias"
-                data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Anterior</span>
-            </button>
-
-            <button class="carousel-control-next" type="button" data-bs-target="#carousel_noticias"
-                data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Próximo</span>
-            </button>
-
-        </div>
-    </div>
-</header>
-
-
-<section id="about" class="section about">
-    <div class="container">
-
-        <div class="row mb-5">
-            <div class="col-12 text-center">
-
-                <span class="about-kicker">
-                    {{ evento.edicao }} EDIÇÃO
-                </span>
-
-                <h2 class="about-title">
-                    {{ evento.titulo|default:"EXPOTEC" }}
-                </h2>
-
-                {% if evento.subtitulo %}
-                <p class="about-subtitle">
-                    {{ evento.subtitulo }}
-                </p>
-                {% endif %}
-
-            </div>
-        </div>
-
-
-        <div class="row align-items-center g-5">
-
-            <div class="col-lg-6">
-                <div class="about-content">
-
-                    <h3>Sobre o evento</h3>
-
-                    {% if evento.apresentacao %}
-                    <div class="about-text">
-                        {{ evento.apresentacao|safe }}
-                    </div>
-                    {% else %}
-                    <p class="about-placeholder">
-                        As informações sobre a {{ evento.edicao }} edição da
-                        {{ evento.titulo|default:"Expotec" }} serão divulgadas em breve.
-                    </p>
-                    {% endif %}
-
-
-                    <div class="about-info">
-
-                        {% if evento.dt_inicio %}
-                        <div class="about-info-item">
-
-                            <span class="about-info-icon">
-                                <i class="fas fa-calendar-alt"></i>
-                            </span>
-
-                            <div>
-                                <strong>Data</strong>
-                                <p>
-                                    {{ evento.dt_inicio|date:"d/m/Y" }}
-
-                                    {% if evento.dt_encerramento %}
-                                    — {{ evento.dt_encerramento|date:"d/m/Y" }}
-                                    {% endif %}
-                                </p>
-                            </div>
-
-                        </div>
-                        {% endif %}
-
-
-                        {% if evento.endereco %}
-                        <div class="about-info-item">
-
-                            <span class="about-info-icon">
-                                <i class="fas fa-map-marker-alt"></i>
-                            </span>
-
-                            <div>
-                                <strong>Local</strong>
-                                <p>
-                                    {{ evento.endereco.local|default:"IFRN" }}
-
-                                    {% if evento.endereco.cidade %}
-                                    · {{ evento.endereco.cidade }}
-                                    {% endif %}
-                                </p>
-                            </div>
-
-                        </div>
-                        {% endif %}
-
-                    </div>
-
-                </div>
-            </div>
-
-
-            <div class="col-lg-6">
-
-                {% if evento.imagem_promocional %}
-                <div class="about-image">
-                    <img src="{{ evento.imagem_promocional.url }}" alt="{{ evento.titulo|default:'Expotec' }}"
-                        class="img-fluid">
-                </div>
-
-                {% else %}
-
-                <div class="about-image about-image-placeholder">
-                    <div>
-                        <span>{{ evento.edicao }}</span>
-                        <strong>{{ evento.titulo|default:"EXPOTEC" }}</strong>
-                        <small>{{ evento.ano|default:"2026" }}</small>
-                    </div>
-                </div>
-
-                {% endif %}
-
-            </div>
-
-        </div>
-
-    </div>
-</section>
-
-
-{% if evento.ItemGaleria.all %}
-<section id="gallery" class="section gallery">
-
-    <div class="container">
-
-        <div class="row mb-5">
-            <div class="col-12 text-center">
-
-                <span class="about-kicker">
-                    MOMENTOS
-                </span>
-
-                <h2 class="about-title">
-                    Galeria
-                </h2>
-
-                <p class="about-subtitle">
-                    Confira registros e momentos da Expotec.
-                </p>
-
-            </div>
-        </div>
-
-
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
-
-            {% for j in evento.ItemGaleria.all %}
-
-            <div class="col">
-
-                <a class="gallery-link" {% if j.url %} href="{{ j.url }}" target="_blank" rel="noopener noreferrer" {%
-                    else %} href="{{ j.img.url }}" target="_blank" {% endif %}>
-
-                    <figure class="gallery-card">
-
-                        <img src="{{ j.img.url }}" alt="Imagem da {{ evento.titulo|default:'Expotec' }}"
-                            class="img-fluid">
-
-                        <div class="gallery-overlay">
-                            <i class="fas fa-expand"></i>
-                        </div>
-
-                    </figure>
-
-                </a>
-
-            </div>
-
-            {% endfor %}
-
-        </div>
-
-    </div>
-
-</section>
-{% endif %}
-
-
-<section id="facts" class="section event-facts">
-
-    <div class="container">
-
-        <div class="row g-4">
-
-            <div class="col-6 col-lg-3">
-
-                <div class="fact-card">
-
-                    <div class="fact-icon">
-                        <i class="fas fa-calendar-alt"></i>
-                    </div>
-
-                    <span class="fact-label">Data</span>
-
-                    <strong class="fact-value">
-
-                        {% if evento.dt_inicio %}
-
-                        {{ evento.dt_inicio|date:"d/m" }}
-
-                        {% if evento.dt_encerramento %}
-                        — {{ evento.dt_encerramento|date:"d/m" }}
-                        {% endif %}
-
-                        {% else %}
-
-                        Em breve
-
-                        {% endif %}
-
-                    </strong>
-
-                    {% if evento.ano %}
-                    <small>{{ evento.ano }}</small>
-                    {% endif %}
-
-                </div>
-
-            </div>
-
-
-            <div class="col-6 col-lg-3">
-
-                <div class="fact-card">
-
-                    <div class="fact-icon">
-                        <i class="fas fa-map-marker-alt"></i>
-                    </div>
-
-                    <span class="fact-label">Local</span>
-
-                    <strong class="fact-value">
-
-                        {% if evento.endereco %}
-                        {{ evento.endereco.local|default:"IFRN" }}
-                        {% else %}
-                        IFRN
-                        {% endif %}
-
-                    </strong>
-
-                    {% if evento.endereco.cidade %}
-                    <small>{{ evento.endereco.cidade }}</small>
-                    {% endif %}
-
-                </div>
-
-            </div>
-
-
-            <div class="col-6 col-lg-3">
-
-                <div class="fact-card">
-
-                    <div class="fact-icon">
-                        <i class="fas fa-ticket-alt"></i>
-                    </div>
-
-                    <span class="fact-label">Entrada</span>
-
-                    <strong class="fact-value">
-                        Livre
-                    </strong>
-
-                    <small>Aberta ao público</small>
-
-                </div>
-
-            </div>
-
-
-            <div class="col-6 col-lg-3">
-
-                <div class="fact-card">
-
-                    <div class="fact-icon">
-                        <i class="fas fa-bullhorn"></i>
-                    </div>
-
-                    <span class="fact-label">Programação</span>
-
-                    <strong class="fact-value">
-                        {{ evento.areas_tematicas.all|length }}
-                    </strong>
-
-                    <small>Áreas temáticas</small>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<section id="schedule" class="section thematic-areas">
-
-    <div class="container">
-
-        <div class="section-heading text-center">
-
-            <span class="section-kicker">
-                XI EXPOTEC
-            </span>
-
-            <h3 class="section-title">
-                Áreas Temáticas
-            </h3>
-
-            <p>
-                Conheça os temas que fazem parte da programação da XI Expotec.
-            </p>
-
-        </div>
-
-
-        <div class="row g-4 justify-content-center">
-
-            {% for a in evento.areas_tematicas.all %}
-
-            <div class="col-md-4 col-sm-6 d-flex">
-
-                <a href="{% url 'portal:evento-area' a.pk %}" class="thematic-area-card flex-fill text-decoration-none"
-                    style="--area-color: {{ a.cor|default:'#198754' }};">
-
-                    <div class="thematic-area-icon">
-
-                        {% if a.icone %}
-                        <i class="fas {{ a.icone }}"></i>
-                        {% else %}
-                        <i class="fas fa-lightbulb"></i>
-                        {% endif %}
-
-                    </div>
-
-                    <div class="thematic-area-content">
-
-                        <h3>
-                            {{ a.nome }}
-                        </h3>
-
-                        {% if a.descricao %}
-                        <p>
-                            {{ a.descricao }}
-                        </p>
-                        {% endif %}
-
-                    </div>
-
-                    <span class="thematic-area-arrow">
-                        <i class="fas fa-arrow-right"></i>
-                    </span>
-
-                </a>
-
-            </div>
-
-
-            {% empty %}
-
-            <div class="col-12">
-
-                <div class="thematic-empty">
-
-                    <div class="thematic-empty-icon">
-                        <i class="fas fa-layer-group"></i>
-                    </div>
-
-                    <h4>
-                        Em breve
-                    </h4>
-
-                    <p>
-                        As áreas temáticas da XI Expotec serão divulgadas em breve.
-                    </p>
-
-                </div>
-
-            </div>
-
-            {% endfor %}
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<section id="contribution" class="section contribution-section">
-
-    <div class="container">
-
-        <div class="contribution-content">
-
-            <span class="section-kicker contribution-kicker">
-                XI EXPOTEC
-            </span>
-
-            <h3>
-                Submissão de Trabalhos
-            </h3>
-
-            <p>
-                Compartilhe seus trabalhos, projetos e pesquisas durante a
-                {{ evento.edicao }} {{ evento.titulo|default:"Expotec" }}.
-            </p>
-
-            <a class="btn contribution-button" href="{% url 'account_login' %}">
-
-                Acessar área de submissões
-
-                <i class="fas fa-arrow-right ms-2"></i>
-
+<section class="hero">
+    <div class="hero-copy">
+        <p class="kicker">
+            Mulheres, saberes e inovação
+        </p>
+
+        <h1>
+            Descubra tudo o que acontece na
+            <span>{{ request.evento.titulo|default:"XI EXPOTEC" }}.</span>
+        </h1>
+
+        <p class="hero-description">
+            <strong>Ciência Delas:</strong>
+            mulheres, saberes e inovação que transformam o Seridó,
+            no IFRN Campus Currais Novos.
+        </p>
+
+        <div class="hero-actions">
+            <a href="{% url 'portal:programacao' %}">
+                Explorar programação
             </a>
 
+            <a href="{% url 'portal:mapa' %}" class="outline">
+                Localizar uma sala
+            </a>
         </div>
 
-    </div>
-
-</section>
-
-
-<section id="partner" class="section partners-section">
-
-    <div class="container">
-
-        <div class="section-heading text-center">
-
-            <span class="section-kicker">
-                XI EXPOTEC
-            </span>
-
-            <h3 class="section-title">
-                Parceiros
-            </h3>
-
-            <p>
-                Instituições e organizações que apoiam a realização da Expotec.
-            </p>
-
-        </div>
-
-
-        <div class="row g-4 justify-content-center">
-
-            {% for p in evento.parceiros.all %}
-
-            <div class="col-6 col-md-4 col-lg-3">
-
-                {% if p.url %}
-
-                <a class="partner-card" href="{{ p.url }}" target="_blank" rel="noopener noreferrer">
-
+        <div class="event-facts">
+            <div>
+                <strong>
+                    {% if request.evento.dt_inicio %}
+                    {{ request.evento.dt_inicio|date:"d" }}
+                    {% if request.evento.dt_encerramento %}
+                    –{{ request.evento.dt_encerramento|date:"d" }}
+                    {% endif %}
                     {% else %}
-
-                    <div class="partner-card">
-
-                        {% endif %}
-
-
-                        {% if p.logo %}
-                        <img src="{{ p.logo.url }}" alt="Logo do parceiro">
-                        {% endif %}
-
-
-                        {% if p.url %}
-
-                </a>
-
-                {% else %}
-
-            </div>
-
-            {% endif %}
-
-        </div>
-
-        {% empty %}
-
-        <div class="col-12">
-
-            <div class="partners-empty">
-
-                <div class="partners-empty-icon">
-                    <i class="fas fa-handshake"></i>
-                </div>
-
-                <h4>
-                    Em breve
-                </h4>
-
-                <p>
-                    Os parceiros da XI Expotec serão divulgados em breve.
-                </p>
-
-            </div>
-
-        </div>
-
-        {% endfor %}
-
-    </div>
-
-    </div>
-
-</section>
-
-
-<section id="location" class="section location-section">
-
-    <div class="container">
-
-        <div class="section-heading text-center">
-
-            <span class="section-kicker">
-                COMO CHEGAR
-            </span>
-
-            <h3 class="section-title">
-                Localização
-            </h3>
-
-            <p>
-                Confira onde será realizada a {{ evento.edicao }}
-                {{ evento.titulo|default:"Expotec" }}.
-            </p>
-
-        </div>
-
-
-        <div class="row g-4 align-items-stretch">
-
-            <div class="col-lg-4">
-
-                <div class="location-info">
-
-                    <div class="location-icon">
-                        <i class="fas fa-map-marker-alt"></i>
-                    </div>
-
-                    <h4>
-
-                        {% if evento.endereco %}
-                        {{ evento.endereco.local|default:"IFRN" }}
-                        {% else %}
-                        IFRN
-                        {% endif %}
-
-                    </h4>
-
-
-                    {% if evento.endereco %}
-
-                    <address>
-
-                        {% if evento.endereco.logradouro %}
-                        {{ evento.endereco.logradouro }}<br>
-                        {% endif %}
-
-                        {% if evento.endereco.cidade %}
-                        {{ evento.endereco.cidade }}
-                        {% endif %}
-
-                        {% if evento.endereco.estado %}
-                        — {{ evento.endereco.estado }}
-                        {% endif %}
-
-                    </address>
-
+                    2026
                     {% endif %}
-
-
-                    {% if evento.contatos.all %}
-
-                    <div class="location-contact">
-
-                        {% for c in evento.contatos.all %}
-
-                        {% if c.telefone %}
-                        <div>
-                            <i class="fas fa-phone"></i>
-                            {{ c.telefone }}
-                        </div>
-                        {% endif %}
-
-                        {% if c.email %}
-                        <div>
-                            <i class="fas fa-envelope"></i>
-                            {{ c.email }}
-                        </div>
-                        {% endif %}
-
-                        {% endfor %}
-
-                    </div>
-
+                </strong>
+                <span>
+                    {% if request.evento.dt_inicio %}
+                    {{ request.evento.dt_inicio|date:"F"}} de {{ request.evento.dt_inicio|date:"Y" }}
+                    {% else %}
+                    Novembro de 2026
                     {% endif %}
-
-                </div>
-
+                </span>
             </div>
 
-
-            <div class="col-lg-8">
-
-                <div class="location-map">
-
-                    <iframe
-                        src="https://www.openstreetmap.org/export/embed.html?bbox=-36.5365%2C-6.2555%2C-36.5315%2C-6.2505&amp;layer=mapnik&amp;marker=-6.253073%2C-36.53412"
-                        loading="lazy"
-                        title="Mapa do IFRN Campus Currais Novos">
-                    </iframe>
-
-                </div>
-
+            <div>
+                <strong>{{ request.evento.edicao|default:"XI" }} edição</strong>
+                <span>IFRN — Campus Currais Novos</span>
             </div>
 
+            <div>
+                <strong>Gratuito</strong>
+                <span>Aberto ao público</span>
+            </div>
         </div>
-
     </div>
 
+    <div class="hero-visual">
+        <div class="hero-orbit orbit-a"></div>
+        <div class="hero-orbit orbit-b"></div>
+
+        <div class="hero-logo">
+            <img src="{% static 'expotec2026/imagens/logos/expotec-2026-sem-ifrn.svg' %}"
+                alt="EXPOTEC 2026 — Ciência Delas">
+        </div>
+
+        <span class="visual-tag tag-one">Pesquisa</span>
+        <span class="visual-tag tag-two">Extensão</span>
+        <span class="visual-tag tag-three">Ensino</span>
+    </div>
 </section>
-
-{% endblock content %}
-
-
-{% block extra_scripts %}
-
-{{ block.super }}
-
-<script src="{% static 'vendor/smoothscroll/smooth-scroll.min.js' %}"></script>
-<script src="{% static 'js/main.js' %}"></script>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-
-        const promoVideo = document.getElementById("promo_video");
-
-        if (promoVideo) {
-            promoVideo.addEventListener("canplaythrough", function () {
-                promoVideo.play().catch(function () {
-                    // O navegador pode bloquear autoplay.
-                });
-            });
-        }
-
-
-        const carouselNoticias = $("#carousel_noticias");
-
-        if (carouselNoticias.length) {
-            carouselNoticias.carousel({
-                pause: "hover"
-            });
-        }
-
-    });
-</script>
-
-{% endblock extra_scripts %}
+{% endblock %}

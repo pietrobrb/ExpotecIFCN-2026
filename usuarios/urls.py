@@ -84,6 +84,11 @@ urlpatterns = [
         AlternarSelecaoMonitorView.as_view(),
         name="alternar_selecao_monitor",
     ),
+    path(
+        "me/dashboard/",
+        DashboardView.as_view(),
+        name="dashboard"
+    ),
     trabalhos_vs.url_path,
     avaliacoes_vs.url_path,
     dashboard_vs.url_path,

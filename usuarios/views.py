@@ -876,7 +876,7 @@ class MinhaAvaliacaoDetailView(MinhasAvaliacoesMixin, DetailView):
 @atividades_vs.action('list', default=True)
 class AtividadesInscricaoListView(TableListView):
     model = Atividade
-    permission_required = ["is_participant_rule"]
+    permission_required = ["is_user_rule"]
     filterset_class = AtividadeInscricaoFilter
     table_class = AtividadeInscricaoTable
     def get_queryset(self):
@@ -900,7 +900,7 @@ class AtividadesInscricaoDetail(DetailView):
 class AtividadesInscreverse(EditView):
     fields = []
     model = Atividade
-    permission_required = ["is_participant_rule"]
+    permission_required = ["is_user_rule"]
     confirm_message = 'Deseja realmente inscrever-se na atividade: "<b>{object}</b> ?'
     template_name = "confirm_form.html"
 
@@ -914,7 +914,7 @@ class AtividadesInscreverse(EditView):
             messages.error(request, "Esta atividade não permite inscricao.")
             return redirect(self.get_success_url())
 
-        if self.object.status != StatusAtividade.INSCRICOES_ABERTAS:
+        if self.object.status_atual != StatusAtividade.INSCRICOES_ABERTAS:
             messages.error(request, "Esta atividade não está com inscrições abertas")
             return redirect(self.get_success_url())
 
@@ -936,13 +936,36 @@ class AtividadesInscreverse(EditView):
         return context
 
 
-    def form_valid(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        inscricao, created = InscricaoAtividade.objects.get_or_create(atividade=self.object, usuario=self.request.user)
-        if created:
-            messages.success(self.request, "Inscrição realizada com sucesso.")
-        return redirect(reverse('user:minhas_inscricoes'))
 
+    def form_valid(self, form):
+        self.object = self.get_object()
+        request = self.request
+
+        if not self.object.com_inscricoes:
+            messages.error(
+                request,
+                "Esta atividade não permite inscrição."
+            )
+            return redirect(self.get_success_url())
+
+        if self.object.status_atual != StatusAtividade.INSCRICOES_ABERTAS:
+            messages.error(
+                request,
+                "Esta atividade não está com inscrições abertas."
+            )
+            return redirect(self.get_success_url())
+
+        inscricao, created = InscricaoAtividade.objects.get_or_create(
+            atividade=self.object,
+            usuario=request.user,
+        )
+
+        if created:
+            messages.success(request, "Inscrição realizada com sucesso.")
+        else:
+            messages.error(request, "Você já está inscrito nesta atividade.")
+
+        return redirect(reverse("user:minhas_inscricoes"))
 
 @insc_atividades_vs.action('list', default=True)
 class MinhasInscricoesView(TableListView):

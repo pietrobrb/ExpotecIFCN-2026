@@ -3,6 +3,7 @@ from django.db.models.base import Model as Model
 from django.db.models.query import QuerySet
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.http import JsonResponse
 
 from atividades.filtersets import AgendamentoFilter
 from atividades.models import Agendamento
@@ -14,26 +15,25 @@ from django.views.generic import TemplateView
 
 from portal.tables import PortalAgendamentoTable
 
+
 portal_vs = ViewSet(Evento)
 @portal_vs.action("portal")
+@portal_vs.action("portal")
+
 class PortalEventoView(PublicDetailView):
     model = Evento
     template_name = "index.html"
     permission_required = []
 
-    def get_object(self, queryset: QuerySet[Any] | None = ...) -> Model:
+    def get_object(self, queryset=None):
         return self.request.evento
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
+
 
 @portal_vs.action("atividades")
 class EventoAgendaListView(TemplateView):
     permission_required = ["is_admin_rule", "is_member_rule"]
     def get(self, request, *args, **kwargs):
         return redirect(reverse('portal:evento-list_dia', kwargs={'dia': 1}))
-
 
 
 class AtividadesEventoView(PublicTableListView):
@@ -53,29 +53,40 @@ class AtividadesEventoView(PublicTableListView):
                 qs = qs.filter(dia=dia)
         return qs
 
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['page_title'] = 'Programação'
-        # Passa o dia atual para o contexto
-        context['dia_atual'] = self.kwargs.get('dia')
-         # Instanciar o filtro com os parâmetros da requisição
-        filterset = self.filterset_class(self.request.GET, queryset=self.get_queryset())
 
-        # Verificar se o campo 'tipo' foi passado no filtro
+        context["page_title"] = "Programação"
+        context["dia_atual"] = int(self.kwargs.get("dia", 1))
+        context["dias_evento"] = (
+            self.request.evento.dias_do_evento if self.request.evento else []
+        )
+        context["tipos_atividade"] = (
+            self.request.evento.tipos_de_atividade.all() if self.request.evento else []
+        )
+
+        filterset = self.filterset_class(
+            self.request.GET,
+            queryset=self.get_queryset(),
+        )
+
+        context["tipo_atual"] = None
         if filterset.is_valid():
-            context['tipo_atual'] = filterset.form.cleaned_data.get('tipo')
+            context["tipo_atual"] = filterset.form.cleaned_data.get("tipo")
 
         return context
-    
+
     def get_table_kwargs(self):
         kwargs = super().get_table_kwargs()
         kwargs["extra_columns"] = []
         return kwargs
-    
+
     def get_table_class(self):
         table_class = super().get_table_class()
-        table_class._meta.sequence = ["..."] 
+        table_class._meta.sequence = ["..."]
         return table_class
+
 
 @portal_vs.action("chamadas")
 class ChamadasEventoView(PublicDetailView):
@@ -85,11 +96,11 @@ class ChamadasEventoView(PublicDetailView):
 
     def get_object(self, queryset: QuerySet[Any] | None = ...) -> Model:
         return self.request.evento
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
-    
+
 @portal_vs.action("downloads")
 class DownloadsEventoView(PublicDetailView):
     model = Evento
@@ -98,11 +109,10 @@ class DownloadsEventoView(PublicDetailView):
 
     def get_object(self, queryset: QuerySet[Any] | None = ...) -> Model:
         return self.request.evento
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
-    
 
 
 @portal_vs.action("comissoes")
@@ -113,11 +123,11 @@ class ComissoesEventoView(PublicDetailView):
 
     def get_object(self, queryset: QuerySet[Any] | None = ...) -> Model:
         return self.request.evento
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
-    
+
 @portal_vs.action("chamada", route='chamadas/<int:pk>')
 class ChamadaDetailView(PublicDetailView):
     model = Evento
@@ -126,12 +136,12 @@ class ChamadaDetailView(PublicDetailView):
 
     def get_object(self, queryset: QuerySet[Any] | None = ...) -> Model:
         return TipoChamada.objects.get(pk=self.kwargs.get("pk"))
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
+
         return context
-    
+
 @portal_vs.action("area", route='areas/<int:pk>')
 class ChamadaDetailView(PublicDetailView):
     model = Evento
@@ -140,8 +150,42 @@ class ChamadaDetailView(PublicDetailView):
 
     def get_object(self, queryset: QuerySet[Any] | None = ...) -> Model:
         return AreaTematica.objects.get(pk=self.kwargs.get("pk"))
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
+
         return context
+
+
+def agenda_json(request):
+    evento = request.evento
+
+    if not evento:
+        return JsonResponse({"atividades": []})
+
+    agendamentos = (
+        Agendamento.objects.filter(sala__evento=evento)
+        .select_related(
+            "atividade",
+            "atividade__tipo",
+            "sala",
+        )
+        .order_by("dia", "inicio")
+    )
+
+    atividades = [
+        {
+            "id": agendamento.pk,
+            "titulo": agendamento.atividade.titulo,
+            "descricao": agendamento.atividade.descricao or "",
+            "tipo": agendamento.atividade.tipo.nome,
+            "cor": agendamento.atividade.tipo.cor,
+            "dia": agendamento.dia.strftime("%d/%m/%Y"),
+            "inicio": agendamento.inicio.strftime("%H:%M"),
+            "fim": agendamento.fim.strftime("%H:%M"),
+            "local": agendamento.sala.nome,
+        }
+        for agendamento in agendamentos
+    ]
+
+    return JsonResponse({"atividades": atividades})

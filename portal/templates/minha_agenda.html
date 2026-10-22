@@ -1,0 +1,40 @@
+{% extends "public/expotec2026_layout.html" %}
+{% load static %}
+
+{% block title %}Minha agenda — XI EXPOTEC 2026{% endblock %}
+{% block page_name %}agenda{% endblock %}
+
+{% block page_css %}
+<link rel="stylesheet" href="{% static 'expotec2026/css/programacao.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="programacao" id="minha-agenda" data-api-url="{% url 'portal:agenda_json' %}">
+    <header class="programacao__cabecalho">
+        <p class="programacao__sobretitulo">XI EXPOTEC · IFRN Currais Novos</p>
+        <h1>Minha agenda</h1>
+        <p>Atividades que você selecionou para acompanhar durante o evento.</p>
+    </header>
+
+    <div id="minha-agenda-lista" class="programacao__lista">
+        <p>Carregando atividades salvas...</p>
+    </div>
+
+    <div id="minha-agenda-vazia" class="programacao__vazio" hidden>
+        <h2>Sua agenda está vazia</h2>
+        <p>Adicione atividades pela página de programação.</p>
+        <a href="{% url 'portal:programacao' %}">Ver programação</a>
+    </div>
+
+    <div class="programacao__paginacao">
+        <button type="button" id="limpar-minha-agenda" class="atividade-card__agenda">
+            Limpar agenda
+        </button>
+        <a href="{% url 'portal:programacao' %}">Voltar à programação</a>
+    </div>
+</section>
+{% endblock %}
+
+{% block page_js %}
+<script src="{% static 'expotec2026/js/minha-agenda.js' %}"></script>
+{% endblock %}

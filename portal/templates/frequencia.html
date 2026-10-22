@@ -1,0 +1,70 @@
+{% extends "public/expotec2026_layout.html" %}
+{% load static %}
+
+{% block title %}Frequência — XI EXPOTEC 2026{% endblock %}
+{% block page_name %}frequencia{% endblock %}
+
+{% block page_css %}
+<link rel="stylesheet" href="{% static 'expotec2026/css/frequencia.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="frequencia">
+    <header class="frequencia__cabecalho">
+        <p class="frequencia__sobretitulo">XI EXPOTEC · IFRN Currais Novos</p>
+        <h1>Frequência</h1>
+        <p>Consulte as orientações para registrar sua presença nas atividades.</p>
+    </header>
+
+    <div class="frequencia__grade">
+        <article class="frequencia__card">
+            <span class="frequencia__numero">01</span>
+            <h2>Inscreva-se na atividade</h2>
+            <p>
+                O registro de presença exige uma inscrição na atividade
+                correspondente. Confira sua inscrição antes de fazer o check-in.
+            </p>
+            <a href="{% url 'portal:programacao' %}" class="frequencia__botao">
+                Ver programação
+            </a>
+        </article>
+
+        <article class="frequencia__card">
+            <span class="frequencia__numero">02</span>
+            <h2>Leia o QR Code</h2>
+            <p>
+                Durante a atividade, utilize a câmera do celular para abrir
+                o endereço do QR Code disponibilizado pelo monitor.
+            </p>
+            <p class="frequencia__nota">
+                O QR Code precisa estar válido e a chamada deve estar aberta.
+            </p>
+        </article>
+
+        <article class="frequencia__card frequencia__card--destaque">
+            <span class="frequencia__numero">03</span>
+            <h2>Confirme sua presença</h2>
+            <p>
+                Entre com sua conta e acesse o endereço do check-in. O sistema
+                verifica sua inscrição e a validade da chamada antes de
+                registrar a presença.
+            </p>
+            <p class="frequencia__botao">
+                Para registrar sua presença, abra o QR Code disponibilizado
+                pelo monitor e siga as instruções do sistema.
+            </p>
+        </article>
+    </div>
+
+    <aside class="frequencia__ajuda">
+        <h2>Você é monitor?</h2>
+        <p>
+            O painel de monitoramento é restrito aos monitores cadastrados
+            para o evento. Faça login para acessar as chamadas autorizadas.
+        </p>
+        <a href="{% url 'presenca:monitor' %}" class="frequencia__link">
+            Acessar painel de monitor →
+        </a>
+    </aside>
+</section>
+{% endblock %}

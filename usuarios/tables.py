@@ -62,6 +62,7 @@ class AtividadeInscricaoTable(tables.Table):
     duracao = tables.Column(accessor="duracao", verbose_name="Duranção")
     periodo_inscricao = tables.Column(accessor="inicio_inscricoes", verbose_name="Periondo de Inscrição")
     actions = tables.Column(verbose_name="Ações", orderable=False, empty_values=())
+    status = tables.Column(accessor="status_atual", verbose_name="Status")
     class Meta:
         model = Atividade
         fields = (
@@ -81,7 +82,7 @@ class AtividadeInscricaoTable(tables.Table):
     def render_actions(self, record):
         detail_url = reverse("user:atividade-detail", args=[record.id])
         inscrever_url = reverse("user:atividade-inscreverse", args=[record.id])
-        if record.status == StatusAtividade.INSCRICOES_ABERTAS:
+        if record.status_atual == StatusAtividade.INSCRICOES_ABERTAS:
           return format_html(
                 (
                     '<a title="Detalhar" class="btn btn-light btn-link text-black action-detail px-2 py-2"'
