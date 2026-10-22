@@ -214,10 +214,10 @@ else:
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # config users
-AUTH_USER_MODEL = 'usuarios.User'
-LOGIN_URL = 'account_login'
-LOGIN_REDIRECT_URL = 'portal:index'
-LOGOUT_REDIRECT_URL = 'portal:index'
+AUTH_USER_MODEL = "usuarios.User"
+LOGIN_URL = "account_login"
+LOGIN_REDIRECT_URL = "portal:index"
+LOGOUT_REDIRECT_URL = "portal:index"
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_CHANGE_EMAIL = True
 ACCOUNT_LOGIN_METHODS = {"email"}
