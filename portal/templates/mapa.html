@@ -13,23 +13,35 @@
     <header class="mapa__cabecalho">
         <p class="mapa__sobretitulo">XI EXPOTEC · IFRN Currais Novos</p>
         <h1>Mapa do campus</h1>
-        <p>Consulte o mapa para se orientar durante o evento.</p>
+        <p>Consulte a localização do campus e encontre como chegar ao evento.</p>
     </header>
 
     <div class="mapa__painel">
         <div class="mapa__imagem">
-            <img src="{% static 'expotec2026/imagens/mapa/mapa-campus.png' %}"
-                alt="Mapa do campus do IFRN Currais Novos" loading="lazy">
+            <iframe
+                src="https://www.openstreetmap.org/export/embed.html?bbox=-36.545%2C-6.262%2C-36.523%2C-6.244&layer=mapnik&marker=-6.253073%2C-36.53412"
+                title="Mapa do IFRN Campus Currais Novos"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
         </div>
 
         <div class="mapa__acoes">
             <p>
-                Utilize o mapa como referência para localizar os espaços
-                do campus. Para confirmar a localização de uma atividade
-                específica, consulte também a programação.
+                O mapa apresenta a região do campus. Para localizar salas,
+                laboratórios e atividades específicas, consulte a sinalização
+                do evento e a programação oficial.
             </p>
 
-            <a href="{% url 'portal:programacao' %}" class="mapa__botao">
+            <a
+                href="https://www.openstreetmap.org/?mlat=-6.253073&mlon=-36.53412#map=17/-6.253073/-36.53412"
+                class="mapa__botao"
+                target="_blank"
+                rel="noopener noreferrer">
+                Abrir mapa completo
+            </a>
+
+            <a href="{% url 'portal:programacao' %}" class="mapa__botao mapa__botao--secundario">
                 Consultar programação
             </a>
         </div>
