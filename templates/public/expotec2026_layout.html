@@ -7,8 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#015F33">
     <meta name="description"
-        content="{{ request.evento.subtitulo|default:'XI EXPOTEC 2026 â€” CiÃªncia Delas, IFRN Campus Currais Novos.' }}">
-    <title>{% block title %}XI EXPOTEC 2026 â€” CiÃªncia Delas{% endblock %}</title>
+        content="{{ request.evento.subtitulo|default:'XI EXPOTEC 2026 - Ciência Delas, IFRN Campus Currais Novos.' }}">
+    <title>{% block title %}XI EXPOTEC 2026 - Ciência Delas{% endblock %}</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,17 +25,17 @@
             <img src="{% static 'expotec2026/imagens/logos/expotec-2026-horizontal.svg' %}" alt="EXPOTEC 2026">
         </a>
 
-        <nav aria-label="NavegaÃ§Ã£o principal">
-            <a data-nav="inicio" href="{% url 'portal:index' %}">InÃ­cio</a>
-            <a data-nav="programacao" href="{% url 'portal:programacao' %}">ProgramaÃ§Ã£o</a>
+        <nav aria-label="Navegação principal">
+            <a data-nav="inicio" href="{% url 'portal:index' %}">Início</a>
+            <a data-nav="programacao" href="{% url 'portal:programacao' %}">Programação</a>
             <a data-nav="sobre" href="{% url 'portal:sobre' %}">Sobre</a>
             <a data-nav="mapa" href="{% url 'portal:mapa' %}">Mapa</a>
-            <a data-nav="frequencia" href="{% url 'portal:frequencia' %}">FrequÃªncia</a>
+            <a data-nav="frequencia" href="{% url 'portal:frequencia' %}">Frequência</a>
         </nav>
 
         {% if user.is_authenticated %}
         <a class="login-top" href="{% url 'user:atividade-list' %}">
-            Atividades com inscriÃ§Ã£o
+            Atividades com inscrição
         </a>
 
         <a class="agenda-top" href="{% url 'portal:minha_agenda' %}">
@@ -66,8 +66,8 @@
 
     <footer>
         <img src="{% static 'expotec2026/imagens/logos/expotec-2026-rodape-branco.svg' %}" alt="EXPOTEC 2026">
-        <p>IFRN â€” Campus Currais Novos</p>
-        <a href="{% url 'portal:index' %}">Voltar ao inÃ­cio</a>
+        <p>IFRN - Campus Currais Novos</p>
+        <a href="{% url 'portal:index' %}">Voltar ao início</a>
     </footer>
 
     <script src="{% static 'expotec2026/js/principal.js' %}"></script>
