@@ -1,0 +1,38 @@
+{% extends "public/expotec2026_layout.html" %}
+{% load static %}
+
+{% block title %}Mapa do Campus — XI EXPOTEC 2026{% endblock %}
+{% block page_name %}mapa{% endblock %}
+
+{% block page_css %}
+<link rel="stylesheet" href="{% static 'expotec2026/css/mapa.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="mapa">
+    <header class="mapa__cabecalho">
+        <p class="mapa__sobretitulo">XI EXPOTEC · IFRN Currais Novos</p>
+        <h1>Mapa do campus</h1>
+        <p>Consulte o mapa para se orientar durante o evento.</p>
+    </header>
+
+    <div class="mapa__painel">
+        <div class="mapa__imagem">
+            <img src="{% static 'expotec2026/imagens/mapa/mapa-campus.png' %}"
+                alt="Mapa do campus do IFRN Currais Novos" loading="lazy">
+        </div>
+
+        <div class="mapa__acoes">
+            <p>
+                Utilize o mapa como referência para localizar os espaços
+                do campus. Para confirmar a localização de uma atividade
+                específica, consulte também a programação.
+            </p>
+
+            <a href="{% url 'portal:programacao' %}" class="mapa__botao">
+                Consultar programação
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

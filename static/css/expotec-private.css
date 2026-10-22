@@ -1,0 +1,1084 @@
+/* Expotec 2026 — identidade visual da área interna */
+
+:root {
+    --private-pink: #C8003E;
+    --private-pink-dark: #cc006b;
+    --private-bg: #f5f6fa;
+    --private-white: #ffffff;
+    --private-text: #292b3a;
+    --private-muted: #737789;
+    --private-border: #e6e8ef;
+}
+
+/* Fundo e conteúdo principal */
+body.sidebar-mini {
+    background: var(--private-bg);
+}
+
+body.sidebar-mini .content-wrapper {
+    background: var(--private-bg);
+}
+
+body.sidebar-mini .content-header {
+    padding: 24px 20px 12px;
+}
+
+body.sidebar-mini .content-header h5 {
+    color: var(--private-text) !important;
+    font-size: 1.35rem;
+    font-weight: 700;
+}
+
+body.sidebar-mini .content {
+    padding: 0 12px 24px;
+}
+
+/* Barra superior */
+body.sidebar-mini .main-header {
+    background: var(--private-white);
+    border-bottom: 1px solid var(--private-border);
+    box-shadow: 0 4px 16px rgb(25 30 50 / 4%);
+}
+
+body.sidebar-mini .main-header .nav-link {
+    color: var(--private-text);
+}
+
+body.sidebar-mini .main-header .nav-link:hover {
+    color: var(--private-pink);
+}
+
+/* Barra lateral */
+body.sidebar-mini .main-sidebar {
+    background: var(--private-white) !important;
+    border-right: 1px solid var(--private-border);
+    box-shadow: none;
+}
+
+body.sidebar-mini .brand-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 66px;
+    border-bottom: 1px solid var(--private-border) !important;
+}
+
+body.sidebar-mini .sidebar .form-control-sidebar {
+    background: #f7f7fa;
+    border-color: var(--private-border);
+    border-radius: 8px 0 0 8px;
+}
+
+body.sidebar-mini .sidebar .btn-sidebar {
+    background: #f7f7fa;
+    border: 1px solid var(--private-border);
+    border-left: 0;
+    border-radius: 0 8px 8px 0;
+}
+
+body.sidebar-mini .sidebar .nav-link {
+    margin: 3px 8px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    transition: background-color .18s ease, color .18s ease;
+}
+
+body.sidebar-mini .sidebar .nav-link:hover {
+    background: #fff0f7;
+    color: var(--private-pink) !important;
+}
+
+body.sidebar-mini .sidebar .nav-link.active {
+    background: var(--private-pink) !important;
+    color: var(--private-white) !important;
+}
+
+body.sidebar-mini .sidebar .nav-link.active p,
+body.sidebar-mini .sidebar .nav-link.active i {
+    color: var(--private-white) !important;
+}
+
+/* Botões */
+body.sidebar-mini .btn-primary {
+    background-color: var(--private-pink);
+    border-color: var(--private-pink);
+}
+
+body.sidebar-mini .btn-primary:hover,
+body.sidebar-mini .btn-primary:focus {
+    background-color: var(--private-pink-dark);
+    border-color: var(--private-pink-dark);
+    color: var(--private-white) !important;
+}
+
+/* Cartões e painéis */
+body.sidebar-mini .card {
+    overflow: hidden;
+    border: 1px solid var(--private-border);
+    border-radius: 12px;
+    box-shadow: 0 4px 18px rgb(25 30 50 / 5%);
+}
+
+body.sidebar-mini .card-header {
+    background: var(--private-white);
+    border-bottom-color: var(--private-border);
+}
+
+/* Formulários */
+body.sidebar-mini .form-control,
+body.sidebar-mini .custom-select,
+body.sidebar-mini .form-select {
+    border-color: var(--private-border);
+    border-radius: 8px;
+}
+
+body.sidebar-mini .form-control:focus,
+body.sidebar-mini .custom-select:focus,
+body.sidebar-mini .form-select:focus {
+    border-color: var(--private-pink);
+    box-shadow: 0 0 0 .2rem rgb(239 0 126 / 12%);
+}
+
+/* Rodapé */
+body.sidebar-mini .main-footer {
+    background: var(--private-white);
+    border-top: 1px solid var(--private-border);
+    color: var(--private-muted);
+}
+
+/* Telas menores */
+@media (max-width: 767.98px) {
+    body.sidebar-mini .content-header {
+        padding: 16px 12px 8px;
+    }
+
+    body.sidebar-mini .content {
+        padding: 0 4px 16px;
+    }
+
+    body.sidebar-mini .main-footer {
+        font-size: .82rem;
+    }
+}
+
+/* Acabamento dos indicadores do dashboard */
+.expotec-stat-card {
+    min-height: 136px;
+    border: 0 !important;
+    border-radius: 13px !important;
+    box-shadow: 0 5px 16px rgb(25 30 50 / 9%);
+    transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.expotec-stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 9px 22px rgb(25 30 50 / 13%);
+}
+
+.expotec-stat-card .card-body {
+    padding: 20px 12px;
+}
+
+.expotec-stat-card h3 {
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.expotec-stat-card p {
+    margin: 7px 0 0;
+    font-size: .95rem !important;
+    font-weight: 600;
+    letter-spacing: .035em;
+}
+
+/* Painéis de notícias, atividades e chamadas */
+.expotec-dashboard-panel {
+    margin-top: 14px;
+    margin-bottom: 14px;
+}
+
+.expotec-dashboard-panel>h5 {
+    min-height: 38px;
+    display: flex;
+    align-items: center;
+    padding: 10px 12px;
+    margin-bottom: 0;
+    color: var(--private-text) !important;
+    background: #fff;
+    border: 1px solid var(--private-border) !important;
+    border-radius: 10px 10px 0 0;
+    font-size: .85rem;
+    font-weight: 700;
+}
+
+.expotec-dashboard-list {
+    min-height: 100px;
+    padding: 10px 12px;
+    background: #fff;
+    border: 1px solid var(--private-border);
+    border-top: 0;
+    border-radius: 0 0 10px 10px;
+}
+
+.expotec-dashboard-list .list-group-item {
+    padding: 9px 4px !important;
+    border-bottom: 1px solid #f0f1f5 !important;
+}
+
+.expotec-dashboard-list .list-group-item:last-child {
+    border-bottom: 0 !important;
+}
+
+.expotec-dashboard-list a {
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.expotec-dashboard-list a:hover {
+    color: var(--private-pink-dark);
+    text-decoration: underline;
+}
+
+@media (max-width: 767.98px) {
+    .expotec-stat-card {
+        min-height: 110px;
+    }
+
+    .expotec-dashboard-panel {
+        margin-top: 8px;
+        margin-bottom: 8px;
+    }
+
+    .expotec-dashboard-list {
+        min-height: auto;
+    }
+}
+
+/* Página de controle de presença do monitor */
+
+.expotec-monitor {
+    max-width: 1500px;
+}
+
+.expotec-monitor-heading {
+    padding: 8px 0 18px;
+}
+
+.expotec-monitor-eyebrow {
+    display: inline-block;
+    margin-bottom: 8px;
+    color: var(--private-pink);
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .12em;
+}
+
+.expotec-monitor-title {
+    margin: 0 0 8px;
+    color: var(--private-text);
+    font-size: clamp(1.6rem, 2.5vw, 2.1rem);
+    font-weight: 750;
+}
+
+.expotec-monitor-card {
+    overflow: hidden;
+    border: 1px solid var(--private-border);
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 4px 16px rgb(25 30 50 / 5%);
+    transition: box-shadow .2s ease, transform .2s ease;
+}
+
+.expotec-monitor-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgb(25 30 50 / 8%);
+}
+
+.expotec-monitor-card .card-body {
+    display: flex;
+    flex-direction: column;
+    padding: 22px;
+}
+
+.expotec-monitor-card-heading {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 22px;
+}
+
+.expotec-monitor-icon {
+    display: flex;
+    flex: 0 0 46px;
+    width: 46px;
+    height: 46px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: #fff0f7;
+    color: var(--private-pink);
+    font-size: 1.2rem;
+}
+
+.expotec-monitor-activity-title {
+    margin: 1px 0 7px;
+    color: var(--private-text);
+    font-size: 1.08rem;
+    font-weight: 750;
+    line-height: 1.4;
+}
+
+.expotec-monitor-room {
+    color: var(--private-muted);
+    font-size: .86rem;
+}
+
+.expotec-monitor-room i {
+    margin-right: 5px;
+    color: var(--private-pink);
+}
+
+.expotec-monitor-details {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.expotec-monitor-detail {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 13px;
+    border: 1px solid var(--private-border);
+    border-radius: 10px;
+    background: #fafafd;
+}
+
+.expotec-monitor-detail>i {
+    margin-top: 3px;
+    color: var(--private-pink);
+}
+
+.expotec-monitor-detail div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.expotec-monitor-detail span,
+.expotec-monitor-status-label {
+    color: var(--private-muted);
+    font-size: .76rem;
+}
+
+.expotec-monitor-detail strong {
+    color: var(--private-text);
+    font-size: .88rem;
+}
+
+.expotec-monitor-status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.expotec-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: .78rem;
+    font-weight: 700;
+}
+
+.expotec-status-badge>span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.expotec-status-open {
+    background: #e8f8ef;
+    color: #187744;
+}
+
+.expotec-status-closed {
+    background: #f0f1f5;
+    color: #626779;
+}
+
+.expotec-status-started {
+    background: #e8f1ff;
+    color: #245bb5;
+}
+
+.expotec-status-pending {
+    background: #fff5df;
+    color: #916500;
+}
+
+.expotec-monitor-action {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 44px;
+    padding: 11px 14px;
+    border-radius: 9px;
+    font-weight: 700;
+    text-align: left;
+}
+
+.expotec-monitor-action .fa-arrow-right {
+    margin-left: auto;
+}
+
+.expotec-monitor-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+    padding: 12px;
+    border-radius: 9px;
+    font-size: .86rem;
+    line-height: 1.5;
+}
+
+.expotec-monitor-empty {
+    padding: 48px 24px;
+    border: 1px solid var(--private-border);
+    border-radius: 14px;
+    background: #fff;
+    text-align: center;
+}
+
+.expotec-monitor-empty-icon {
+    margin-bottom: 14px;
+    color: var(--private-pink);
+    font-size: 2rem;
+}
+
+.expotec-monitor-empty h2 {
+    color: var(--private-text);
+    font-size: 1.2rem;
+    font-weight: 750;
+}
+
+@media (max-width: 575.98px) {
+    .expotec-monitor-card .card-body {
+        padding: 17px;
+    }
+
+    .expotec-monitor-details {
+        grid-template-columns: 1fr;
+    }
+
+    .expotec-monitor-status {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+/* Controle da sessão de presença */
+
+.expotec-session-page {
+    max-width: 1500px;
+}
+
+.expotec-session-heading {
+    padding: 8px 0 24px;
+}
+
+.expotec-session-card {
+    border: 1px solid var(--private-border);
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgb(25 30 50 / 5%);
+}
+
+.expotec-session-card>.card-body {
+    padding: 26px;
+}
+
+.expotec-session-activity {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 22px;
+}
+
+.expotec-session-activity h2 {
+    margin: 0 0 7px;
+    color: var(--private-text);
+    font-size: 1.25rem;
+    font-weight: 750;
+}
+
+.expotec-session-status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--private-border);
+}
+
+.expotec-session-alert {
+    padding: 13px 15px;
+    border-radius: 9px;
+    font-size: .9rem;
+    line-height: 1.55;
+}
+
+.expotec-qr-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 22px 0;
+    padding: 28px 18px;
+    border: 1px solid var(--private-border);
+    border-radius: 12px;
+    background: #fafafd;
+    text-align: center;
+}
+
+.expotec-qr-panel h3 {
+    margin: 7px 0;
+    color: var(--private-text);
+    font-size: 1.2rem;
+    font-weight: 750;
+}
+
+.expotec-qr-image-wrapper {
+    margin: 15px 0;
+    padding: 12px;
+    border: 1px solid var(--private-border);
+    border-radius: 12px;
+    background: #fff;
+}
+
+.expotec-qr-image-wrapper img {
+    display: block;
+    width: min(300px, 65vw);
+    height: auto;
+}
+
+.expotec-qr-countdown {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 4px 0 10px;
+    color: var(--private-muted);
+    font-size: .88rem;
+}
+
+.expotec-qr-countdown strong {
+    color: var(--private-pink);
+    font-size: 1.3rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.expotec-session-form {
+    margin-top: 12px;
+}
+
+.expotec-session-action {
+    min-height: 44px;
+    padding: 11px 18px;
+    border-radius: 9px;
+    font-weight: 700;
+}
+
+@media (max-width: 575.98px) {
+    .expotec-session-card>.card-body {
+        padding: 17px;
+    }
+
+    .expotec-qr-panel {
+        padding: 22px 12px;
+    }
+
+    .expotec-qr-countdown {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .expotec-session-action {
+        width: 100%;
+    }
+}
+
+/* Formulário de inscrição da Expotec */
+
+.expotec-inscricao {
+    max-width: 1500px;
+}
+
+.expotec-inscricao-heading {
+    padding: 8px 0 24px;
+}
+
+.expotec-inscricao-card {
+    overflow: hidden;
+    border: 1px solid var(--private-border);
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 4px 16px rgb(25 30 50 / 5%);
+}
+
+.expotec-inscricao-card>.card-body {
+    padding: 26px;
+}
+
+.expotec-inscricao-section {
+    min-width: 0;
+    margin: 0;
+    padding: 0 0 24px;
+    border: 0;
+}
+
+.expotec-inscricao-section+.expotec-inscricao-section {
+    padding-top: 24px;
+    border-top: 1px solid var(--private-border);
+}
+
+.expotec-inscricao-section-last {
+    padding-bottom: 0;
+}
+
+.expotec-inscricao-section-heading {
+    display: flex;
+    align-items: flex-start;
+    gap: 13px;
+    margin-bottom: 22px;
+}
+
+.expotec-inscricao-section-icon {
+    display: flex;
+    flex: 0 0 42px;
+    width: 42px;
+    height: 42px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 11px;
+    background: #fff0f7;
+    color: var(--private-pink);
+    font-size: 1.05rem;
+}
+
+.expotec-inscricao-section-heading legend {
+    float: none;
+    width: auto;
+    margin: 0 0 5px;
+    padding: 0;
+    color: var(--private-text);
+    font-size: 1.05rem;
+    font-weight: 750;
+}
+
+.expotec-inscricao-section-heading p {
+    margin: 0;
+    color: var(--private-muted);
+    font-size: .86rem;
+}
+
+.expotec-inscricao-fields .form-group,
+.expotec-inscricao-fields .mb-3 {
+    margin-bottom: 18px;
+}
+
+.expotec-inscricao-fields label {
+    color: var(--private-text);
+    font-size: .88rem;
+    font-weight: 650;
+}
+
+.expotec-inscricao-fields .form-control,
+.expotec-inscricao-fields .custom-select,
+.expotec-inscricao-fields select {
+    min-height: 42px;
+    border-color: var(--private-border);
+    border-radius: 8px;
+}
+
+.expotec-inscricao-fields .form-control:focus,
+.expotec-inscricao-fields select:focus {
+    border-color: var(--private-pink);
+    box-shadow: 0 0 0 .18rem rgb(239 0 126 / 10%);
+}
+
+.expotec-inscricao-fields input[type="file"] {
+    max-width: 100%;
+    height: auto;
+    padding: 8px;
+}
+
+.expotec-inscricao-fields .invalid-feedback,
+.expotec-inscricao-fields .text-danger {
+    font-size: .82rem;
+}
+
+.expotec-inscricao-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 18px 26px;
+    border-top: 1px solid var(--private-border);
+    background: #fff;
+}
+
+.expotec-inscricao-submit {
+    min-height: 44px;
+    padding: 11px 22px;
+    border-radius: 9px;
+    font-weight: 700;
+}
+
+@media (max-width: 575.98px) {
+    .expotec-inscricao-card>.card-body {
+        padding: 18px;
+    }
+
+    .expotec-inscricao-footer {
+        align-items: stretch;
+        flex-direction: column;
+        padding: 18px;
+    }
+
+    .expotec-inscricao-submit {
+        width: 100%;
+    }
+
+    .expotec-inscricao-section-heading {
+        gap: 10px;
+    }
+}
+
+/* Minhas inscrições */
+
+.expotec-minhas-inscricoes {
+    max-width: 1600px;
+}
+
+.expotec-inscricoes-heading {
+    padding: 8px 0 26px;
+}
+
+.expotec-inscricoes-section-heading {
+    display: flex;
+    align-items: flex-start;
+    gap: 13px;
+    margin-bottom: 18px;
+}
+
+.expotec-inscricoes-section-heading h2 {
+    margin: 0 0 5px;
+    color: var(--private-text);
+    font-size: 1.15rem;
+    font-weight: 750;
+}
+
+.expotec-inscricoes-section-heading p {
+    margin: 0;
+    color: var(--private-muted);
+    font-size: .87rem;
+}
+
+.expotec-inscricoes-icon {
+    display: flex;
+    flex: 0 0 42px;
+    width: 42px;
+    height: 42px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 11px;
+    background: #fff0f7;
+    color: var(--private-pink);
+}
+
+.expotec-inscricoes-count {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    background: #f0f1f5;
+    color: var(--private-text);
+    font-size: .75rem;
+    font-weight: 650;
+}
+
+.expotec-inscricoes-card {
+    overflow: hidden;
+    border: 1px solid var(--private-border);
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 3px 12px rgb(25 30 50 / 4%);
+}
+
+.expotec-inscricoes-table {
+    margin: 0;
+}
+
+.expotec-inscricoes-table thead th {
+    padding: 14px 16px;
+    border-top: 0;
+    border-bottom: 1px solid var(--private-border);
+    background: #fafafd;
+    color: var(--private-text);
+    font-size: .82rem;
+    font-weight: 750;
+    white-space: nowrap;
+}
+
+.expotec-inscricoes-table tbody td {
+    padding: 15px 16px;
+    color: var(--private-text);
+    vertical-align: middle;
+}
+
+.expotec-atividade-filter {
+    padding: 18px;
+    border: 1px solid var(--private-border);
+    border-radius: 12px;
+    background: #fff;
+}
+
+.expotec-atividade-filter label {
+    display: block;
+    margin-bottom: 7px;
+    color: var(--private-text);
+    font-size: .84rem;
+    font-weight: 650;
+}
+
+.expotec-atividade-filter input,
+.expotec-atividade-filter select {
+    width: 100%;
+    min-height: 42px;
+    border: 1px solid var(--private-border);
+    border-radius: 8px;
+}
+
+.expotec-inscricoes-filter-button {
+    min-height: 42px;
+    padding: 10px 15px;
+    border-radius: 8px;
+}
+
+.expotec-atividade-card {
+    overflow: hidden;
+    border: 1px solid var(--private-border);
+    border-radius: 13px;
+    box-shadow: 0 3px 12px rgb(25 30 50 / 4%);
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.expotec-atividade-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 18px rgb(25 30 50 / 8%);
+}
+
+.expotec-atividade-card .card-body {
+    padding: 20px;
+}
+
+.expotec-atividade-type,
+.expotec-atividade-status {
+    max-width: 100%;
+    padding: 6px 9px;
+    border-radius: 20px;
+    font-size: .73rem;
+    font-weight: 700;
+    white-space: normal;
+}
+
+.expotec-atividade-type {
+    color: #fff;
+}
+
+.expotec-atividade-status-open {
+    background: #e8f8ef;
+    color: #187744;
+}
+
+.expotec-atividade-status-soon {
+    background: #e8f3ff;
+    color: #245bb5;
+}
+
+.expotec-atividade-status-full {
+    background: #ffebeb;
+    color: #b42323;
+}
+
+.expotec-atividade-status-closed {
+    background: #f0f1f5;
+    color: #626779;
+}
+
+.expotec-atividade-title {
+    margin-bottom: 10px;
+    color: var(--private-text);
+    font-size: 1.05rem;
+    font-weight: 750;
+    line-height: 1.45;
+}
+
+.expotec-atividade-description {
+    flex-grow: 1;
+    color: var(--private-muted);
+    font-size: .88rem;
+    line-height: 1.65;
+}
+
+.expotec-atividade-details {
+    display: grid;
+    gap: 12px;
+    margin: 8px 0 20px;
+    padding: 15px 0;
+    border-top: 1px solid var(--private-border);
+    border-bottom: 1px solid var(--private-border);
+}
+
+.expotec-atividade-details div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.expotec-atividade-details dt {
+    color: var(--private-muted);
+    font-size: .82rem;
+    font-weight: 500;
+}
+
+.expotec-atividade-details dd {
+    margin: 0;
+    color: var(--private-text);
+    font-size: .82rem;
+    font-weight: 650;
+    text-align: right;
+}
+
+.expotec-atividade-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.expotec-atividade-actions .btn {
+    flex: 1 1 auto;
+    min-height: 40px;
+    border-radius: 8px;
+    font-size: .82rem;
+    font-weight: 650;
+}
+
+.expotec-atividades-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 22px;
+}
+
+.expotec-atividades-pagination>span {
+    color: var(--private-muted);
+    font-size: .84rem;
+}
+
+.expotec-inscricoes-empty {
+    padding: 35px 20px;
+    border: 1px dashed var(--private-border);
+    border-radius: 12px;
+    background: #fff;
+    color: var(--private-muted);
+    text-align: center;
+}
+
+.expotec-inscricoes-empty>i {
+    margin-bottom: 12px;
+    color: var(--private-pink);
+    font-size: 1.8rem;
+}
+
+.expotec-inscricoes-empty h3 {
+    color: var(--private-text);
+    font-size: 1.05rem;
+    font-weight: 750;
+}
+
+.expotec-inscricoes-table-header {
+    padding: 18px;
+    border-bottom: 1px solid var(--private-border);
+    background: #fff;
+}
+
+.expotec-inscricoes-search-label {
+    display: block;
+    margin-bottom: 12px;
+    color: var(--private-text);
+    font-size: .85rem;
+    font-weight: 700;
+}
+
+.expotec-minhas-atividades-filters {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.expotec-minhas-atividades-filters>* {
+    max-width: 100%;
+}
+
+.expotec-minhas-atividades-filters .btn {
+    min-height: 40px;
+    border-radius: 8px;
+}
+
+.expotec-inscricoes-table-footer {
+    padding: 16px 18px;
+    border-top: 1px solid var(--private-border);
+    background: #fff;
+}
+
+@media (max-width: 575.98px) {
+    .expotec-atividade-filter {
+        padding: 14px;
+    }
+
+    .expotec-atividade-actions {
+        flex-direction: column;
+    }
+
+    .expotec-atividade-actions .btn {
+        width: 100%;
+    }
+
+    .expotec-inscricoes-table-header {
+        padding: 14px;
+    }
+
+    .expotec-minhas-atividades-filters {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .expotec-minhas-atividades-filters>* {
+        width: 100%;
+    }
+
+    .expotec-inscricoes-table-footer {
+        overflow-x: auto;
+    }
+}

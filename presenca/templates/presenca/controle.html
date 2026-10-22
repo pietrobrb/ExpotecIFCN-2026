@@ -1,81 +1,134 @@
 {% extends "private/layout.html" %}
 
-{% block title %}
-Controle da Sessão | Expotec
-{% endblock %}
+{% block title %}Controle da Sessão | Expotec{% endblock %}
 
 {% block content %}
 
-<div class="container py-4">
+<div class="container-fluid py-3 expotec-session-page">
 
-    <h1 class="mb-2">Controle da Sessão</h1>
+    <header class="expotec-session-heading">
+        <span class="expotec-monitor-eyebrow">ÁREA DO MONITOR</span>
+        <h1 class="expotec-monitor-title">Controle da Sessão</h1>
+        <p class="text-muted mb-0">{{ sessao.agendamento.atividade.titulo }}</p>
+    </header>
 
-    <p class="text-muted mb-4">
-        {{ sessao.agendamento.atividade.titulo }}
-    </p>
+    <div class="row">
+        <div class="col-12 col-xl-10 col-xxl-9">
 
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <h4>{{ sessao.agendamento.atividade.titulo }}</h4>
+            <section class="card expotec-session-card">
+                <div class="card-body">
 
-            <p>
-                <strong>Status:</strong>
-                {{ sessao.get_status_display }}
-            </p>
+                    <div class="expotec-session-activity">
+                        <div class="expotec-monitor-icon">
+                            <i class="fas fa-calendar-check" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <h2>{{ sessao.agendamento.atividade.titulo }}</h2>
+                            <p class="text-muted mb-0">
+                                <i class="fas fa-map-marker-alt mr-1" aria-hidden="true"></i>
+                                {{ sessao.agendamento.sala }}
+                            </p>
+                        </div>
+                    </div>
 
-            {% if sessao.status == "aberta" %}
-            <div class="alert alert-info">
-                Chamada aberta. O QR Code é renovado a cada 30 segundos.
-                O prazo máximo é de 10 minutos.
-            </div>
+                    <div class="expotec-session-status">
+                        <span class="expotec-monitor-status-label">Situação da sessão</span>
 
-            {% if sessao.todos_presentes %}
-            <div id="aviso-todos-presentes" class="alert alert-success">
-                Todos os inscritos registraram presença.
-                Encerre a chamada para liberar o início da oficina.
-            </div>
-            {% endif %}
+                        {% if sessao.status == "aberta" %}
+                        <span class="expotec-status-badge expotec-status-open">
+                            <span></span> Presença aberta
+                        </span>
+                        {% elif sessao.status == "encerrada" %}
+                        <span class="expotec-status-badge expotec-status-closed">
+                            <span></span> Presença encerrada
+                        </span>
+                        {% elif sessao.status == "iniciada" %}
+                        <span class="expotec-status-badge expotec-status-started">
+                            <span></span> Atividade iniciada
+                        </span>
+                        {% else %}
+                        <span class="expotec-status-badge expotec-status-pending">
+                            <span></span> {{ sessao.get_status_display }}
+                        </span>
+                        {% endif %}
+                    </div>
 
-            <div class="text-center">
-                <h5>QR Code para registrar presença</h5>
+                    {% if sessao.status == "aberta" %}
 
-                <img id="qr-code" src="data:image/png;base64,{{ qr_code }}" alt="QR Code para registro de presença"
-                    width="300" height="300" class="img-fluid mb-3">
+                    <div class="alert alert-info expotec-session-alert">
+                        <i class="fas fa-info-circle mr-2" aria-hidden="true"></i>
+                        O QR Code é renovado a cada 30 segundos. A sessão tem prazo máximo de 10 minutos.
+                    </div>
 
-                <p><strong>Tempo restante do QR:</strong></p>
-                <h4 id="contador-qr">00:30</h4>
+                    {% if sessao.todos_presentes %}
+                    <div id="aviso-todos-presentes" class="alert alert-success expotec-session-alert">
+                        <i class="fas fa-check-circle mr-2" aria-hidden="true"></i>
+                        Todos os inscritos registraram presença. Encerre a chamada para liberar o início da oficina.
+                    </div>
+                    {% endif %}
 
-                <p class="small text-muted">
-                    O QR Code será renovado automaticamente.
-                </p>
-            </div>
+                    <div class="expotec-qr-panel">
+                        <span class="expotec-monitor-eyebrow">CHECK-IN DOS PARTICIPANTES</span>
+                        <h3>QR Code de presença</h3>
+                        <p class="text-muted">
+                            Peça aos participantes que leiam o código com a câmera do celular.
+                        </p>
 
-            <form method="post" action="{% url 'presenca:encerrar_presenca' sessao.id %}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger">
-                    Encerrar chamada
-                </button>
-            </form>
+                        <div class="expotec-qr-image-wrapper">
+                            <img id="qr-code" src="data:image/png;base64,{{ qr_code }}"
+                                alt="QR Code para registro de presença" width="300" height="300" class="img-fluid">
+                        </div>
 
-            {% elif sessao.status == "encerrada" %}
-            <div class="alert alert-warning">
-                Chamada encerrada. Novos registros de presença estão bloqueados.
-            </div>
+                        <div class="expotec-qr-countdown">
+                            <span>Renovação do código em</span>
+                            <strong id="contador-qr">00:30</strong>
+                        </div>
 
-            <form method="post" action="{% url 'presenca:iniciar_atividade' sessao.id %}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-success">
-                    Iniciar oficina
-                </button>
-            </form>
+                        <p class="small text-muted mb-0">
+                            O código é atualizado automaticamente nesta página.
+                        </p>
+                    </div>
 
-            {% elif sessao.status == "iniciada" %}
-            <div class="alert alert-success">
-                A oficina foi iniciada.
-            </div>
-            {% endif %}
+                    <form method="post" action="{% url 'presenca:encerrar_presenca' sessao.id %}"
+                        class="expotec-session-form">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger expotec-session-action">
+                            <i class="fas fa-stop-circle mr-2" aria-hidden="true"></i>
+                            Encerrar chamada
+                        </button>
+                    </form>
+
+                    {% elif sessao.status == "encerrada" %}
+
+                    <div class="alert alert-warning expotec-session-alert">
+                        <i class="fas fa-lock mr-2" aria-hidden="true"></i>
+                        Chamada encerrada. Novos registros de presença estão bloqueados.
+                    </div>
+
+                    <form method="post" action="{% url 'presenca:iniciar_atividade' sessao.id %}"
+                        class="expotec-session-form">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success expotec-session-action">
+                            <i class="fas fa-play-circle mr-2" aria-hidden="true"></i>
+                            Iniciar oficina
+                        </button>
+                    </form>
+
+                    {% elif sessao.status == "iniciada" %}
+
+                    <div class="alert alert-success expotec-session-alert">
+                        <i class="fas fa-check-circle mr-2" aria-hidden="true"></i>
+                        A oficina foi iniciada.
+                    </div>
+
+                    {% endif %}
+
+                </div>
+            </section>
+
         </div>
     </div>
+
 </div>
 
 {% if sessao.status == "aberta" %}
@@ -84,7 +137,6 @@ Controle da Sessão | Expotec
     const contadorElement = document.getElementById("contador-qr");
 
     const renovarUrl = "{% url 'presenca:renovar_presenca' sessao.id %}";
-
     const estadoUrl = "{% url 'presenca:estado_sessao' sessao.id %}";
 
     const csrfToken = document.cookie
@@ -119,9 +171,7 @@ Controle da Sessão | Expotec
 
             const data = await response.json();
 
-            qrCodeElement.src =
-                "data:image/png;base64," + data.qr_code;
-
+            qrCodeElement.src = "data:image/png;base64," + data.qr_code;
             iniciarContagem(data.expira_em);
 
         } catch (error) {
@@ -139,8 +189,7 @@ Controle da Sessão | Expotec
         const expiracao = new Date(expiraEm).getTime();
 
         function atualizar() {
-            const agora = Date.now();
-            const restante = expiracao - agora;
+            const restante = expiracao - Date.now();
 
             if (restante <= 0) {
                 contadorElement.textContent = "Atualizando...";
@@ -165,54 +214,47 @@ Controle da Sessão | Expotec
 
     iniciarContagem("{{ sessao.token_expira_em|date:'c' }}");
 
-        async function verificarEstadoSessao() {
-            try {
-                const response = await fetch(estadoUrl, {
-                    method: "GET",
-                    headers: {
-                        "X-Requested-With": "XMLHttpRequest",
-                    },
-                    cache: "no-store",
-                });
+    async function verificarEstadoSessao() {
+        try {
+            const response = await fetch(estadoUrl, {
+                method: "GET",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest",
+                },
+                cache: "no-store",
+            });
 
-                if (!response.ok) {
-                    return;
-                }
+            if (!response.ok) return;
 
-                const data = await response.json();
+            const data = await response.json();
 
-                if (data.status !== "aberta") {
-                    window.location.reload();
-                    return;
-                }
-
-                const alertaExistente = document.getElementById(
-                    "aviso-todos-presentes"
-                );
-
-                if (data.todos_presentes && !alertaExistente) {
-                    const alerta = document.createElement("div");
-
-                    alerta.id = "aviso-todos-presentes";
-                    alerta.className = "alert alert-success";
-                    alerta.textContent =
-                        "Todos os inscritos registraram presença. " +
-                        "Encerre a chamada para liberar o início da oficina.";
-
-                    qrCodeElement.closest(".card-body").insertBefore(
-                        alerta,
-                        qrCodeElement.closest(".text-center")
-                    );
-                }
-            } catch (error) {
-                console.error("Erro ao consultar estado da chamada:", error);
+            if (data.status !== "aberta") {
+                window.location.reload();
+                return;
             }
-        }
 
-        verificarEstadoSessao();
-        setInterval(verificarEstadoSessao, 5000);
+            const alertaExistente = document.getElementById("aviso-todos-presentes");
+
+            if (data.todos_presentes && !alertaExistente) {
+                const alerta = document.createElement("div");
+
+                alerta.id = "aviso-todos-presentes";
+                alerta.className = "alert alert-success expotec-session-alert";
+                alerta.textContent =
+                    "Todos os inscritos registraram presença. " +
+                    "Encerre a chamada para liberar o início da oficina.";
+
+                const painel = document.querySelector(".expotec-qr-panel");
+                painel.parentNode.insertBefore(alerta, painel);
+            }
+        } catch (error) {
+            console.error("Erro ao consultar estado da chamada:", error);
+        }
+    }
+
+    verificarEstadoSessao();
+    setInterval(verificarEstadoSessao, 5000);
 </script>
 {% endif %}
-
 
 {% endblock %}

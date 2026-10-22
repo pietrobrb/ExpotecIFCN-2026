@@ -15,7 +15,7 @@ class TipoAtividadeAdmin(admin.ModelAdmin):
     search_fields = ("nome", "descricao")
     fields = ['evento', 'nome', 'descricao', 'cor', 'icone']
     inlines = []
-    
+
 
 admin.site.register(TipoAtividade, TipoAtividadeAdmin)
 
@@ -28,17 +28,17 @@ class AtividadeAdmin(admin.ModelAdmin):
     search_fields = ("tipo__nome","titulo")
     fields = [
         'tipo',
-        'titulo', 
-        'descricao', 
+        'titulo',
+        'descricao',
         'com_inscricoes',
-        'qtd_vagas', 
-        'inicio_inscricoes', 
-        'fim_inscricoes', 
-        'duracao', 
-        'status', 
+        'qtd_vagas',
+        'inicio_inscricoes',
+        'fim_inscricoes',
+        'duracao',
+        'status',
     ]
     inlines = []
- 
+
 admin.site.register(Atividade, AtividadeAdmin)
 
 class InscricaoAtividadeAdmin(admin.ModelAdmin):
@@ -48,10 +48,10 @@ class InscricaoAtividadeAdmin(admin.ModelAdmin):
         "usuario",
     )
     search_fields = ("usuario__nome_completo","atividade__titulo")
-    fields = ["atividade", "usuario", "presente", "data_inscricao"]
+    fields = ["atividade", "usuario", "presente"]
     inlines = []
-     
- 
+
+
 admin.site.register(InscricaoAtividade, InscricaoAtividadeAdmin)
 
 

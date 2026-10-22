@@ -1,0 +1,134 @@
+.frequencia {
+  width: min(1120px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 56px 0 80px;
+  color: #17352b;
+}
+
+.frequencia__cabecalho {
+  max-width: 760px;
+  margin-bottom: 36px;
+}
+
+.frequencia__sobretitulo {
+  color: #087849;
+  font-size: .82rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.frequencia__cabecalho h1 {
+  margin: 10px 0;
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.frequencia__cabecalho>p:last-child {
+  color: #62756b;
+  line-height: 1.8;
+}
+
+.frequencia__grade {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.frequencia__card {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  padding: 25px;
+  border: 1px solid #e0e9e3;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 5px 18px rgb(20 55 35 / 4%);
+}
+
+.frequencia__numero {
+  display: inline-grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  color: #087849;
+  background: #eaf5ee;
+  font-weight: 800;
+}
+
+.frequencia__card h2,
+.frequencia__ajuda h2 {
+  margin: 0 0 12px;
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.frequencia__card p,
+.frequencia__ajuda p {
+  color: #62756b;
+  line-height: 1.8;
+}
+
+.frequencia__card--destaque {
+  border-color: #087849;
+  background: #f2f8f4;
+}
+
+.frequencia__nota {
+  font-size: .88rem;
+}
+
+.frequencia__botao {
+  display: inline-block;
+  margin-top: auto;
+  padding: 12px 15px;
+  border-radius: 9px;
+  color: #fff;
+  background: #087849;
+  font-size: .9rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.frequencia__botao:hover {
+  background: #065d38;
+}
+
+.frequencia__ajuda {
+  margin-top: 25px;
+  padding: 25px;
+  border: 1px solid #e0e9e3;
+  border-radius: 15px;
+  background: #fff;
+}
+
+.frequencia__link {
+  color: #087849;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.frequencia__link:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 850px) {
+  .frequencia__grade {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .frequencia {
+    width: calc(100% - 28px);
+    padding-top: 38px;
+  }
+
+  .frequencia__card,
+  .frequencia__ajuda {
+    padding: 20px;
+  }
+}

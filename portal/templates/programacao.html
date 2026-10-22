@@ -1,63 +1,142 @@
-{% extends 'public/layout.html' %}
-{% load static i18n %}
-{% load render_table from django_tables2 %}
-{% block title %} Atividades {% endblock title %}
-{% block bodyclass %}bg-black single-page{% endblock bodyclass %}
-{% block content %}
+{% extends "public/expotec2026_layout.html" %}
+{% load static %}
 
-<section class="section bg-white">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-3">
-                <h3 class="section-title text-break">PROGRAMAÇÃO</h3>
-            </div>
-           
-            <div class="col-md-9 ">
-                <div class="d-flex justify-content-center  justify-content-md-end flex-wrap mb-3">
-                <div class=" mb-1 ms-1">
-                    <div class="flex-fill fw-light p-2 {% if tipo_atual is None %}schedule-box mt-0 {%endif%}" style="background:black; text-shadow: 0px 1px 3px #000;">
-                        <a href="{% url 'portal:evento-list_dia' dia=dia_atual %}" class="text-decoration-none"><small class="text-wrap text-light px-1">Todas</small></a>
-                    </div>
-                </div>
-                {% for a in request.evento.tipos_de_atividade.all %}
-                <div class=" mb-1 ms-1 ">
-                    <a href="{% url 'portal:evento-list_dia' dia=dia_atual %}?tipo={{a.id}}" class="text-decoration-none">
-                        <div class="flex-fill fw-light p-2  {% if tipo_atual.pk == a.pk %} schedule-box  mt-0 {% endif %}" style="background:{{a.cor}}; text-shadow: 0px 1px 3px #000;">
-                            <small class="text-wrap text-light px-1">{{a.nome}}</small>
-                        </div>
-                    </a>
-                </div>
-                {% endfor %}
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <ul class="nav nav-tabs">
-                    {% for dia in request.evento.dias_do_evento %}
-                    <li class="nav-item mb-0 pb-0">
-                    <a class="nav-link text-active-primary ms-0 me-10 fw-light {% if dia_atual == forloop.counter %} active {% endif %}"
-                        href="{% url 'portal:evento-list_dia' dia=forloop.counter %}{% if tipo_atual.pk %}?tipo={{tipo_atual.pk}}{% endif %}">{{ dia|date:"d/m/Y" }}</a>
-                    </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-        <div class="row mt-1">
-            <div class="col-md-12">
-                {% render_table table "includes/item_agenda.html" %}
-            </div>
-        </div>
-        <div class="row">
-          
-          <div class="col-md-12 pagination-container">
-            {% if table.paginator %}
-                <nav aria-label="Page navigation">
-                    {% include "includes/pagination.html" %}
-                </nav>
-            {% endif %}
-          </div>
+{% block title %}Programação — XI EXPOTEC 2026{% endblock %}
+{% block page_name %}programacao{% endblock %}
+
+{% block page_css %}
+<link rel="stylesheet" href="{% static 'expotec2026/css/programacao.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="programacao">
+    <div class="programacao__cabecalho">
+        <p class="programacao__sobretitulo">XI EXPOTEC · IFRN Currais Novos</p>
+        <h1>Programação</h1>
+        <p>Consulte as atividades, os horários e os locais do evento.</p>
+    </div>
+
+    <nav class="programacao__dias" aria-label="Dias do evento">
+        {% for dia in dias_evento %}
+        <a href="{% url 'portal:evento-list_dia' dia=forloop.counter %}{% if tipo_atual %}?tipo={{ tipo_atual.pk }}{% endif %}"
+            class="programacao__dia {% if dia_atual == forloop.counter %}is-active{% endif %}">
+            <span>Dia {{ forloop.counter }}</span>
+            <strong>{{ dia|date:"d/m" }}</strong>
+        </a>
+        {% empty %}
+        <p>As datas da programação ainda não foram configuradas.</p>
+        {% endfor %}
+    </nav>
+
+    <div class="programacao__filtros">
+        <label class="programacao__busca">
+            <span>Buscar atividade</span>
+            <input id="busca-atividades" type="search" placeholder="Nome, descrição ou local..." autocomplete="off">
+        </label>
+
+        <div class="programacao__categorias" aria-label="Filtrar por categoria">
+            <a href="{% url 'portal:evento-list_dia' dia=dia_atual %}"
+                class="programacao__categoria {% if not tipo_atual %}is-active{% endif %}">Todas</a>
+
+            {% for tipo in tipos_atividade %}
+            <a href="{% url 'portal:evento-list_dia' dia=dia_atual %}?tipo={{ tipo.pk }}"
+                class="programacao__categoria {% if tipo_atual.pk == tipo.pk %}is-active{% endif %}"
+                style="--tipo-cor: {{ tipo.cor }};">{{ tipo.nome }}</a>
+            {% endfor %}
         </div>
     </div>
+
+    <div class="programacao__resultado">
+        <p id="contador-atividades">
+            {{ table.paginator.count|default:0 }}
+            atividade(s) encontrada(s) nesta página de resultados.
+        </p>
+    </div>
+
+    <div class="programacao__lista" id="lista-atividades">
+        {% for row in table.paginated_rows %}
+        {% with atividade=row.record.atividade %}
+        <article class="atividade-card" data-atividade data-titulo="{{ atividade.titulo|lower }}"
+            data-descricao="{{ atividade.descricao|striptags|lower|truncatechars:500 }}"
+            data-local="{{ row.record.sala.nome|lower }}" data-tipo="{{ atividade.tipo.nome|lower }}"
+            data-agenda-id="{{ row.record.pk }}" style="--atividade-cor: {{ atividade.tipo.cor }};">
+            <div class="atividade-card__horario">
+                <strong>{{ row.record.inicio|date:"H:i" }}</strong>
+                <span>até {{ row.record.fim|date:"H:i" }}</span>
+            </div>
+
+            <div class="atividade-card__conteudo">
+                <span class="atividade-card__tipo">{{ atividade.tipo.nome }}</span>
+                <h2>{{ atividade.titulo }}</h2>
+
+                {% if atividade.descricao %}
+                <p class="atividade-card__descricao">
+                    {{ atividade.descricao|striptags|truncatechars:220 }}
+                </p>
+                {% endif %}
+
+                <div class="atividade-card__detalhes">
+                    <span>
+                        <strong>Local:</strong> {{ row.record.sala.nome }}
+                    </span>
+
+                    {% if atividade.com_inscricoes %}
+                    <span>
+                        <strong>Inscrições:</strong>
+                        {% if atividade.status == "inscricoes_abertas" %}
+                        Abertas
+                        {% elif atividade.status == "inscricoes_embreve" %}
+                        Em breve
+                        {% elif atividade.status == "sem_vaga" %}
+                        Sem vagas
+                        {% elif atividade.status == "inscricoes_encerradas" %}
+                        Encerradas
+                        {% else %}
+                        Consulte a organização
+                        {% endif %}
+                    </span>
+
+                    {% if atividade.qtd_vagas %}
+                    <span><strong>Vagas:</strong> {{ atividade.qtd_vagas }}</span>
+                    {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+
+            <button type="button" class="atividade-card__agenda" data-alternar-agenda="{{ row.record.pk }}"
+                aria-pressed="false">+ Minha agenda</button>
+        </article>
+        {% endwith %}
+        {% empty %}
+        <div class="programacao__vazio">
+            <h2>Nenhuma atividade encontrada</h2>
+            <p>Não há atividades cadastradas para este dia ou filtro.</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <p id="busca-sem-resultados" class="programacao__vazio" hidden>
+        Nenhuma atividade corresponde à sua busca.
+    </p>
+
+    {% if table.page and table.paginator.num_pages > 1 %}
+    <nav class="programacao__paginacao" aria-label="Paginação">
+        {% if table.page.has_previous %}
+        <a
+            href="?page={{ table.page.previous_page_number }}{% if tipo_atual %}&tipo={{ tipo_atual.pk }}{% endif %}">Anterior</a>
+        {% endif %}
+
+        <span>Página {{ table.page.number }} de {{ table.paginator.num_pages }}</span>
+
+        {% if table.page.has_next %}
+        <a
+            href="?page={{ table.page.next_page_number }}{% if tipo_atual %}&tipo={{ tipo_atual.pk }}{% endif %}">Próxima</a>
+        {% endif %}
+    </nav>
+    {% endif %}
 </section>
-{% endblock content %}
+{% endblock %}
+
+{% block page_js %}
+<script src="{% static 'expotec2026/js/programacao-django.js' %}"></script>
+{% endblock %}

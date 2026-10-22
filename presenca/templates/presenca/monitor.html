@@ -1,75 +1,114 @@
 {% extends "private/layout.html" %}
 
-{% block title %}
-Controle de Presença | Expotec
-{% endblock %}
+{% block title %}Controle de Presença | Expotec{% endblock %}
 
 {% block content %}
 
-<div class="container py-4">
+<div class="container-fluid py-3 expotec-monitor">
 
-    <h1 class="mb-2">Controle de Presença</h1>
-
-    <p class="text-muted mb-4">
-        Olá,
-        {{ monitor.usuario.get_full_name|default:monitor.usuario.username }}.
-    </p>
+    <div class="expotec-monitor-heading mb-4">
+        <div>
+            <span class="expotec-monitor-eyebrow">ÁREA DO MONITOR</span>
+            <h1 class="expotec-monitor-title">Controle de Presença</h1>
+            <p class="text-muted mb-0">
+                Olá, {{ monitor.usuario.get_full_name|default:monitor.usuario.username }}.
+                Acompanhe suas atividades e gerencie a presença dos participantes.
+            </p>
+        </div>
+    </div>
 
     {% if atividades_monitor %}
 
-    <div class="row g-4">
+    <div class="row">
 
         {% for item in atividades_monitor %}
 
-        <div class="col-md-6">
-
-            <div class="card h-100 shadow-sm">
+        <div class="col-12 col-lg-6 mb-4">
+            <article class="card expotec-monitor-card h-100">
 
                 <div class="card-body">
 
-                    <h5 class="card-title">
-                        {{ item.agendamento.atividade.titulo }}
-                    </h5>
+                    <div class="expotec-monitor-card-heading">
+                        <div class="expotec-monitor-icon">
+                            <i class="fas fa-calendar-check" aria-hidden="true"></i>
+                        </div>
 
-                    <p class="mb-1">
-                        <strong>Data:</strong>
-                        {{ item.agendamento.dia|date:"d/m/Y" }}
-                    </p>
+                        <div class="flex-grow-1">
+                            <h2 class="expotec-monitor-activity-title">
+                                {{ item.agendamento.atividade.titulo }}
+                            </h2>
+                            <p class="expotec-monitor-room mb-0">
+                                <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                                {{ item.agendamento.sala }}
+                            </p>
+                        </div>
+                    </div>
 
-                    <p class="mb-1">
-                        <strong>Horário:</strong>
-                        {{ item.agendamento.inicio|time:"H:i" }}
-                        –
-                        {{ item.agendamento.fim|time:"H:i" }}
-                    </p>
+                    <div class="expotec-monitor-details">
+                        <div class="expotec-monitor-detail">
+                            <i class="far fa-calendar" aria-hidden="true"></i>
+                            <div>
+                                <span>Data</span>
+                                <strong>{{ item.agendamento.dia|date:"d/m/Y" }}</strong>
+                            </div>
+                        </div>
 
-                    <p class="mb-3">
-                        <strong>Sala:</strong>
-                        {{ item.agendamento.sala }}
-                    </p>
+                        <div class="expotec-monitor-detail">
+                            <i class="far fa-clock" aria-hidden="true"></i>
+                            <div>
+                                <span>Horário</span>
+                                <strong>
+                                    {{ item.agendamento.inicio|time:"H:i" }}
+                                    – {{ item.agendamento.fim|time:"H:i" }}
+                                </strong>
+                            </div>
+                        </div>
+                    </div>
 
                     {% if item.sessao %}
 
-                    <p class="mb-3">
-                        <strong>Status:</strong>
-                        {{ item.sessao.get_status_display }}
-                    </p>
+                    <div class="expotec-monitor-status">
+                        <span class="expotec-monitor-status-label">Situação da sessão</span>
+
+                        {% if item.sessao.status == "aberta" %}
+                        <span class="expotec-status-badge expotec-status-open">
+                            <span></span> Presença aberta
+                        </span>
+                        {% elif item.sessao.status == "encerrada" %}
+                        <span class="expotec-status-badge expotec-status-closed">
+                            <span></span> Presença encerrada
+                        </span>
+                        {% elif item.sessao.status == "iniciada" %}
+                        <span class="expotec-status-badge expotec-status-started">
+                            <span></span> Atividade iniciada
+                        </span>
+                        {% else %}
+                        <span class="expotec-status-badge expotec-status-pending">
+                            <span></span> {{ item.sessao.get_status_display }}
+                        </span>
+                        {% endif %}
+                    </div>
 
                     {% if item.sessao.monitor_id == monitor.id %}
 
-                    <a href="{% url 'presenca:controle_sessao' item.sessao.id %}" class="btn btn-primary">
+                    <a href="{% url 'presenca:controle_sessao' item.sessao.id %}"
+                        class="btn btn-primary expotec-monitor-action">
+                        <i class="fas fa-clipboard-check mr-2" aria-hidden="true"></i>
                         Controlar presença
+                        <i class="fas fa-arrow-right ml-auto" aria-hidden="true"></i>
                     </a>
 
                     {% elif item.sessao.monitor %}
 
-                    <div class="alert alert-warning mb-0">
+                    <div class="alert alert-warning expotec-monitor-alert mb-0">
+                        <i class="fas fa-user-shield mr-2" aria-hidden="true"></i>
                         Esta sessão está associada a outro monitor.
                     </div>
 
                     {% else %}
 
-                    <div class="alert alert-warning mb-0">
+                    <div class="alert alert-warning expotec-monitor-alert mb-0">
+                        <i class="fas fa-exclamation-triangle mr-2" aria-hidden="true"></i>
                         Esta sessão não possui monitor associado e não pode ser controlada.
                     </div>
 
@@ -77,21 +116,27 @@ Controle de Presença | Expotec
 
                     {% else %}
 
+                    <div class="expotec-monitor-status">
+                        <span class="expotec-monitor-status-label">Situação da sessão</span>
+                        <span class="expotec-status-badge expotec-status-pending">
+                            <span></span> Ainda não aberta
+                        </span>
+                    </div>
+
                     <form method="post" action="{% url 'presenca:abrir_presenca' item.agendamento.id %}">
                         {% csrf_token %}
 
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary expotec-monitor-action">
+                            <i class="fas fa-qrcode mr-2" aria-hidden="true"></i>
                             Abrir presença
+                            <i class="fas fa-arrow-right ml-auto" aria-hidden="true"></i>
                         </button>
                     </form>
 
                     {% endif %}
 
-
                 </div>
-
-            </div>
-
+            </article>
         </div>
 
         {% endfor %}
@@ -100,8 +145,14 @@ Controle de Presença | Expotec
 
     {% else %}
 
-    <div class="alert alert-info">
-        Nenhuma atividade disponível para você.
+    <div class="expotec-monitor-empty">
+        <div class="expotec-monitor-empty-icon">
+            <i class="fas fa-calendar-times" aria-hidden="true"></i>
+        </div>
+        <h2>Nenhuma atividade disponível</h2>
+        <p class="text-muted mb-0">
+            Não há atividades atribuídas ao seu perfil de monitor neste momento.
+        </p>
     </div>
 
     {% endif %}

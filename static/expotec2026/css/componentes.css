@@ -1,0 +1,666 @@
+:root {
+  --green: #015f33;
+  --dark: #0f3729;
+  --yellow: #f58c0f;
+  --red: #da0205;
+  --magenta: #c8003e;
+  --blue: #2563eb;
+  --lilac: #7c3aed;
+  --teal: #0f766e;
+  --cyan-dark: #0e7490;
+  --paper: #faf7ef;
+  --ink: #0f3729;
+  --muted: #596b63;
+  --line: #d9e2dd;
+  --shadow: 0 16px 45px rgba(15, 55, 41, 0.13);
+}
+
+/* Navegação responsiva compartilhada entre as páginas */
+@media (max-width: 900px) {
+  .topbar {
+    height: auto;
+    min-height: 78px;
+    flex-wrap: wrap;
+    padding-bottom: 0;
+  }
+
+  .topbar nav {
+    order: 3;
+    width: 100%;
+    display: flex;
+    gap: 22px;
+    overflow-x: auto;
+    padding: 0 2px;
+    scrollbar-width: none;
+  }
+
+  .topbar nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .topbar nav a {
+    flex: none;
+    padding: 10px 0 12px;
+  }
+}
+
+@media (max-width: 600px) {
+  body {
+    padding-bottom: 0;
+  }
+
+  .topbar {
+    height: auto;
+    padding: 8px 18px 0;
+  }
+
+  .topbar nav {
+    font-size: 12px;
+  }
+}
+
+.brand img {
+  width: 205px;
+  height: 58px;
+  object-fit: contain;
+}
+
+.topbar nav a.active {
+  box-shadow: inset 0 -3px var(--magenta);
+}
+
+.hero {
+  background: linear-gradient(
+    145deg,
+    #fffdf8 0 64%,
+    var(--magenta) 64% 78%,
+    var(--green) 78%
+  );
+}
+
+.hero h1 {
+  color: #111;
+  letter-spacing: -0.05em;
+  word-spacing: 0.1em;
+}
+
+.hero h1 span {
+  display: inline-block;
+  color: var(--green);
+  white-space: nowrap;
+}
+
+.hero-actions a {
+  background: var(--yellow);
+  color: var(--dark);
+}
+
+.hero-logo {
+  width: min(430px, 82%);
+  aspect-ratio: 1;
+  border: 9px solid var(--magenta);
+  border-radius: 35% 65% 57% 43% / 54% 38% 62% 46%;
+  overflow: hidden;
+  transform: rotate(-4deg);
+  background: #fff;
+  box-shadow: 0 18px 50px rgba(200, 0, 62, 0.22);
+}
+
+.hero-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 24px;
+  transform: rotate(4deg);
+}
+
+.orbit-a {
+  border-color: rgba(200, 0, 62, 0.35);
+}
+
+.orbit-b {
+  border-color: rgba(200, 0, 62, 0.48);
+}
+
+/* Balão Ensino — computador */
+.tag-three {
+  left: auto;
+  right: 9%;
+  top: 9%;
+  bottom: auto;
+  transform: rotate(6deg);
+}
+
+.hero-dot {
+  position: absolute;
+  z-index: 4;
+  display: block;
+  border-radius: 50%;
+  box-shadow: 0 5px 14px rgba(15, 55, 41, 0.16);
+}
+
+.dot-red {
+  width: 15px;
+  height: 15px;
+  left: 8%;
+  bottom: 25%;
+  background: var(--red);
+}
+
+.dot-orange {
+  width: 11px;
+  height: 11px;
+  right: 12%;
+  top: 17%;
+  background: var(--yellow);
+}
+
+.dot-magenta {
+  width: 8px;
+  height: 8px;
+  right: 5%;
+  bottom: 34%;
+  background: var(--magenta);
+}
+
+.pillar.green {
+  background: #fff;
+  color: var(--dark);
+  border-left: 8px solid var(--green);
+}
+
+.pillar.green p {
+  color: var(--muted);
+}
+
+.pillar.red {
+  background: var(--magenta);
+}
+
+.pillar.yellow {
+  background: var(--yellow);
+  color: var(--dark);
+}
+
+/* Filtros da programação */
+.category-filters button {
+  --filter-color: var(--dark);
+
+  background: #fff;
+  color: var(--filter-color);
+  border: 1px solid var(--filter-color);
+  border-radius: 99px;
+  padding: 9px 13px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.category-filters button[data-category="Todos"] {
+  --filter-color: var(--dark);
+}
+
+.category-filters button[data-category="Sala temática"] {
+  --filter-color: var(--red);
+  color: var(--red);
+}
+
+.category-filters button[data-category="Oficina"] {
+  --filter-color: var(--yellow);
+  color: #9b5500;
+}
+
+.category-filters button[data-category="Exposição"] {
+  --filter-color: var(--green);
+  color: var(--green);
+}
+
+.category-filters button[data-category="Palestra"] {
+  --filter-color: var(--magenta);
+  color: var(--magenta);
+}
+
+.category-filters button[data-category="Mesa-redonda"] {
+  --filter-color: var(--lilac);
+  color: var(--lilac);
+}
+
+.category-filters button[data-category="Minicurso"] {
+  --filter-color: var(--blue);
+  color: var(--blue);
+}
+
+.category-filters button[data-category="Comunicações"] {
+  --filter-color: var(--cyan-dark);
+  color: var(--cyan-dark);
+}
+
+.category-filters button[data-category="Pôsteres"] {
+  --filter-color: var(--teal);
+  color: var(--teal);
+}
+
+.category-filters button:hover {
+  background: color-mix(
+    in srgb,
+    var(--filter-color) 10%,
+    white
+  );
+
+  transform: translateY(-1px);
+}
+
+.category-filters button.active {
+  color: #fff;
+  background: var(--filter-color);
+  border-color: var(--filter-color);
+  transform: none;
+}
+
+/* Cores dos cards */
+.activity-card[style*="#DA0205"] .time,
+.activity-card[style*="#DA0205"] .activity-type {
+  background: var(--red);
+}
+
+.activity-card[style*="#F58C0F"] .time,
+.activity-card[style*="#F58C0F"] .activity-type {
+  background: var(--yellow);
+  color: var(--dark);
+}
+
+.activity-card[style*="#015F33"] .time,
+.activity-card[style*="#015F33"] .activity-type {
+  background: var(--green);
+}
+
+.activity-card[style*="#C8003E"] .time,
+.activity-card[style*="#C8003E"] .activity-type {
+  background: var(--magenta);
+}
+
+.activity-card {
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.activity-card:hover,
+.activity-card:focus-visible,
+.activity-card.expanded {
+  border-color: var(--accent);
+  box-shadow: 0 14px 35px rgba(15, 55, 41, 0.16);
+  transform: translateY(-2px);
+  outline: none;
+}
+
+.activity-details {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+
+  transition:
+    grid-template-rows 0.25s ease,
+    opacity 0.2s ease,
+    margin 0.25s ease;
+}
+
+.activity-details > div {
+  overflow: hidden;
+}
+
+.activity-card.expanded .activity-details {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  margin-top: 16px;
+}
+
+.activity-description {
+  margin: 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.activity-presenters {
+  margin: 11px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.activity-presenters strong {
+  color: var(--dark);
+}
+
+.activity-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.register-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  filter: grayscale(0.25);
+}
+
+.expand-activity,
+.register-button {
+  border: 0;
+  border-radius: 9px;
+  padding: 10px 13px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.expand-activity {
+  margin-top: 14px;
+  padding: 0;
+  background: transparent;
+  color: var(--green);
+}
+
+.register-button {
+  background: var(--magenta);
+  color: #fff;
+}
+
+.registration-note {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+/* Área de frequência e SUAP */
+.attendance-card .suap-mark {
+  font-size: 16px;
+  letter-spacing: 0.04em;
+}
+
+.attendance-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.attendance-actions button {
+  margin-top: 0;
+}
+
+.attendance-actions .secondary {
+  background: var(--dark);
+}
+
+.scanner-panel,
+.presence-history {
+  grid-column: 1 / -1;
+  background: #fff;
+  border-radius: 22px;
+  padding: 28px;
+  box-shadow: 0 12px 32px rgba(15, 55, 41, 0.12);
+}
+
+.scanner-panel[hidden] {
+  display: none;
+}
+
+.scanner-head,
+.history-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.scanner-head h3,
+.history-heading h3 {
+  margin: 0;
+  font-size: 25px;
+}
+
+#close-scanner {
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 50%;
+  background: #edf2ef;
+  color: var(--dark);
+  font-size: 28px;
+  line-height: 1;
+}
+
+.camera-frame {
+  position: relative;
+  max-width: 620px;
+  aspect-ratio: 4 / 3;
+  margin: 22px auto 15px;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #07150e;
+}
+
+#qr-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.scan-guide {
+  position: absolute;
+  width: min(56%, 270px);
+  aspect-ratio: 1;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border: 3px solid #fff;
+  border-radius: 18px;
+  box-shadow: 0 0 0 999px rgba(0, 0, 0, 0.25);
+}
+
+#scanner-status,
+.camera-alternative {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.qr-result {
+  margin-top: 16px;
+  padding: 18px;
+  border-left: 5px solid var(--green);
+  border-radius: 12px;
+  background: #eef8f2;
+}
+
+.qr-result p {
+  margin: 6px 0 13px;
+  color: var(--muted);
+}
+
+.qr-result button {
+  border: 0;
+  border-radius: 10px;
+  padding: 11px 15px;
+  background: var(--green);
+  color: #fff;
+  font-weight: 800;
+}
+
+.history-heading span {
+  padding: 8px 12px;
+  border-radius: 99px;
+  background: #edf2ef;
+  color: var(--dark);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.history-empty {
+  margin-top: 20px;
+  padding: 26px;
+  border: 1px dashed #aebcb4;
+  border-radius: 16px;
+  text-align: center;
+}
+
+.history-empty p {
+  margin: 7px auto 0;
+  max-width: 560px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* Rodapé */
+footer img {
+  width: 240px;
+  height: 74px;
+  object-fit: contain;
+  filter: none;
+  background: transparent;
+  padding: 0;
+}
+
+/* Ajustes para celular */
+@media (max-width: 600px) {
+  .brand img {
+    width: 145px;
+    height: 44px;
+  }
+
+  .hero {
+    min-height: auto;
+    padding: 26px 20px;
+    gap: 12px;
+
+    background: linear-gradient(
+      155deg,
+      #fffdf8 0 70%,
+      var(--magenta) 70% 86%,
+      var(--green) 86%
+    );
+  }
+
+  .hero h1 {
+    max-width: 520px;
+    font-size: clamp(31px, 9.5vw, 37px);
+    line-height: 1;
+    letter-spacing: -0.035em;
+    word-spacing: 0.14em;
+  }
+
+  .hero-description {
+    margin: 15px 0;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .hero-actions {
+    gap: 8px;
+  }
+
+  .hero-actions a {
+    padding: 12px 14px;
+    font-size: 12px;
+  }
+
+  .event-facts {
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 17px;
+  }
+
+  .event-facts strong {
+    font-size: 14px;
+  }
+
+  .event-facts span {
+    font-size: 9px;
+  }
+
+  .hero-visual {
+    min-height: 245px;
+  }
+
+  .hero-logo {
+    width: min(220px, 72%);
+    border-width: 7px;
+  }
+
+  .hero-logo img {
+    padding: 13px;
+  }
+
+  .dot-red {
+    left: 0;
+    bottom: 31%;
+  }
+
+  .dot-orange {
+    right: 8%;
+    top: 19%;
+  }
+
+  .dot-magenta {
+    right: 2%;
+    bottom: 32%;
+  }
+
+  .attendance-actions {
+    display: grid;
+  }
+
+  .attendance-actions button {
+    width: 100%;
+  }
+
+  .scanner-panel,
+  .presence-history {
+    padding: 20px;
+  }
+
+  .visual-tag {
+    padding: 7px 10px;
+    font-size: 10px;
+  }
+
+  /* Balão Ensino — celular */
+  .tag-three {
+    left: auto;
+    right: 5%;
+    top: 15%;
+    bottom: auto;
+    transform: rotate(6deg);
+  }
+
+  footer {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 8px 16px;
+    padding: 20px;
+    font-size: 11px;
+  }
+
+  footer img {
+    grid-row: 1 / 3;
+    width: 150px;
+    height: 50px;
+  }
+
+  .activity-description {
+    font-size: 13px;
+  }
+}

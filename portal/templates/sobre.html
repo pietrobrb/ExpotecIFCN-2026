@@ -1,0 +1,69 @@
+{% extends "public/expotec2026_layout.html" %}
+{% load static %}
+
+{% block title %}Sobre — XI EXPOTEC 2026{% endblock %}
+{% block page_name %}sobre{% endblock %}
+
+{% block page_css %}
+<link rel="stylesheet" href="{% static 'expotec2026/css/sobre.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="sobre">
+    <header class="sobre__cabecalho">
+        <p class="sobre__sobretitulo">IFRN · Campus Currais Novos</p>
+        <h1>Sobre a XI EXPOTEC</h1>
+        <p>
+            Ciência, tecnologia, cultura e inovação em um espaço de
+            aprendizagem, troca de conhecimentos e transformação social.
+        </p>
+    </header>
+
+    <div class="sobre__conteudo">
+        <article class="sobre__bloco">
+            <h2>O que é a EXPOTEC?</h2>
+            <p>
+                A Exposição Científica, Tecnológica e Cultural é um espaço
+                para compartilhar projetos, pesquisas, experiências e
+                produções desenvolvidas pela comunidade acadêmica.
+            </p>
+            <p>
+                A programação reúne atividades que incentivam a curiosidade,
+                o pensamento crítico, a criatividade e a integração entre
+                ensino, pesquisa e extensão.
+            </p>
+        </article>
+
+        <article class="sobre__bloco sobre__destaque">
+            <span class="sobre__etiqueta">XI edição · 2026</span>
+            <h2>Ciência Delas</h2>
+            <p>
+                A edição de 2026 destaca a participação das mulheres na
+                ciência, na tecnologia e na produção do conhecimento,
+                valorizando suas contribuições e trajetórias.
+            </p>
+        </article>
+
+        <article class="sobre__bloco">
+            <h2>Nosso propósito</h2>
+            <ul>
+                <li>Compartilhar conhecimentos científicos e tecnológicos.</li>
+                <li>Valorizar a pesquisa e a inovação.</li>
+                <li>Promover a integração entre estudantes, servidores e comunidade.</li>
+                <li>Ampliar o acesso à ciência, à cultura e à educação.</li>
+            </ul>
+        </article>
+
+        <article class="sobre__bloco">
+            <h2>Onde acontece?</h2>
+            <p>
+                Instituto Federal de Educação, Ciência e Tecnologia do
+                Rio Grande do Norte — Campus Currais Novos.
+            </p>
+            <a href="{% url 'portal:mapa' %}" class="sobre__link">
+                Consultar mapa do campus →
+            </a>
+        </article>
+    </div>
+</section>
+{% endblock %}

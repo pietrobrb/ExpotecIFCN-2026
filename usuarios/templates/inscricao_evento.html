@@ -1,57 +1,106 @@
 {% extends "private/layout.html" %}
 {% load crispy_forms_tags i18n %}
-{% block extrahead %}
-  {{ block.super }}
-  {{ form.media.css }}
-{% endblock extrahead %}
-{% block content %}
-    <form method="post"
-          id="change-form"
-          enctype="multipart/form-data"
-          novalidate>
 
-      {% block form_content %}
-        
-        <div class="card shadow-none">
-          <div class="card-body pt-0">
-            <div class="d-flex flex-column flex-fill">
-              <fieldset class="px-0">
-                <div class="d-flex flex-row">
-                  <legend class="text-secondary fs-6 mt-3">Informações Pessoais</legend>
-                </div>
-                <div class="d-flex flex-column flex-fill">
-                  {% crispy form.usuario %}
-                </div>
-              </fieldset>
-              <fieldset id="endereco_formset" class="border-top px-0" data-formset-prefix="{{ endereco_form.prefix }}">
-                  <div class="d-flex flex-row">
-                    <legend class="text-secondary fs-6 mt-3">Endereço</legend>
-                  </div>
-                  <div class="d-flex flex-column flex-fill">
-                    {% crispy form.endereco %}
-                  </div>
-              </fieldset>
-              <fieldset id="endereco_formset" class="border-top px-0" data-formset-prefix="{{ endereco_form.prefix }}">
-                <div class="d-flex flex-column flex-fill">
-                  {% crispy form.inscricao %}
-                </div>
-            </fieldset>
+{% block title %}Inscrição no evento | Expotec{% endblock title %}
+
+{% block extrahead %}
+{{ block.super }}
+{{ form.media.css }}
+{% endblock extrahead %}
+
+{% block content %}
+
+<div class="container-fluid py-3 expotec-inscricao">
+
+  <header class="expotec-inscricao-heading">
+    <span class="expotec-monitor-eyebrow">XI EXPOTEC · 2026</span>
+    <h1 class="expotec-monitor-title">Inscrição no evento</h1>
+    <p class="text-muted mb-0">
+      Confira seus dados pessoais e complete as informações solicitadas para participar do evento.
+    </p>
+  </header>
+
+  <form method="post" id="change-form" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+
+    {% block form_content %}
+
+    <div class="card expotec-inscricao-card">
+      <div class="card-body">
+
+        <fieldset class="expotec-inscricao-section">
+          <div class="expotec-inscricao-section-heading">
+            <span class="expotec-inscricao-section-icon">
+              <i class="fas fa-user" aria-hidden="true"></i>
+            </span>
+            <div>
+              <legend>Informações pessoais</legend>
+              <p>Seus dados de identificação e vínculo institucional.</p>
             </div>
           </div>
-          <div class="card-foot pb-3 px-3">
-            <button type="submit" class="btn btn-primary">Inscrever-se</button>
-          </div>
-        </div>
 
-      {% endblock form_content %}
-      
-    </form>
-  </div>
-  
+          <div class="expotec-inscricao-fields">
+            {% crispy form.usuario %}
+          </div>
+        </fieldset>
+
+        <fieldset id="endereco_formset" class="expotec-inscricao-section"
+          data-formset-prefix="{{ endereco_form.prefix }}">
+          <div class="expotec-inscricao-section-heading">
+            <span class="expotec-inscricao-section-icon">
+              <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+            </span>
+            <div>
+              <legend>Endereço</legend>
+              <p>Informe seu endereço conforme os campos do formulário.</p>
+            </div>
+          </div>
+
+          <div class="expotec-inscricao-fields">
+            {% crispy form.endereco %}
+          </div>
+        </fieldset>
+
+        <fieldset class="expotec-inscricao-section expotec-inscricao-section-last">
+          <div class="expotec-inscricao-section-heading">
+            <span class="expotec-inscricao-section-icon">
+              <i class="fas fa-clipboard-list" aria-hidden="true"></i>
+            </span>
+            <div>
+              <legend>Informações da inscrição</legend>
+              <p>Complete os dados complementares solicitados.</p>
+            </div>
+          </div>
+
+          <div class="expotec-inscricao-fields">
+            {% crispy form.inscricao %}
+          </div>
+        </fieldset>
+
+      </div>
+
+      <div class="card-footer expotec-inscricao-footer">
+        <p class="text-muted small mb-0">
+          Revise as informações antes de enviar.
+        </p>
+
+        <button type="submit" class="btn btn-primary expotec-inscricao-submit">
+          <i class="fas fa-check-circle mr-2" aria-hidden="true"></i>
+          Inscrever-se
+        </button>
+      </div>
+    </div>
+
+    {% endblock form_content %}
+  </form>
+
+</div>
+
 {% endblock content %}
+
 {% block extra_scripts %}
-  {{ block.super }}
-  {{ form.media.js }}
+{{ block.super }}
+{{ form.media.js }}
 {% endblock extra_scripts %}
 
 {% block preloader %}

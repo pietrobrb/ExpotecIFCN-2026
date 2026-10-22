@@ -1,101 +1,380 @@
-
 {% extends "private/layout.html" %}
 {% load i18n crispy_forms_tags %}
 {% load render_table from django_tables2 %}
 
+{% block title %}Submissões | Expotec{% endblock title %}
+
 {% block extrahead %}
-  {{ block.super }}
-  {{ form.media.css }}
+{{ block.super }}
+{{ form.media.css }}
+
+<style>
+  .expotec-submissoes {
+    --submissoes-border: #e5e7eb;
+    --submissoes-muted: #64748b;
+    --submissoes-primary: #c8003e;
+  }
+
+  /* Cabeçalho */
+  .expotec-submissoes .submissoes-heading {
+    margin-bottom: 1.5rem;
+  }
+
+  .expotec-submissoes .submissoes-eyebrow {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: var(--submissoes-primary);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  .expotec-submissoes .submissoes-title {
+    margin: 0 0 0.4rem;
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    font-weight: 700;
+  }
+
+  .expotec-submissoes .submissoes-description {
+    margin: 0;
+    color: var(--submissoes-muted);
+  }
+
+  /* Abas das etapas */
+  .expotec-submissoes .submissoes-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding: 0.35rem;
+    border: 1px solid var(--submissoes-border);
+    border-radius: 0.8rem;
+    background: #fff;
+  }
+
+  .expotec-submissoes .submissoes-tabs .nav-link {
+    padding: 0.7rem 1rem;
+    border: 0;
+    border-radius: 0.55rem;
+    color: #475569;
+    font-weight: 600;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .expotec-submissoes .submissoes-tabs .nav-link:hover {
+    background: #f8fafc;
+    color: var(--submissoes-primary);
+  }
+
+  .expotec-submissoes .submissoes-tabs .nav-link.active {
+    background: var(--submissoes-primary);
+    color: #fff;
+  }
+
+  /* Cartão principal */
+  .expotec-submissoes .submissoes-card {
+    overflow: hidden;
+    border: 1px solid var(--submissoes-border);
+    border-radius: 0.8rem;
+    background: #fff;
+    box-shadow: 0 3px 12px rgb(15 23 42 / 4%);
+  }
+
+  .expotec-submissoes .submissoes-card-header {
+    padding: 1.1rem 1.25rem;
+    border-bottom: 1px solid var(--submissoes-border);
+    background: #fff;
+  }
+
+  .expotec-submissoes .submissoes-card-title {
+    margin: 0 0 0.25rem;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .expotec-submissoes .submissoes-card-description {
+    margin: 0;
+    color: var(--submissoes-muted);
+    font-size: 0.875rem;
+  }
+
+  /* Grade dos filtros */
+  .expotec-submissoes .submissoes-filters {
+    display: block;
+    margin-top: 1rem;
+  }
+
+  .expotec-submissoes .expotec-filtros-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    align-items: end;
+    margin-top: 0.5rem;
+  }
+
+  .expotec-submissoes .expotec-filtro-campo {
+    min-width: 0;
+    margin: 0 !important;
+  }
+
+  .expotec-submissoes .expotec-filtro-campo label {
+    display: block;
+    margin-bottom: 0.4rem;
+    color: #334155;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .expotec-submissoes .expotec-filtro-campo input,
+  .expotec-submissoes .expotec-filtro-campo select,
+  .expotec-submissoes .expotec-filtro-campo textarea {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-height: 42px;
+    padding: 0.55rem 0.75rem;
+    border: 1px solid #dbe1e8;
+    border-radius: 0.55rem;
+    background-color: #fff;
+    box-shadow: none;
+    box-sizing: border-box;
+  }
+
+  .expotec-submissoes .expotec-filtro-campo input:focus,
+  .expotec-submissoes .expotec-filtro-campo select:focus,
+  .expotec-submissoes .expotec-filtro-campo textarea:focus {
+    border-color: var(--submissoes-primary);
+    box-shadow: 0 0 0 3px rgb(239 0 126 / 10%);
+    outline: none;
+  }
+
+  /* Mensagens de validação */
+  .expotec-submissoes .expotec-filtro-campo .invalid-feedback,
+  .expotec-submissoes .expotec-filtro-campo .text-danger {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.8rem;
+  }
+
+  /* Botão Filtrar */
+  .expotec-submissoes .expotec-filtro-botao {
+    grid-column: 1 / -1;
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .expotec-submissoes .expotec-filtro-botao button[type="submit"] {
+    display: block;
+    width: 100%;
+    min-height: 42px;
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--submissoes-primary);
+    border-radius: 0.55rem;
+    background: var(--submissoes-primary);
+    color: #fff;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+  }
+
+  .expotec-submissoes .expotec-filtro-botao button[type="submit"]:hover {
+    border-color: #c8003e;
+    background: #c8003e;
+  }
+
+  /* Ações da página */
+  .expotec-submissoes .submissoes-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .expotec-submissoes .submissoes-actions .btn {
+    margin: 0 !important;
+    border-radius: 0.5rem;
+    font-weight: 600;
+  }
+
+  /* Tabela */
+  .expotec-submissoes .submissoes-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .expotec-submissoes .submissoes-table-wrap table {
+    width: 100%;
+    min-width: 720px;
+    margin-bottom: 0;
+  }
+
+  .expotec-submissoes .selected-row {
+    background-color: #FCE7ED !important;
+  }
+
+  /* Paginação */
+  .expotec-submissoes .submissoes-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid var(--submissoes-border);
+    background: #fff;
+  }
+
+  .expotec-submissoes .submissoes-pagination nav {
+    margin-left: auto;
+  }
+
+  /* Celulares */
+  @media (max-width: 767.98px) {
+    .expotec-submissoes .expotec-filtros-grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.75rem;
+    }
+
+    .expotec-submissoes .submissoes-tabs .nav-link {
+      padding: 0.6rem 0.7rem;
+      font-size: 0.875rem;
+    }
+
+    .expotec-submissoes .submissoes-card-header {
+      padding: 1rem;
+    }
+
+    .expotec-submissoes .submissoes-actions {
+      justify-content: stretch;
+    }
+
+    .expotec-submissoes .submissoes-actions .btn {
+      flex: 1 1 100%;
+      text-align: center;
+    }
+
+    .expotec-submissoes .submissoes-pagination {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .expotec-submissoes .submissoes-pagination nav {
+      margin-left: 0;
+      max-width: 100%;
+      overflow-x: auto;
+    }
+  }
+</style>
+
 {% endblock extrahead %}
+
+
 {% block content %}
-<ul class="nav nav-tabs">
-  <li class="nav-item">
-    <a class="nav-link text-active-primary ms-0 me-10 fw-light {%if etapa == 'inicial' %} active {%endif%}" href="{% url 'submissao:submissao-list'%}?etapa=inicial">
+<div class="container-fluid py-3 expotec-submissoes">
+
+  <header class="submissoes-heading">
+    <span class="submissoes-eyebrow">Área de trabalhos</span>
+
+    <h1 class="submissoes-title">Submissões cadastradas</h1>
+
+    <p class="submissoes-description">
+      Consulte as submissões, acompanhe as etapas e verifique o andamento das avaliações.
+    </p>
+  </header>
+
+  <nav class="nav nav-tabs submissoes-tabs" aria-label="Etapas das submissões">
+    <a class="nav-link {% if etapa == 'inicial' %}active{% endif %}"
+      href="{% url 'submissao:submissao-list' %}?etapa=inicial">
+      <i class="fas fa-file-alt mr-1" aria-hidden="true"></i>
       Etapa Inicial
     </a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link text-active-primary ms-0 me-10 fw-light {%if etapa == 'apresentacao'%} active {%endif%}" href="{% url 'submissao:submissao-list'%}?etapa=apresentacao">
+
+    <a class="nav-link {% if etapa == 'apresentacao' %}active{% endif %}"
+      href="{% url 'submissao:submissao-list' %}?etapa=apresentacao">
+      <i class="fas fa-chalkboard-teacher mr-1" aria-hidden="true"></i>
       Etapa Apresentação
     </a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link text-active-primary ms-0 me-10 fw-light {%if etapa == 'final'%} active {%endif%}" href="{% url 'submissao:submissao-list'%}?etapa=final">
+
+    <a class="nav-link {% if etapa == 'final' %}active{% endif %}"
+      href="{% url 'submissao:submissao-list' %}?etapa=final">
+      <i class="fas fa-flag-checkered mr-1" aria-hidden="true"></i>
       Etapa Final
     </a>
-  </li>
-</ul>
-<div class="card shadow-none">
- 
-  <div class="card-header px-2">
+  </nav>
 
-    <form id="search-form" class="d-flex flex-md-row flex-column"  method="get">
-      <div class="container-fluid">
-          {% if filterset.form %}
-          <div class="small text-muted mb-2">Buscar</div>
-          <div class="filters d-flex flex-column flex-md-row mb-3">
-            {% block filters %}
-              {% if filterset %}
-                {% include "includes/list_filters.html" %}
-              {% endif %}
-            {% endblock filters %}
-          </div>
+  <section class="submissoes-card" aria-label="Lista de trabalhos">
+    <div class="submissoes-card-header">
+      <h2 class="submissoes-card-title">Submissões cadastradas</h2>
+
+      <p class="submissoes-card-description">
+        Utilize os filtros para localizar trabalhos e as ações disponíveis para gerenciar as submissões.
+      </p>
+
+      <form id="search-form" method="get">
+        {% if filterset.form %}
+        <div class="submissoes-filters">
+          {% if filterset %}
+          {% include "includes/list_filters.html" %}
           {% endif %}
+        </div>
+        {% endif %}
 
-          {% block actions %}
-          <div class="actions d-flex flex-column flex-md-row justify-content-end">
-            {% include "includes/list_actions.html" with actions=view.list_actions %}
-          </div>
-          {% endblock actions %}
-      
-      
-       
-      
-      
-    </form>
-  </div>
-  <div class="card-body p-0 m-0">
-    
-    {% render_table table "includes/table.html" %}
-    
-  </div>
-  <div class="card-footer  px-0 bg-white">
-    <div class="pagination-container">
-      {% if table.paginator %}
-          <nav aria-label="Page navigation">
-            {% include "includes/pagination.html" %}
-          </nav>
-      {% endif %}
+        <div class="submissoes-actions">
+          {% include "includes/list_actions.html" with actions=view.list_actions %}
+        </div>
+      </form>
     </div>
-  </div>
+
+    <div class="submissoes-table-wrap">
+      {% render_table table "includes/table.html" %}
+    </div>
+
+    {% if table.paginator %}
+    <div class="submissoes-pagination">
+      <span class="small text-muted">
+        Página {{ table.page.number }} de {{ table.paginator.num_pages }}
+      </span>
+
+      <nav aria-label="Paginação das submissões">
+        {% include "includes/pagination.html" %}
+      </nav>
+    </div>
+    {% endif %}
+  </section>
+</div>
 {% endblock content %}
+
+
 {% block extra_scripts %}
-  {{ block.super }}
-  {{ form.media.js }}
-  <script src="https://cdn.datatables.net/2.1.5/js/dataTables.js"></script>
-  <script>
-    $(document).ready(function() {
-      
-    $("#toggleSelectAll").click((event) => {
-      const target = event.currentTarget;
+{{ block.super }}
+{{ form.media.js }}
+
+<script>
+  $(function () {
+    $("#toggleSelectAll").on("change", function () {
+      const checked = this.checked;
       const checkboxes = document.getElementsByName("selection");
-      [...checkboxes].forEach((el) => {
-        el.checked = target.checked;
-        $(el).trigger("change");
+
+      checkboxes.forEach(function (checkbox) {
+        checkbox.checked = checked;
+        $(checkbox).trigger("change");
       });
     });
-    $('input[type="checkbox"]').change((e) => {
-      const $row = $(e.target).closest("tr");
-      if (e.target.checked) {
-          $row.addClass('selected-row');
+
+    $('input[name="selection"]').on("change", function () {
+      const row = $(this).closest("tr");
+
+      if (this.checked) {
+        row.addClass("selected-row");
       } else {
-          $row.removeClass('selected-row');
+        row.removeClass("selected-row");
       }
     });
-    });
-  </script>
+  });
+</script>
 {% endblock extra_scripts %}
+
 
 {% block preloader %}
 {% endblock preloader %}
-  
