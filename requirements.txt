@@ -24,3 +24,6 @@ django-render-block
 pydantic
 requests
 reportlab
+gunicorn
+mysqlclient
+django-redis

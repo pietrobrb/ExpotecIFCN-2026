@@ -42,12 +42,12 @@
   background: #f5f8f5;
 }
 
-.mapa__imagem img {
+.mapa__imagem iframe {
   display: block;
   width: 100%;
-  height: auto;
-  max-height: 75vh;
-  object-fit: contain;
+  height: min(65vh, 600px);
+  max-height: 350px;
+  border: 0;
   border-radius: 8px;
 }
 
@@ -100,4 +100,18 @@
   .mapa__botao {
     text-align: center;
   }
+}
+
+.mapa__acoes {
+  flex-wrap: wrap;
+}
+
+.mapa__botao--secundario {
+  color: #087849;
+  background: #e8f3ec;
+}
+
+.mapa__botao--secundario:hover {
+  color: #fff;
+  background: #065d38;
 }
